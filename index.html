@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="单词本">
+<meta name="theme-color" content="#f3f6fb">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-180.png">
+<title>雅思单词本</title>
+<style>
+  :root{ --bg:#f3f6fb; --card:#fff; --ink:#1d2433; --muted:#7c8597; --line:#e4e9f2;
+    --accent:#2457c5; --soft:#e8effc; --g1:#2a5bd7; --g2:#16a3b8;
+    --bad:#d6504a; --mid:#e0912b; --good:#2e9c6a; --easy:#7a5cd0; }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#11151d; --card:#1b212c; --ink:#eef2f8; --muted:#97a0b2; --line:#2b3240; --soft:#1f2a40; --accent:#7aa2ff; }
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue",sans-serif;font-size:16px}
+  body{padding:env(safe-area-inset-top) 0 calc(76px + env(safe-area-inset-bottom))}
+  main{max-width:560px;margin:0 auto;padding:16px}
+  h1{font-size:22px;margin:8px 4px 14px}
+  h2{font-size:17px;margin:0 0 10px}
+  .sub{color:var(--muted);font-size:14px;line-height:1.55;margin:0 0 10px}
+  .hero{background:linear-gradient(135deg,var(--g1),var(--g2));color:#fff;border-radius:20px;padding:18px;margin:4px 0 14px;position:relative;overflow:hidden}
+  .hero .t{font-size:22px;font-weight:800}
+  .hero .s{opacity:.9;margin-top:4px;font-size:15px}
+  .hero .m{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap}
+  .hero .m span{background:rgba(255,255,255,.2);padding:5px 11px;border-radius:999px;font-size:13px}
+  .hero .deco{position:absolute;right:-6px;top:-10px;font-size:84px;font-weight:900;opacity:.13;font-family:Georgia,serif}
+  .card{background:var(--card);border-radius:16px;padding:16px;margin-bottom:14px}
+  .card.bk{border:1.5px dashed var(--accent)}
+  .big{font-size:34px;font-weight:800;font-variant-numeric:tabular-nums}
+  .row{display:flex;gap:10px;align-items:center}
+  .row.sp{justify-content:space-between}
+  button{font-family:inherit}
+  .btn{border:0;background:var(--accent);color:#fff;border-radius:12px;padding:12px 16px;font-size:16px;font-weight:600}
+  .btn:disabled{opacity:.4}
+  .ghost{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:12px;padding:11px 14px;font-size:15px}
+  .full{width:100%}
+  select,input,textarea{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px;font-size:16px;width:100%}
+  textarea{min-height:140px}
+  label.f{display:block;font-size:13px;color:var(--muted);margin:10px 0 4px}
+  .modes{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+  .tabs{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);display:flex;padding-bottom:env(safe-area-inset-bottom);z-index:5}
+  .tabs button{flex:1;border:0;background:none;padding:9px 0 8px;color:var(--muted);font-size:12px}
+  .tabs button b{display:block;font-size:21px;font-weight:400;margin-bottom:1px}
+  .tabs button.on{color:var(--accent)}
+  .view{display:none}.view.on{display:block}
+  .list .it{display:flex;align-items:center;gap:10px;padding:11px 2px;border-bottom:1px solid var(--line)}
+  .list .it:last-child{border-bottom:0}
+  .list .it .w{font-weight:600}
+  .list .it .c{color:var(--muted);font-size:14px;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .dot{width:9px;height:9px;border-radius:50%;flex:none;background:var(--line)}
+  .dot.l{background:var(--mid)} .dot.m{background:var(--good)} .dot.e{background:var(--easy)} .dot.x{background:var(--bad)}
+  .grp{display:flex;align-items:center;justify-content:space-between;padding:12px 2px;border-bottom:1px solid var(--line)}
+  .grp:last-child{border-bottom:0}
+  .bar{height:6px;background:var(--soft);border-radius:4px;overflow:hidden;margin-top:6px;width:120px}
+  .bar i{display:block;height:100%;background:var(--accent)}
+  .chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+  .chips button{border:1px solid var(--line);background:none;color:var(--ink);padding:7px 13px;border-radius:999px;font-size:14px}
+  .chips button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+  /* 学习界面 */
+  #study{position:fixed;inset:0;background:var(--bg);z-index:20;display:none;flex-direction:column;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
+  #study.on{display:flex}
+  .stop{display:flex;align-items:center;justify-content:space-between;padding:12px 16px}
+  .stop button{border:0;background:none;color:var(--accent);font-size:16px}
+  .prog{height:4px;background:var(--soft);margin:0 16px;border-radius:3px;overflow:hidden}
+  .prog i{display:block;height:100%;background:var(--accent);transition:width .2s}
+  .sbody{flex:1;overflow:auto;padding:20px 16px;max-width:560px;width:100%;margin:0 auto}
+  .word{font-size:40px;font-weight:800;text-align:center;margin-top:34px;word-break:break-word}
+  .ipa{text-align:center;color:var(--muted);font-size:18px;margin-top:6px}
+  .say{display:block;margin:14px auto 0;border:0;background:var(--soft);color:var(--accent);border-radius:999px;padding:9px 18px;font-size:16px}
+  .ans{margin-top:26px;background:var(--card);border-radius:16px;padding:16px;line-height:1.6}
+  .ans .cn{font-size:20px;font-weight:600}
+  .ans .ex{margin-top:10px;color:var(--ink)}
+  .ans .ex button{border:0;background:none;color:var(--accent);font-size:15px;padding:0 4px}
+  .tag{display:inline-block;font-size:12px;padding:2px 8px;border-radius:999px;background:var(--soft);color:var(--accent);margin-bottom:8px}
+  .sfoot{padding:12px 16px 16px;max-width:560px;width:100%;margin:0 auto}
+  .grades{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+  .grades button{border:0;border-radius:12px;padding:13px 0 10px;color:#fff;font-size:16px;font-weight:600}
+  .grades button small{display:block;font-size:11px;font-weight:400;opacity:.9;margin-top:2px}
+  .g0{background:var(--bad)}.g1{background:var(--mid)}.g2{background:var(--good)}.g3{background:var(--easy)}
+  .spin{margin-top:28px}
+  .spin input{font-size:24px;text-align:center;padding:14px;background:var(--card);letter-spacing:.5px}
+  .res{text-align:center;margin-top:16px;font-size:18px;line-height:1.6}
+  .res .ok{color:var(--good);font-weight:700}.res .ng{color:var(--bad);font-weight:700}
+  .res .right{font-size:26px;font-weight:800}
+  .done{text-align:center;padding-top:50px}
+  .done .big{font-size:52px}
+  /* 弹层 */
+  .sheet{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:30;display:none;align-items:flex-end;justify-content:center}
+  .sheet.on{display:flex}
+  .sheet .in{background:var(--card);width:100%;max-width:560px;border-radius:20px 20px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom));max-height:88vh;overflow:auto}
+  .toast{position:fixed;left:50%;top:calc(env(safe-area-inset-top) + 14px);transform:translateX(-50%);background:rgba(20,25,35,.9);color:#fff;padding:10px 16px;border-radius:12px;font-size:15px;z-index:50;display:none;max-width:90%}
+  .cal{display:grid;grid-template-columns:repeat(12,1fr);gap:4px;margin-top:6px}
+  .cal i{aspect-ratio:1;border-radius:4px;background:var(--soft);display:block}
+  .cal i.a1{background:#a9c3f3}.cal i.a2{background:#5f8ce6}.cal i.a3{background:#2457c5}
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;text-align:center}
+  .stats div{background:var(--bg);border-radius:12px;padding:10px 4px}
+  .stats b{display:block;font-size:22px;font-variant-numeric:tabular-nums}
+  .stats span{font-size:12px;color:var(--muted)}
+  #reportImg{width:100%;border-radius:12px;margin-top:10px}
+  .welcome{position:fixed;inset:0;background:var(--bg);z-index:60;display:none;align-items:center;justify-content:center;padding:24px}
+  .welcome.on{display:flex}
+</style>
+</head>
+<body>
+<div class="toast" id="toast"></div>
+
+<main>
+  <!-- 首页 -->
+  <section class="view on" id="v-home">
+    <div class="hero">
+      <div class="deco">Aa</div>
+      <div class="t" id="heroT">雅思单词本</div>
+      <div class="s" id="heroS">今天也来背几个吧</div>
+      <div class="m" id="heroM"></div>
+    </div>
+    <div class="card bk" id="bkCard" hidden>
+      <div id="bkText"></div>
+      <div class="row" style="margin-top:10px"><button class="ghost" id="bkGo" style="flex:1">去备份</button><button class="ghost" id="bkLater" style="flex:1">过几天再说</button></div>
+    </div>
+    <div class="card">
+      <div class="row sp"><h2 style="margin:0">复习</h2><span class="sub" style="margin:0" id="dueHint"></span></div>
+      <div class="row" style="margin-top:8px;align-items:baseline;gap:6px"><span class="big" id="dueN">0</span><span class="sub" style="margin:0">个词该复习了</span></div>
+      <p class="sub" id="dueMore" style="margin-top:4px"></p>
+      <button class="btn full" id="goReview">开始复习</button>
+    </div>
+    <div class="card">
+      <h2>学新词</h2>
+      <label class="f">从哪个词库</label>
+      <select id="newSrc"></select>
+      <label class="f">这一组学几个</label>
+      <div class="chips" id="newSize"></div>
+      <button class="btn full" id="goNew">开始学新词</button>
+    </div>
+    <div class="card">
+      <h2>拼写 · 听写练习</h2>
+      <p class="sub">练习不打乱复习计划；拼错的词会自动放回今天的复习里。</p>
+      <label class="f">练哪些词</label>
+      <select id="prSrc"></select>
+      <div class="modes">
+        <button class="ghost" id="goSpell">✍️ 看中文拼写</button>
+        <button class="ghost" id="goDict">🎧 听音写词</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 词库 -->
+  <section class="view" id="v-lib">
+    <h1>词库</h1>
+    <input id="q" placeholder="搜索英文或中文" autocomplete="off" style="margin-bottom:14px">
+    <div class="card" id="qRes" hidden><div class="list" id="qList"></div></div>
+    <div id="libGroups">
+      <div class="card">
+        <div class="row sp"><h2 style="margin:0">我的生词</h2><button class="ghost" id="addBtn" style="padding:7px 12px">＋ 添加</button></div>
+        <p class="sub" style="margin-top:8px">课本、真题、听力语料库里遇到的生词加到这里，可以按「新概念1 第5课」「王陆 第3章」这样分组，方便按组听写。</p>
+        <div id="myGroups"></div>
+      </div>
+      <div class="card">
+        <h2>内置话题词</h2>
+        <p class="sub">按雅思常考话题整理，带音标、例句。</p>
+        <div id="topicGroups"></div>
+      </div>
+    </div>
+    <div id="libWords" hidden>
+      <button class="ghost" id="libBack" style="margin-bottom:12px">‹ 返回</button>
+      <div class="card">
+        <div class="row sp"><h2 style="margin:0" id="libTitle"></h2><button class="ghost" id="grpMenu" style="padding:6px 10px" hidden>管理</button></div>
+        <p class="sub" style="margin-top:6px">圆点颜色：<span style="color:var(--mid)">●</span> 学习中 <span style="color:var(--good)">●</span> 已掌握 <span style="color:var(--easy)">●</span> 太简单 <span style="color:var(--bad)">●</span> 易错</p>
+        <div class="list" id="libList"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 进度 -->
+  <section class="view" id="v-stat">
+    <h1>学习进度</h1>
+    <div class="card">
+      <div class="stats" id="stats"></div>
+    </div>
+    <div class="card">
+      <h2>最近 12 周</h2>
+      <p class="sub" style="margin:0">每格一天，颜色越深学得越多。</p>
+      <div class="cal" id="cal"></div>
+    </div>
+    <div class="card">
+      <h2>📮 分享学习报告</h2>
+      <p class="sub">生成最近 7 天的学习报告图片，可以发到微信家庭群。</p>
+      <button class="btn full" id="mkReport">生成报告</button>
+      <div id="reportBox" hidden>
+        <img id="reportImg" alt="学习报告">
+        <p class="sub" style="margin-top:8px">如果分享按钮不能用：长按上面的图片 →「存储到照片」，再从微信发出去。</p>
+        <div class="row"><button class="btn" id="shareReport" style="flex:1">分享图片</button><button class="ghost" id="copyReport" style="flex:1">复制文字版</button></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="row sp"><h2 style="margin:0">易错词</h2><span class="sub" style="margin:0">忘记或拼错 2 次以上</span></div>
+      <div class="list" id="hardList" style="margin-top:6px"></div>
+    </div>
+  </section>
+
+  <!-- 设置 -->
+  <section class="view" id="v-set">
+    <h1>设置与备份</h1>
+    <div class="card">
+      <label class="f" style="margin-top:0">称呼</label>
+      <input id="setName">
+      <label class="f">发音</label>
+      <div class="chips" id="setAccent"></div>
+      <label class="f">语速</label>
+      <div class="chips" id="setRate"></div>
+      <label class="f">出现单词时自动朗读</label>
+      <div class="chips" id="setAuto"></div>
+      <label class="f">一次复习最多几个（积压多时分批来，不会累死）</label>
+      <div class="chips" id="setCap"></div>
+      <label class="f">雅思考试日期（选填，首页显示倒计时）</label>
+      <input type="date" id="setExam">
+      <button class="ghost full" id="testVoice" style="margin-top:12px">🔊 试听发音</button>
+    </div>
+    <div class="card">
+      <h2>备份</h2>
+      <p class="sub">学习记录只保存在这台手机上。建议每月导出一次备份，存到「文件」或发给自己。换手机时用「从备份恢复」。</p>
+      <div class="row"><button class="ghost" id="exportJson" style="flex:1">导出备份</button><button class="ghost" id="importBtn" style="flex:1">从备份恢复</button></div>
+      <input type="file" id="importFile" accept=".json,application/json" hidden>
+      <p class="sub" id="countInfo" style="margin-top:10px"></p>
+    </div>
+    <p class="sub" style="text-align:center">内置词和例句为自编整理。请从桌面图标打开，别只在 Safari 里用。</p>
+  </section>
+</main>
+
+<nav class="tabs" id="tabs">
+  <button data-v="home" class="on"><b>📖</b>背单词</button>
+  <button data-v="lib"><b>🗂️</b>词库</button>
+  <button data-v="stat"><b>📈</b>进度</button>
+  <button data-v="set"><b>⚙️</b>设置</button>
+</nav>
+
+<!-- 学习界面 -->
+<div id="study">
+  <div class="stop"><button id="sQuit">‹ 结束</button><span class="sub" style="margin:0" id="sCount"></span><button id="sSay2">🔊</button></div>
+  <div class="prog"><i id="sProg"></i></div>
+  <div class="sbody" id="sBody"></div>
+  <div class="sfoot" id="sFoot"></div>
+</div>
+
+<!-- 弹层 -->
+<div class="sheet" id="sheet"><div class="in" id="sheetIn"></div></div>
+
+<div class="welcome" id="welcome">
+  <div class="card" style="width:100%;max-width:420px">
+    <h2>👋 欢迎使用雅思单词本</h2>
+    <p class="sub">先告诉我怎么称呼你，首页和学习报告上会显示。</p>
+    <input id="wName" placeholder="比如：小明">
+    <button class="btn full" id="wGo" style="margin-top:14px">开始</button>
+  </div>
+</div>
+
+<script>
+(function(){
+"use strict";
+var BUILTIN = {"t":["环境与自然","教育与学习","科技与互联网","健康与医疗","工作与经济","社会与政府","城市与交通","文化、艺术与旅游","媒体与广告","犯罪与法律","家庭、人际与成长","写作与口语高频","雅思听力高频"],"w":[["environment","ɪnˈvaɪrənmənt","n. 环境","We all have a duty to protect the environment.",0],["pollution","pəˈluːʃn","n. 污染","Air pollution is a serious problem in many big cities.",0],["emission","iˈmɪʃn","n. 排放；排放物","Car emissions are a major cause of poor air quality.",0],["carbon","ˈkɑːbən","n. 碳","Planting trees helps to absorb carbon from the air.",0],["climate","ˈklaɪmət","n. 气候","The climate here is mild and wet.",0],["global warming","ˌɡləʊbl ˈwɔːmɪŋ","n. 全球变暖","Global warming is causing sea levels to rise.",0],["greenhouse effect","ˈɡriːnhaʊs ɪˌfekt","n. 温室效应","Burning coal makes the greenhouse effect worse.",0],["fossil fuel","ˈfɒsl ˌfjuːəl","n. 化石燃料","Oil and coal are fossil fuels.",0],["renewable","rɪˈnjuːəbl","adj. 可再生的","Wind and solar power are renewable sources of energy.",0],["sustainable","səˈsteɪnəbl","adj. 可持续的","We need a more sustainable way of living.",0],["conservation","ˌkɒnsəˈveɪʃn","n. 保护；节约","Water conservation is important in dry regions.",0],["endangered","ɪnˈdeɪndʒəd","adj. 濒危的","The panda was once an endangered species.",0],["species","ˈspiːʃiːz","n. 物种","Thousands of species are at risk of disappearing.",0],["habitat","ˈhæbɪtæt","n. 栖息地","Cutting down forests destroys animals' natural habitat.",0],["extinct","ɪkˈstɪŋkt","adj. 灭绝的","Dinosaurs became extinct millions of years ago.",0],["biodiversity","ˌbaɪəʊdaɪˈvɜːsəti","n. 生物多样性","Rainforests have very high biodiversity.",0],["ecosystem","ˈiːkəʊsɪstəm","n. 生态系统","Plastic waste can damage the ocean ecosystem.",0],["deforestation","diːˌfɒrɪˈsteɪʃn","n. 森林砍伐","Deforestation leads to soil erosion.",0],["erosion","ɪˈrəʊʒn","n. 侵蚀","Trees protect the land from erosion.",0],["drought","draʊt","n. 干旱","The farmers lost their crops in the drought.",0],["flood","flʌd","n. 洪水","Heavy rain caused floods across the region.",0],["disaster","dɪˈzɑːstə(r)","n. 灾难","The earthquake was a terrible natural disaster.",0],["recycle","ˌriːˈsaɪkl","v. 回收利用","Most of these bottles can be recycled.",0],["waste","weɪst","n. 废物；浪费","Households produce a lot of plastic waste.",0],["landfill","ˈlændfɪl","n. 垃圾填埋场","Much of our rubbish ends up in landfill.",0],["contaminate","kənˈtæmɪneɪt","v. 污染","Chemicals from the factory contaminated the river.",0],["toxic","ˈtɒksɪk","adj. 有毒的","The factory released toxic gases.",0],["pesticide","ˈpestɪsaɪd","n. 杀虫剂；农药","Some pesticides harm bees.",0],["resource","rɪˈzɔːs","n. 资源","Water is a precious natural resource.",0],["consumption","kənˈsʌmpʃn","n. 消耗；消费","Energy consumption rises every winter.",0],["reduce","rɪˈdjuːs","v. 减少","We should reduce the amount of plastic we use.",0],["solar","ˈsəʊlə(r)","adj. 太阳的","They put solar panels on the roof.",0],["temperature","ˈtemprətʃə(r)","n. 温度","Average temperatures have risen over the past century.",0],["atmosphere","ˈætməsfɪə(r)","n. 大气层；气氛","Gases build up in the atmosphere.",0],["ozone layer","ˈəʊzəʊn ˌleɪə(r)","n. 臭氧层","The ozone layer protects us from the sun's rays.",0],["glacier","ˈɡlæsiə(r)","n. 冰川","The glacier is melting faster than expected.",0],["wildlife","ˈwaɪldlaɪf","n. 野生动物","The park is home to a lot of wildlife.",0],["vegetation","ˌvedʒəˈteɪʃn","n. 植被","The hills are covered in thick vegetation.",0],["irrigation","ˌɪrɪˈɡeɪʃn","n. 灌溉","Irrigation allows crops to grow in dry areas.",0],["education","ˌedʒuˈkeɪʃn","n. 教育","Everyone has the right to a good education.",1],["curriculum","kəˈrɪkjələm","n. 课程（设置）","Music is part of the school curriculum.",1],["compulsory","kəmˈpʌlsəri","adj. 必修的；强制的","English is a compulsory subject.",1],["optional","ˈɒpʃənl","adj. 可选的","Art is optional in the final year.",1],["academic","ˌækəˈdemɪk","adj. 学术的","She has a strong academic record.",1],["qualification","ˌkwɒlɪfɪˈkeɪʃn","n. 资格；学历","You need a teaching qualification for this job.",1],["degree","dɪˈɡriː","n. 学位","He has a degree in engineering.",1],["graduate","ˈɡrædʒuət","n. 毕业生 v. 毕业","Many graduates struggle to find jobs.",1],["undergraduate","ˌʌndəˈɡrædʒuət","n. 本科生","Undergraduates usually study for three or four years.",1],["postgraduate","ˌpəʊstˈɡrædʒuət","n. 研究生","She is a postgraduate student in physics.",1],["tuition fee","tjuˈɪʃn fiː","n. 学费","Tuition fees have increased sharply.",1],["scholarship","ˈskɒləʃɪp","n. 奖学金","He won a scholarship to study abroad.",1],["lecture","ˈlektʃə(r)","n. 讲座；讲课","The lecture starts at nine o'clock.",1],["seminar","ˈsemɪnɑː(r)","n. 研讨课","Students discuss the reading in weekly seminars.",1],["tutor","ˈtjuːtə(r)","n. 导师；家庭教师","My tutor helped me plan my essay.",1],["assignment","əˈsaɪnmənt","n. 作业；任务","The assignment is due next Friday.",1],["deadline","ˈdedlaɪn","n. 截止日期","I finished the report just before the deadline.",1],["dissertation","ˌdɪsəˈteɪʃn","n. 学位论文","She is writing her dissertation on climate change.",1],["thesis","ˈθiːsɪs","n. 论文；论点","His thesis was about urban transport.",1],["research","rɪˈsɜːtʃ","n./v. 研究","Recent research shows that sleep affects memory.",1],["literacy","ˈlɪtərəsi","n. 读写能力","Adult literacy rates have improved.",1],["discipline","ˈdɪsəplɪn","n. 纪律；学科","Some schools have very strict discipline.",1],["motivation","ˌməʊtɪˈveɪʃn","n. 动力；积极性","Students with high motivation learn faster.",1],["knowledge","ˈnɒlɪdʒ","n. 知识","Reading widely increases your knowledge.",1],["skill","skɪl","n. 技能","Communication skills are important at work.",1],["vocational","vəʊˈkeɪʃənl","adj. 职业的","Vocational courses train people for specific jobs.",1],["enrol","ɪnˈrəʊl","v. 注册；入学","She enrolled in an evening course.",1],["attendance","əˈtendəns","n. 出勤","Attendance at lectures is checked every week.",1],["assess","əˈses","v. 评估","Students are assessed by exams and coursework.",1],["evaluate","ɪˈvæljueɪt","v. 评价","We need to evaluate the results carefully.",1],["plagiarism","ˈpleɪdʒərɪzəm","n. 抄袭","Plagiarism is taken very seriously at university.",1],["campus","ˈkæmpəs","n. 校园","Most first-year students live on campus.",1],["dormitory","ˈdɔːmətri","n. 宿舍","I share a dormitory with three other students.",1],["semester","sɪˈmestə(r)","n. 学期","The new semester begins in September.",1],["reference","ˈrefrəns","n. 参考；推荐信","Always include a list of references at the end.",1],["concentrate","ˈkɒnsntreɪt","v. 集中注意力","It's hard to concentrate when it's noisy.",1],["memorise","ˈmeməraɪz","v. 记住；背诵","I try to memorise ten new words a day.",1],["distance learning","ˌdɪstəns ˈlɜːnɪŋ","n. 远程学习","Distance learning has become more popular.",1],["technology","tekˈnɒlədʒi","n. 技术；科技","Technology has changed the way we communicate.",2],["innovation","ˌɪnəˈveɪʃn","n. 创新","The company is known for innovation.",2],["invention","ɪnˈvenʃn","n. 发明","The printing press was an important invention.",2],["device","dɪˈvaɪs","n. 设备；装置","Mobile devices are now used in classrooms.",2],["digital","ˈdɪdʒɪtl","adj. 数字的","Most photos today are digital.",2],["artificial intelligence","ˌɑːtɪfɪʃl ɪnˈtelɪdʒəns","n. 人工智能","Artificial intelligence may replace some jobs.",2],["automation","ˌɔːtəˈmeɪʃn","n. 自动化","Automation has reduced the need for factory workers.",2],["robot","ˈrəʊbɒt","n. 机器人","Robots are used to build cars.",2],["software","ˈsɒftweə(r)","n. 软件","You need to update the software regularly.",2],["online","ˌɒnˈlaɪn","adj./adv. 在线的","More people now shop online.",2],["access","ˈækses","n./v. 使用权；访问","Not everyone has access to the internet.",2],["data","ˈdeɪtə","n. 数据","The data shows a steady increase.",2],["privacy","ˈprɪvəsi","n. 隐私","Social media raises concerns about privacy.",2],["security","sɪˈkjʊərəti","n. 安全","Online security is a growing concern.",2],["virtual","ˈvɜːtʃuəl","adj. 虚拟的","Virtual meetings save time and travel.",2],["network","ˈnetwɜːk","n. 网络","The phone network was down for an hour.",2],["communicate","kəˈmjuːnɪkeɪt","v. 交流","We communicate mainly by email.",2],["efficient","ɪˈfɪʃnt","adj. 高效的","The new system is more efficient.",2],["convenient","kənˈviːniənt","adj. 方便的","Online banking is very convenient.",2],["obsolete","ˈɒbsəliːt","adj. 过时的；淘汰的","These machines will soon be obsolete.",2],["breakthrough","ˈbreɪkθruː","n. 突破","Scientists have made a breakthrough in cancer research.",2],["experiment","ɪkˈsperɪmənt","n. 实验","They carried out an experiment on mice.",2],["laboratory","ləˈbɒrətri","n. 实验室","The samples were sent to a laboratory.",2],["engineer","ˌendʒɪˈnɪə(r)","n. 工程师","She works as a software engineer.",2],["satellite","ˈsætəlaɪt","n. 卫星","The signal is sent by satellite.",2],["gadget","ˈɡædʒɪt","n. 小装置","He loves the latest gadgets.",2],["addicted","əˈdɪktɪd","adj. 上瘾的","Many teenagers are addicted to their phones.",2],["screen time","ˈskriːn taɪm","n. 屏幕使用时间","Parents worry about children's screen time.",2],["platform","ˈplætfɔːm","n. 平台；站台","The video was shared on several platforms.",2],["cyber","ˈsaɪbə(r)","adj. 网络的","Cyber crime is increasing every year.",2],["upgrade","ˌʌpˈɡreɪd","v./n. 升级","I need to upgrade my computer.",2],["function","ˈfʌŋkʃn","n. 功能 v. 运转","This button has several functions.",2],["sophisticated","səˈfɪstɪkeɪtɪd","adj. 复杂的；精密的","The equipment is very sophisticated.",2],["health","helθ","n. 健康","Regular exercise is good for your health.",3],["diet","ˈdaɪət","n. 饮食","A balanced diet includes fruit and vegetables.",3],["nutrition","njuˈtrɪʃn","n. 营养","Good nutrition is vital for children.",3],["obesity","əʊˈbiːsəti","n. 肥胖","Childhood obesity is a growing problem.",3],["exercise","ˈeksəsaɪz","n./v. 锻炼","I try to exercise three times a week.",3],["fitness","ˈfɪtnəs","n. 健康；体能","He joined a gym to improve his fitness.",3],["disease","dɪˈziːz","n. 疾病","Heart disease is a leading cause of death.",3],["illness","ˈɪlnəs","n. 病","She recovered quickly from her illness.",3],["symptom","ˈsɪmptəm","n. 症状","A high temperature is a common symptom of flu.",3],["treatment","ˈtriːtmənt","n. 治疗","The treatment usually takes six weeks.",3],["medicine","ˈmedsn","n. 药；医学","Take this medicine twice a day.",3],["prescription","prɪˈskrɪpʃn","n. 处方","You need a prescription for these tablets.",3],["surgery","ˈsɜːdʒəri","n. 手术；诊所","He needed surgery on his knee.",3],["patient","ˈpeɪʃnt","n. 病人 adj. 耐心的","The doctor sees about thirty patients a day.",3],["infection","ɪnˈfekʃn","n. 感染","Wash your hands to prevent infection.",3],["vaccine","ˈvæksiːn","n. 疫苗","The vaccine protects against the virus.",3],["immune","ɪˈmjuːn","adj. 免疫的","Sleep helps your immune system.",3],["chronic","ˈkrɒnɪk","adj. 慢性的","He suffers from chronic back pain.",3],["mental health","ˌmentl ˈhelθ","n. 心理健康","Stress can affect your mental health.",3],["stress","stres","n. 压力","Exams cause a lot of stress.",3],["anxiety","æŋˈzaɪəti","n. 焦虑","Many students feel anxiety before tests.",3],["recover","rɪˈkʌvə(r)","v. 恢复","It took her a month to recover.",3],["prevention","prɪˈvenʃn","n. 预防","Prevention is better than cure.",3],["life expectancy","ˈlaɪf ɪkˌspektənsi","n. 预期寿命","Life expectancy has risen in most countries.",3],["hygiene","ˈhaɪdʒiːn","n. 卫生","Good hygiene stops diseases spreading.",3],["injury","ˈɪndʒəri","n. 受伤","He missed the match because of an injury.",3],["pharmacy","ˈfɑːməsi","n. 药店","You can buy this at any pharmacy.",3],["clinic","ˈklɪnɪk","n. 诊所","She works at a local clinic.",3],["allergy","ˈælədʒi","n. 过敏","I have an allergy to nuts.",3],["sedentary","ˈsedntri","adj. 久坐的","A sedentary lifestyle is bad for your health.",3],["calorie","ˈkæləri","n. 卡路里","This drink contains a lot of calories.",3],["protein","ˈprəʊtiːn","n. 蛋白质","Eggs are a good source of protein.",3],["vitamin","ˈvɪtəmɪn","n. 维生素","Oranges are rich in vitamin C.",3],["employment","ɪmˈplɔɪmənt","n. 就业；工作","The new factory will provide employment for 500 people.",4],["unemployment","ˌʌnɪmˈplɔɪmənt","n. 失业","Unemployment rose last year.",4],["career","kəˈrɪə(r)","n. 职业生涯","She wants a career in law.",4],["occupation","ˌɒkjuˈpeɪʃn","n. 职业","Please write your name and occupation.",4],["profession","prəˈfeʃn","n. 专业；行业","Teaching is a respected profession.",4],["salary","ˈsæləri","n. 薪水","He earns a good salary.",4],["income","ˈɪnkʌm","n. 收入","Families on low incomes need more support.",4],["colleague","ˈkɒliːɡ","n. 同事","I had lunch with a colleague.",4],["employer","ɪmˈplɔɪə(r)","n. 雇主","Employers value good communication skills.",4],["employee","ɪmˈplɔɪiː","n. 雇员","The company has over 2,000 employees.",4],["promotion","prəˈməʊʃn","n. 晋升；促销","She got a promotion last month.",4],["interview","ˈɪntəvjuː","n./v. 面试；采访","I have a job interview tomorrow.",4],["experience","ɪkˈspɪəriəns","n. 经验；经历","Do you have any experience of teaching?",4],["retire","rɪˈtaɪə(r)","v. 退休","My father retired at sixty.",4],["part-time","ˌpɑːt ˈtaɪm","adj. 兼职的","She has a part-time job in a café.",4],["flexible","ˈfleksəbl","adj. 灵活的","Flexible working hours suit many parents.",4],["workload","ˈwɜːkləʊd","n. 工作量","Teachers complain about their heavy workload.",4],["economy","ɪˈkɒnəmi","n. 经济","Tourism is important to the local economy.",4],["economic","ˌiːkəˈnɒmɪk","adj. 经济的","The country is in an economic crisis.",4],["finance","ˈfaɪnæns","n. 财务；金融","He works in finance.",4],["budget","ˈbʌdʒɪt","n. 预算","We need to stay within budget.",4],["investment","ɪnˈvestmənt","n. 投资","The government plans more investment in schools.",4],["profit","ˈprɒfɪt","n. 利润","The company made a profit of two million.",4],["loss","lɒs","n. 损失；亏损","The shop made a loss last year.",4],["revenue","ˈrevənjuː","n. 收入；税收","Advertising brings in a lot of revenue.",4],["tax","tæks","n. 税","Taxes on cigarettes have gone up.",4],["inflation","ɪnˈfleɪʃn","n. 通货膨胀","Inflation makes everyday goods more expensive.",4],["industry","ˈɪndəstri","n. 工业；行业","The car industry employs many people.",4],["manufacture","ˌmænjuˈfæktʃə(r)","v. 制造","The company manufactures parts for cars.",4],["trade","treɪd","n. 贸易","International trade has grown rapidly.",4],["export","ˈekspɔːt","n. 出口","Tea is the country's main export.",4],["import","ˈɪmpɔːt","n. 进口","The country relies on food imports.",4],["consumer","kənˈsjuːmə(r)","n. 消费者","Consumers are spending less this year.",4],["competition","ˌkɒmpəˈtɪʃn","n. 竞争；比赛","There is strong competition for jobs.",4],["poverty","ˈpɒvəti","n. 贫困","Millions of people still live in poverty.",4],["wealth","welθ","n. 财富","The gap in wealth between rich and poor is growing.",4],["society","səˈsaɪəti","n. 社会","Older people play an important role in society.",5],["government","ˈɡʌvənmənt","n. 政府","The government has promised to cut taxes.",5],["policy","ˈpɒləsi","n. 政策","The new policy will help small businesses.",5],["authority","ɔːˈθɒrəti","n. 当局；权力","Local authorities are responsible for schools.",5],["citizen","ˈsɪtɪzn","n. 公民；市民","Every citizen has the right to vote.",5],["community","kəˈmjuːnəti","n. 社区；群体","The library is the heart of the community.",5],["public","ˈpʌblɪk","adj. 公共的 n. 公众","Smoking is banned in public places.",5],["welfare","ˈwelfeə(r)","n. 福利","The state spends a lot on welfare.",5],["benefit","ˈbenɪfɪt","n. 好处；福利 v. 有益于","The new park will benefit the whole town.",5],["responsibility","rɪˌspɒnsəˈbɪləti","n. 责任","Parents have a responsibility to educate their children.",5],["equality","iˈkwɒləti","n. 平等","They campaign for equality between men and women.",5],["discrimination","dɪˌskrɪmɪˈneɪʃn","n. 歧视","Discrimination at work is against the law.",5],["volunteer","ˌvɒlənˈtɪə(r)","n. 志愿者 v. 自愿","She volunteers at a hospital at weekends.",5],["charity","ˈtʃærəti","n. 慈善；慈善机构","They raised money for charity.",5],["elderly","ˈeldəli","adj. 年老的","The number of elderly people is increasing.",5],["generation","ˌdʒenəˈreɪʃn","n. 一代人","The younger generation uses technology differently.",5],["population","ˌpɒpjuˈleɪʃn","n. 人口","The city has a population of ten million.",5],["ageing","ˈeɪdʒɪŋ","adj. 老龄化的","Many countries face an ageing population.",5],["birth rate","ˈbɜːθ reɪt","n. 出生率","The birth rate has fallen sharply.",5],["immigrant","ˈɪmɪɡrənt","n. 移民（迁入者）","Many immigrants came to the city to find work.",5],["tradition","trəˈdɪʃn","n. 传统","It is a family tradition to eat together at New Year.",5],["custom","ˈkʌstəm","n. 习俗","Local customs vary from region to region.",5],["regulation","ˌreɡjuˈleɪʃn","n. 规定；管理","New safety regulations came into force.",5],["ban","bæn","v./n. 禁止","The city banned cars from the centre.",5],["fund","fʌnd","n. 资金 v. 资助","The project is funded by the government.",5],["priority","praɪˈɒrəti","n. 优先事项","Education should be a priority.",5],["issue","ˈɪʃuː","n. 问题；议题","Housing is a major issue in big cities.",5],["impact","ˈɪmpækt","n. 影响","Tourism has a big impact on the environment.",5],["individual","ˌɪndɪˈvɪdʒuəl","n. 个人 adj. 个别的","Each individual has different needs.",5],["urban","ˈɜːbən","adj. 城市的","Urban areas are often crowded.",6],["rural","ˈrʊərəl","adj. 农村的","Many young people leave rural areas.",6],["suburb","ˈsʌbɜːb","n. 郊区","They live in a quiet suburb.",6],["infrastructure","ˈɪnfrəstrʌktʃə(r)","n. 基础设施","The city needs better infrastructure.",6],["transport","ˈtrænspɔːt","n. 交通；运输","Public transport is cheap and reliable here.",6],["traffic congestion","ˈtræfɪk kənˌdʒestʃən","n. 交通拥堵","Traffic congestion is worst in the morning.",6],["commute","kəˈmjuːt","v. 通勤 n. 通勤路程","I commute to work by train.",6],["pedestrian","pəˈdestriən","n. 行人","This street is only for pedestrians.",6],["vehicle","ˈviːəkl","n. 车辆","No vehicles are allowed in the park.",6],["accommodation","əˌkɒməˈdeɪʃn","n. 住处","Accommodation in London is very expensive.",6],["housing","ˈhaʊzɪŋ","n. 住房","There is a shortage of affordable housing.",6],["rent","rent","n. 租金 v. 租","The rent is due on the first of the month.",6],["landlord","ˈlændlɔːd","n. 房东","Our landlord fixed the heating quickly.",6],["tenant","ˈtenənt","n. 租户","The tenants complained about the noise.",6],["residential","ˌrezɪˈdenʃl","adj. 住宅的","This is a residential area.",6],["facility","fəˈsɪləti","n. 设施","The hotel has excellent sports facilities.",6],["construction","kənˈstrʌkʃn","n. 建设；施工","The bridge is still under construction.",6],["skyscraper","ˈskaɪskreɪpə(r)","n. 摩天大楼","The city is famous for its skyscrapers.",6],["crowded","ˈkraʊdɪd","adj. 拥挤的","The train was very crowded.",6],["noise","nɔɪz","n. 噪音","Noise from the road kept me awake.",6],["underground","ˈʌndəɡraʊnd","n. 地铁","It's quicker to take the underground.",6],["route","ruːt","n. 路线","Which is the fastest route to the airport?",6],["destination","ˌdestɪˈneɪʃn","n. 目的地","Paris is a popular tourist destination.",6],["journey","ˈdʒɜːni","n. 旅程","The journey takes about two hours.",6],["fare","feə(r)","n. 车费","Bus fares have gone up again.",6],["timetable","ˈtaɪmteɪbl","n. 时刻表","Check the train timetable before you leave.",6],["platform","ˈplætfɔːm","n. 站台","The train leaves from platform 4.",6],["cycle lane","ˈsaɪkl leɪn","n. 自行车道","The city has built new cycle lanes.",6],["parking","ˈpɑːkɪŋ","n. 停车","Parking in the city centre is expensive.",6],["culture","ˈkʌltʃə(r)","n. 文化","I want to learn more about Chinese culture.",7],["heritage","ˈherɪtɪdʒ","n. 遗产；传统","The old town is part of our cultural heritage.",7],["museum","mjuˈziːəm","n. 博物馆","The museum is free on Sundays.",7],["gallery","ˈɡæləri","n. 美术馆","We visited an art gallery.",7],["exhibition","ˌeksɪˈbɪʃn","n. 展览","There is a photography exhibition this month.",7],["architecture","ˈɑːkɪtektʃə(r)","n. 建筑（学）","The city is famous for its modern architecture.",7],["monument","ˈmɒnjumənt","n. 纪念碑；遗迹","The monument was built in 1850.",7],["festival","ˈfestɪvl","n. 节日","The Spring Festival is the most important festival in China.",7],["celebrate","ˈselɪbreɪt","v. 庆祝","We celebrated his birthday at a restaurant.",7],["performance","pəˈfɔːməns","n. 表演；表现","The performance lasted two hours.",7],["audience","ˈɔːdiəns","n. 观众","The audience clapped loudly.",7],["creative","kriˈeɪtɪv","adj. 有创造力的","Art lessons help children be more creative.",7],["literature","ˈlɪtrətʃə(r)","n. 文学","She studied English literature at university.",7],["novel","ˈnɒvl","n. 小说 adj. 新颖的","I'm reading a novel by a Chinese author.",7],["tourism","ˈtʊərɪzəm","n. 旅游业","Tourism brings money to the region.",7],["tourist","ˈtʊərɪst","n. 游客","The beach is full of tourists in summer.",7],["attraction","əˈtrækʃn","n. 景点；吸引力","The castle is the main tourist attraction.",7],["souvenir","ˌsuːvəˈnɪə(r)","n. 纪念品","I bought some souvenirs for my friends.",7],["sightseeing","ˈsaɪtsiːɪŋ","n. 观光","We spent the day sightseeing.",7],["itinerary","aɪˈtɪnərəri","n. 行程","Our itinerary includes three cities.",7],["reservation","ˌrezəˈveɪʃn","n. 预订","I made a reservation for two people.",7],["local","ˈləʊkl","adj. 当地的","Try the local food.",7],["traditional","trəˈdɪʃənl","adj. 传统的","They wore traditional clothes.",7],["craft","krɑːft","n. 手艺；工艺品","The market sells local crafts.",7],["leisure","ˈleʒə(r)","n. 闲暇","What do you do in your leisure time?",7],["hobby","ˈhɒbi","n. 爱好","My hobby is taking photos.",7],["entertainment","ˌentəˈteɪnmənt","n. 娱乐","Television is the main form of entertainment for many.",7],["media","ˈmiːdiə","n. 媒体","The media has a strong influence on public opinion.",8],["social media","ˌsəʊʃl ˈmiːdiə","n. 社交媒体","She spends hours on social media every day.",8],["advertisement","ədˈvɜːtɪsmənt","n. 广告","There are too many advertisements on TV.",8],["advertising","ˈædvətaɪzɪŋ","n. 广告业","Advertising aimed at children should be controlled.",8],["commercial","kəˈmɜːʃl","adj. 商业的 n. 广告片","The film was a commercial success.",8],["brand","brænd","n. 品牌","Which brand of phone do you use?",8],["promote","prəˈməʊt","v. 推广；促进","The campaign promotes healthy eating.",8],["influence","ˈɪnfluəns","n./v. 影响","Parents have a big influence on their children.",8],["journalist","ˈdʒɜːnəlɪst","n. 记者","She works as a journalist for a newspaper.",8],["broadcast","ˈbrɔːdkɑːst","v./n. 广播；播出","The match will be broadcast live.",8],["headline","ˈhedlaɪn","n. 标题；头条","The story made the headlines.",8],["article","ˈɑːtɪkl","n. 文章","I read an interesting article about sleep.",8],["information","ˌɪnfəˈmeɪʃn","n. 信息","The website gives useful information.",8],["reliable","rɪˈlaɪəbl","adj. 可靠的","Is this information reliable?",8],["mislead","ˌmɪsˈliːd","v. 误导","Some adverts mislead consumers.",8],["celebrity","səˈlebrəti","n. 名人","Many celebrities appear in adverts.",8],["audience","ˈɔːdiəns","n. 受众","The programme has a young audience.",8],["censorship","ˈsensəʃɪp","n. 审查制度","There are strict rules on censorship.",8],["publish","ˈpʌblɪʃ","v. 出版；发表","The book was published in 2020.",8],["documentary","ˌdɒkjuˈmentri","n. 纪录片","I watched a documentary about whales.",8],["crime","kraɪm","n. 犯罪","Crime rates have fallen in recent years.",9],["criminal","ˈkrɪmɪnl","n. 罪犯 adj. 犯罪的","The criminal was sent to prison.",9],["law","lɔː","n. 法律","It is against the law to drive without a licence.",9],["legal","ˈliːɡl","adj. 合法的；法律的","Is it legal to park here?",9],["illegal","ɪˈliːɡl","adj. 违法的","It is illegal to sell alcohol to children.",9],["punishment","ˈpʌnɪʃmənt","n. 惩罚","The punishment should fit the crime.",9],["prison","ˈprɪzn","n. 监狱","He spent five years in prison.",9],["police","pəˈliːs","n. 警察","The police arrived quickly.",9],["court","kɔːt","n. 法庭","The case will go to court next month.",9],["judge","dʒʌdʒ","n. 法官 v. 判断","The judge listened to both sides.",9],["evidence","ˈevɪdəns","n. 证据","There is no evidence that he was involved.",9],["witness","ˈwɪtnəs","n. 证人；目击者","A witness saw the accident.",9],["offence","əˈfens","n. 违法行为","Drink-driving is a serious offence.",9],["fine","faɪn","n. 罚款 v. 罚款","He got a fine for speeding.",9],["violence","ˈvaɪələns","n. 暴力","There is too much violence in films.",9],["deter","dɪˈtɜː(r)","v. 威慑；阻止","Cameras help to deter thieves.",9],["rehabilitation","ˌriːəˌbɪlɪˈteɪʃn","n. 改造；康复","Prisons should focus on rehabilitation.",9],["juvenile","ˈdʒuːvənaɪl","adj. 青少年的","Juvenile crime is a growing concern.",9],["security camera","sɪˈkjʊərəti ˌkæmrə","n. 监控摄像头","Security cameras were installed in the street.",9],["family","ˈfæməli","n. 家庭","I come from a big family.",10],["relationship","rɪˈleɪʃnʃɪp","n. 关系","He has a good relationship with his parents.",10],["parent","ˈpeərənt","n. 父亲或母亲","Parents should spend time with their children.",10],["sibling","ˈsɪblɪŋ","n. 兄弟姐妹","Do you have any siblings?",10],["childhood","ˈtʃaɪldhʊd","n. 童年","I had a happy childhood.",10],["adolescent","ˌædəˈlesnt","n. 青少年","Adolescents need plenty of sleep.",10],["teenager","ˈtiːneɪdʒə(r)","n. 青少年","Teenagers often want more independence.",10],["independent","ˌɪndɪˈpendənt","adj. 独立的","Living abroad made her more independent.",10],["behaviour","bɪˈheɪvjə(r)","n. 行为","Good behaviour should be praised.",10],["personality","ˌpɜːsəˈnæləti","n. 个性","She has a friendly personality.",10],["character","ˈkærəktə(r)","n. 性格；角色","Sport helps to build character.",10],["confident","ˈkɒnfɪdənt","adj. 自信的","I feel more confident about the exam now.",10],["patient","ˈpeɪʃnt","adj. 耐心的","Teachers need to be patient.",10],["responsible","rɪˈspɒnsəbl","adj. 负责任的","Children should be responsible for their own things.",10],["support","səˈpɔːt","v./n. 支持","My family has always supported me.",10],["communicate","kəˈmjuːnɪkeɪt","v. 沟通","Good friends communicate openly.",10],["peer pressure","ˈpɪə ˌpreʃə(r)","n. 同伴压力","Teenagers often give in to peer pressure.",10],["role model","ˈrəʊl ˌmɒdl","n. 榜样","Parents should be good role models.",10],["upbringing","ˈʌpbrɪŋɪŋ","n. 养育；教养","He had a strict upbringing.",10],["neighbour","ˈneɪbə(r)","n. 邻居","Our neighbours are very friendly.",10],["friendship","ˈfrendʃɪp","n. 友谊","Their friendship lasted for years.",10],["lifestyle","ˈlaɪfstaɪl","n. 生活方式","City life is a busy lifestyle.",10],["routine","ruːˈtiːn","n. 日常；惯例","Exercise is part of my daily routine.",10],["advantage","ədˈvɑːntɪdʒ","n. 优点；优势","One advantage of living in a city is good transport.",11],["disadvantage","ˌdɪsədˈvɑːntɪdʒ","n. 缺点","The main disadvantage is the cost.",11],["argue","ˈɑːɡjuː","v. 主张；争论","Some people argue that homework is unnecessary.",11],["claim","kleɪm","v. 声称 n. 说法","Scientists claim the drug is safe.",11],["believe","bɪˈliːv","v. 相信；认为","I believe that education is the key to success.",11],["opinion","əˈpɪnjən","n. 观点","In my opinion, both views have some merit.",11],["perspective","pəˈspektɪv","n. 视角；观点","Travel gives you a new perspective.",11],["approach","əˈprəʊtʃ","n. 方法 v. 接近；处理","We need a new approach to the problem.",11],["solution","səˈluːʃn","n. 解决办法","There is no easy solution.",11],["tackle","ˈtækl","v. 处理；应对","The government must tackle unemployment.",11],["address","əˈdres","v. 处理（问题）","We need to address the root causes.",11],["significant","sɪɡˈnɪfɪkənt","adj. 显著的；重要的","There was a significant rise in prices.",11],["considerable","kənˈsɪdərəbl","adj. 相当大的","It took a considerable amount of time.",11],["crucial","ˈkruːʃl","adj. 至关重要的","Sleep is crucial for good health.",11],["essential","ɪˈsenʃl","adj. 必要的","Water is essential for life.",11],["inevitable","ɪnˈevɪtəbl","adj. 不可避免的","Change is inevitable.",11],["contribute","kənˈtrɪbjuːt","v. 贡献；促成","Many factors contributed to the problem.",11],["affect","əˈfekt","v. 影响","Lack of sleep affects concentration.",11],["cause","kɔːz","n. 原因 v. 导致","Smoking can cause serious illness.",11],["consequence","ˈkɒnsɪkwəns","n. 后果","The decision had serious consequences.",11],["result in","rɪˈzʌlt ɪn","phr. 导致","The storm resulted in power cuts.",11],["lead to","ˈliːd tə","phr. 导致","Poor diet can lead to health problems.",11],["factor","ˈfæktə(r)","n. 因素","Cost is an important factor.",11],["aspect","ˈæspekt","n. 方面","Money affects every aspect of life.",11],["trend","trend","n. 趋势","There is a trend towards smaller families.",11],["increase","ɪnˈkriːs","v./n. 增加","The number of students increased by 10%.",11],["decrease","dɪˈkriːs","v./n. 减少","Sales decreased last year.",11],["fluctuate","ˈflʌktʃueɪt","v. 波动","Prices fluctuated throughout the year.",11],["steady","ˈstedi","adj. 稳定的","There was a steady rise in temperature.",11],["dramatic","drəˈmætɪk","adj. 急剧的","There was a dramatic fall in sales.",11],["gradual","ˈɡrædʒuəl","adj. 逐渐的","We saw a gradual improvement.",11],["proportion","prəˈpɔːʃn","n. 比例","A large proportion of students live at home.",11],["majority","məˈdʒɒrəti","n. 大多数","The majority of people agreed.",11],["minority","maɪˈnɒrəti","n. 少数","Only a minority of students failed.",11],["approximately","əˈprɒksɪmətli","adv. 大约","Approximately half of the class passed.",11],["compare","kəmˈpeə(r)","v. 比较","Compared with last year, sales are higher.",11],["contrast","ˈkɒntrɑːst","n. 对比","In contrast, rural areas grew slowly.",11],["whereas","ˌweərˈæz","conj. 然而；反之","Some like tea, whereas others prefer coffee.",11],["however","haʊˈevə(r)","adv. 然而","The idea is good. However, it is expensive.",11],["furthermore","ˌfɜːðəˈmɔː(r)","adv. 此外","Furthermore, it saves time.",11],["moreover","mɔːrˈəʊvə(r)","adv. 而且","The flat is small; moreover, it is noisy.",11],["therefore","ˈðeəfɔː(r)","adv. 因此","He was ill and therefore missed the exam.",11],["consequently","ˈkɒnsɪkwəntli","adv. 因此","It rained; consequently, the game was cancelled.",11],["nevertheless","ˌnevəðəˈles","adv. 尽管如此","It was hard. Nevertheless, we finished.",11],["in conclusion","ɪn kənˈkluːʒn","phr. 总之","In conclusion, the benefits outweigh the drawbacks.",11],["outweigh","ˌaʊtˈweɪ","v. 超过；比…重要","The advantages outweigh the disadvantages.",11],["beneficial","ˌbenɪˈfɪʃl","adj. 有益的","Exercise is beneficial to health.",11],["detrimental","ˌdetrɪˈmentl","adj. 有害的","Too much screen time is detrimental to sleep.",11],["encourage","ɪnˈkʌrɪdʒ","v. 鼓励","Schools should encourage students to read.",11],["discourage","dɪsˈkʌrɪdʒ","v. 劝阻","High prices discourage people from buying.",11],["ensure","ɪnˈʃɔː(r)","v. 确保","We must ensure that everyone is safe.",11],["provide","prəˈvaɪd","v. 提供","The school provides free lunches.",11],["require","rɪˈkwaɪə(r)","v. 需要；要求","The job requires experience.",11],["achieve","əˈtʃiːv","v. 实现；达到","She achieved her goal of 7.5.",11],["improve","ɪmˈpruːv","v. 改善；提高","Practice will improve your listening.",11],["develop","dɪˈveləp","v. 发展；培养","Reading helps to develop vocabulary.",11],["maintain","meɪnˈteɪn","v. 维持；保持","It is hard to maintain a healthy weight.",11],["attitude","ˈætɪtjuːd","n. 态度","He has a positive attitude to work.",11],["phenomenon","fəˈnɒmɪnən","n. 现象","This is a common phenomenon in big cities.",11],["appointment","əˈpɔɪntmənt","n. 预约","I'd like to make an appointment for Tuesday.",12],["application form","ˌæplɪˈkeɪʃn fɔːm","n. 申请表","Please fill in this application form.",12],["surname","ˈsɜːneɪm","n. 姓","Can you spell your surname, please?",12],["postcode","ˈpəʊstkəʊd","n. 邮政编码","What's your postcode?",12],["address","əˈdres","n. 地址","Could I have your address, please?",12],["deposit","dɪˈpɒzɪt","n. 押金；定金","You need to pay a deposit of fifty pounds.",12],["discount","ˈdɪskaʊnt","n. 折扣","Students get a ten percent discount.",12],["receipt","rɪˈsiːt","n. 收据","Keep the receipt in case you need to return it.",12],["membership","ˈmembəʃɪp","n. 会员资格","Annual membership costs eighty pounds.",12],["registration","ˌredʒɪˈstreɪʃn","n. 登记；注册","Registration closes on Friday.",12],["insurance","ɪnˈʃʊərəns","n. 保险","Travel insurance is included.",12],["schedule","ˈʃedjuːl","n. 日程表","The schedule has changed.",12],["available","əˈveɪləbl","adj. 可获得的；有空的","Is the room available next week?",12],["equipment","ɪˈkwɪpmənt","n. 设备","All equipment is provided.",12],["questionnaire","ˌkwestʃəˈneə(r)","n. 问卷","Please complete the questionnaire.",12],["survey","ˈsɜːveɪ","n. 调查","We carried out a survey of 200 students.",12],["temporary","ˈtemprəri","adj. 临时的","He found a temporary job.",12],["permanent","ˈpɜːmənənt","adj. 永久的","She is looking for a permanent position.",12],["recommend","ˌrekəˈmend","v. 推荐","I recommend booking early.",12],["entrance","ˈentrəns","n. 入口","Meet me at the main entrance.",12],["reception","rɪˈsepʃn","n. 前台；接待处","Please leave the key at reception.",12],["canteen","kænˈtiːn","n. 食堂","Lunch is served in the canteen.",12],["corridor","ˈkɒrɪdɔː(r)","n. 走廊","The office is at the end of the corridor.",12],["opposite","ˈɒpəzɪt","prep. 在…对面","The bank is opposite the post office.",12],["roundabout","ˈraʊndəbaʊt","n. 环岛","Turn left at the roundabout.",12],["brochure","ˈbrəʊʃə(r)","n. 宣传册","Take a brochure from the desk.",12],["catalogue","ˈkætəlɒɡ","n. 目录","Order online or from our catalogue.",12],["souvenir shop","ˌsuːvəˈnɪə ʃɒp","n. 纪念品店","The souvenir shop is near the exit.",12],["Wednesday","ˈwenzdeɪ","n. 星期三","The class meets every Wednesday.",12],["February","ˈfebruəri","n. 二月","The course starts in February.",12],["Thursday","ˈθɜːzdeɪ","n. 星期四","The library closes early on Thursday.",12]]};
+var LUNAR_NONE = 0;
+var KEY = "danci.v1";
+var DAY = 86400000;
+var $ = function(id){ return document.getElementById(id); };
+function esc(s){ return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];}); }
+function toast(t,ms){ var e=$("toast"); e.textContent=t; e.style.display="block"; clearTimeout(toast.t); toast.t=setTimeout(function(){e.style.display="none";},ms||1800); }
+function dayNum(d){ d=d||new Date(); return Math.floor((d.getTime()-d.getTimezoneOffset()*60000)/DAY); }
+function dayStr(n){ var d=new Date(n*DAY); return d.getUTCFullYear()+"-"+("0"+(d.getUTCMonth()+1)).slice(-2)+"-"+("0"+d.getUTCDate()).slice(-2); }
+function shuffle(a){ for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
+
+// ---------- 数据 ----------
+var db;
+function load(){
+  try{ db = JSON.parse(localStorage.getItem(KEY)||"null"); }catch(e){ db=null; }
+  if(!db) db = {};
+  db.set = db.set || {};
+  var s=db.set;
+  if(!s.accent) s.accent="en-GB";
+  if(!s.rate) s.rate=0.9;
+  if(s.auto==null) s.auto=true;
+  if(!s.cap) s.cap=50;
+  if(!s.batch) s.batch=10;
+  db.prog = db.prog || {};
+  db.custom = db.custom || [];
+  db.groups = db.groups || ["我的生词"];
+  db.log = db.log || {};
+  if(!db.nextId) db.nextId=1;
+  if(!db.created) db.created=Date.now();
+}
+function persist(){
+  try{ localStorage.setItem(KEY, JSON.stringify(db)); return true; }
+  catch(e){ toast("保存失败：手机空间不足？",3000); return false; }
+}
+load();
+
+// 所有词：内置 + 自己加的
+var TOPICS = BUILTIN.t;
+var WORDS = {}; var BUILT_IDS=[];
+BUILTIN.w.forEach(function(a,i){ var id="b"+i; WORDS[id]={id:id,w:a[0],ipa:a[1],cn:a[2],ex:a[3],g:"t"+a[4]}; BUILT_IDS.push(id); });
+function rebuildCustom(){
+  Object.keys(WORDS).forEach(function(k){ if(k[0]==="c") delete WORDS[k]; });
+  db.custom.forEach(function(c){ WORDS[c.id]={id:c.id,w:c.w,ipa:c.ipa||"",cn:c.cn,ex:c.ex||"",g:"m:"+c.g,custom:true}; });
+}
+rebuildCustom();
+function groupName(g){ return g[0]==="t" ? TOPICS[+g.slice(1)] : g.slice(2); }
+function wordsIn(g){
+  if(g==="all") return BUILT_IDS.concat(db.custom.map(function(c){return c.id;}));
+  if(g[0]==="t") return BUILT_IDS.filter(function(id){ return WORDS[id].g===g; });
+  return db.custom.filter(function(c){ return "m:"+c.g===g; }).map(function(c){return c.id;});
+}
+
+// ---------- 记忆曲线 ----------
+// p: {n:复习次数, iv:间隔天数, ef:难度系数, due:到期日, lap:忘记次数, sw:拼错次数, skip:太简单, last:上次}
+function status(id){
+  var p=db.prog[id];
+  if(!p) return "";
+  if(p.skip) return "e";
+  if((p.lap||0)+(p.sw||0)>=2 && p.iv<21) return "x";
+  if(p.iv>=21) return "m";
+  return "l";
+}
+function grade(id,q){
+  var today=dayNum(), p=db.prog[id];
+  var isNew=!p;
+  if(!p) p=db.prog[id]={n:0,iv:0,ef:2.5,due:today,lap:0,first:today};
+  delete p.skip;
+  if(q===0){ p.lap=(p.lap||0)+1; p.n=0; p.iv=0; p.ef=Math.max(1.3,p.ef-0.2); p.due=today; }
+  else if(q===1){ p.iv = p.n===0?1:Math.max(1,Math.round(p.iv*1.2)); p.ef=Math.max(1.3,p.ef-0.15); p.n++; p.due=today+p.iv; }
+  else if(q===2){ p.iv = p.n===0?1:(p.n===1?3:Math.round(p.iv*p.ef)); p.n++; p.due=today+p.iv; }
+  else if(q===3){ p.skip=1; p.iv=Math.max(p.iv,30); p.n++; p.due=today+p.iv; }
+  p.last=today;
+  var L=logDay();
+  if(isNew) L.nw++; else L.rv++;
+  if(q===0) L.ng++; else L.ok++;
+  persist();
+}
+function logDay(){ var k=dayStr(dayNum()); var L=db.log[k]; if(!L) L=db.log[k]={nw:0,rv:0,ok:0,ng:0,sp:0,spok:0}; return L; }
+function dueList(){
+  var today=dayNum(), out=[];
+  Object.keys(db.prog).forEach(function(id){ var p=db.prog[id]; if(WORDS[id] && !p.skip && p.due<=today) out.push(id); });
+  out.sort(function(a,b){ return db.prog[a].due-db.prog[b].due; });
+  return out;
+}
+
+// ---------- 发音 ----------
+var voices=[];
+function loadVoices(){ try{ voices=speechSynthesis.getVoices()||[]; }catch(e){} }
+if(window.speechSynthesis){ loadVoices(); speechSynthesis.onvoiceschanged=loadVoices; }
+function pickVoice(){
+  var lang=db.set.accent, same=voices.filter(function(v){ return (v.lang||"").replace("_","-")===lang; });
+  var pref = lang==="en-GB" ? /Daniel|Arthur|Kate|Serena/ : /Samantha|Alex|Ava|Allison/;
+  return same.filter(function(v){ return pref.test(v.name); })[0] || same[0] || voices.filter(function(v){ return /^en/.test(v.lang); })[0] || null;
+}
+function speak(text,slow){
+  if(!window.speechSynthesis){ toast("这台设备不支持朗读"); return; }
+  try{
+    speechSynthesis.cancel();
+    var u=new SpeechSynthesisUtterance(text);
+    u.lang=db.set.accent; var v=pickVoice(); if(v) u.voice=v;
+    u.rate = slow ? 0.6 : db.set.rate;
+    speechSynthesis.speak(u);
+  }catch(e){}
+}
+
+// ---------- 导航 ----------
+var curView="home";
+function goView(v){
+  curView=v;
+  [].forEach.call(document.querySelectorAll(".view"),function(s){ s.classList.toggle("on", s.id==="v-"+v); });
+  [].forEach.call($("tabs").children,function(b){ b.classList.toggle("on", b.dataset.v===v); });
+  if(v==="home") renderHome();
+  if(v==="lib") renderLib();
+  if(v==="stat") renderStat();
+  if(v==="set") renderSet();
+  window.scrollTo(0,0);
+}
+$("tabs").addEventListener("click",function(e){ var b=e.target.closest("button"); if(b) goView(b.dataset.v); });
+
+// ---------- 首页 ----------
+function sourceOptions(sel, withPractice){
+  var h="";
+  if(withPractice){
+    h+='<option value="p:today">今天学过的词</option><option value="p:hard">易错词</option><option value="p:week">最近 7 天学过的</option><option value="p:learned">全部学过的词</option>';
+  }
+  if(db.custom.length || db.groups.length){
+    h+='<optgroup label="我的生词">';
+    db.groups.forEach(function(g){ var n=wordsIn("m:"+g).length; h+='<option value="m:'+esc(g)+'">'+esc(g)+'（'+n+'）</option>'; });
+    h+='</optgroup>';
+  }
+  h+='<optgroup label="内置话题词">';
+  if(!withPractice) h+='<option value="all">全部话题，按顺序</option>';
+  TOPICS.forEach(function(t,i){ var ids=wordsIn("t"+i); var left=ids.filter(function(id){return !db.prog[id];}).length;
+    h+='<option value="t'+i+'">'+esc(t)+(withPractice?'':'（剩 '+left+'）')+'</option>'; });
+  h+='</optgroup>';
+  var old=sel.value; sel.innerHTML=h;
+  if(old && sel.querySelector('option[value="'+old.replace(/"/g,'\\"')+'"]')) sel.value=old;
+}
+function renderHome(){
+  var name=db.name||"我";
+  $("heroT").textContent=name+"的雅思单词本";
+  var today=dayNum(), L=db.log[dayStr(today)];
+  var learned=0, mastered=0; Object.keys(db.prog).forEach(function(id){ if(!WORDS[id]) return; learned++; var s=status(id); if(s==="m"||s==="e") mastered++; });
+  $("heroS").textContent = L && (L.nw+L.rv) ? "今天已经学了 "+(L.nw+L.rv)+" 次，真棒 👏" : "有空就背几个，一点一点积累";
+  var m='<span>已学 '+learned+'</span><span>已掌握 '+mastered+'</span>';
+  if(db.set.exam){ var ed=dayNum(new Date(db.set.exam+"T00:00:00")); var left=ed-today; if(left>=0) m+='<span>距考试 '+left+' 天</span>'; }
+  $("heroM").innerHTML=m;
+  var due=dueList();
+  $("dueN").textContent=due.length;
+  var cap=db.set.cap;
+  $("dueMore").textContent = due.length>cap ? "积压比较多，这次先复习最该复习的 "+cap+" 个，剩下的下次再来。" : (due.length? "隔几天没背也没关系，按忘记的顺序排好了。" : "暂时没有要复习的，去学几个新词吧。");
+  $("dueHint").textContent="";
+  $("goReview").disabled=!due.length;
+  sourceOptions($("newSrc"), false);
+  if(db.set.src && $("newSrc").querySelector('option[value="'+db.set.src.replace(/"/g,'\\"')+'"]')) $("newSrc").value=db.set.src;
+  else $("newSrc").value="all";
+  sourceOptions($("prSrc"), true);
+  if(db.set.pr && $("prSrc").querySelector('option[value="'+db.set.pr.replace(/"/g,'\\"')+'"]')) $("prSrc").value=db.set.pr;
+  $("newSize").innerHTML=[5,10,20,30].map(function(n){ return '<button data-n="'+n+'" class="'+(n===db.set.batch?"on":"")+'">'+n+' 个</button>'; }).join("");
+  checkBackup();
+}
+$("newSize").addEventListener("click",function(e){ var b=e.target.closest("button"); if(!b) return; db.set.batch=+b.dataset.n; persist(); renderHome(); });
+$("newSrc").addEventListener("change",function(){ db.set.src=this.value; persist(); });
+$("prSrc").addEventListener("change",function(){ db.set.pr=this.value; persist(); });
+$("goReview").onclick=function(){ var d=dueList().slice(0,db.set.cap); if(d.length) startSession("review","card",d); };
+$("goNew").onclick=function(){
+  var src=$("newSrc").value, all=wordsIn(src), ids=all.filter(function(id){ return !db.prog[id]; });
+  if(!all.length){ toast("这个分组还没有词，先到「词库」里添加",2600); return; }
+  if(!ids.length){ toast("这个词库的新词都学过了 🎉 换一个吧",2600); return; }
+  startSession("new","card",ids.slice(0,db.set.batch));
+};
+function practiceIds(src){
+  var today=dayNum();
+  if(src==="p:today") return Object.keys(db.prog).filter(function(id){ var p=db.prog[id]; return WORDS[id] && (p.last===today||p.first===today); });
+  if(src==="p:hard") return Object.keys(db.prog).filter(function(id){ return WORDS[id] && status(id)==="x"; });
+  if(src==="p:week") return Object.keys(db.prog).filter(function(id){ var p=db.prog[id]; return WORDS[id] && (p.last>=today-6); });
+  if(src==="p:learned") return Object.keys(db.prog).filter(function(id){ return !!WORDS[id]; });
+  return wordsIn(src);
+}
+function goPractice(mode){
+  var ids=practiceIds($("prSrc").value);
+  if(!ids.length){ toast("这里还没有词，先去学几个吧",2400); return; }
+  startSession("practice",mode,shuffle(ids.slice()).slice(0,20));
+}
+$("goSpell").onclick=function(){ goPractice("spell"); };
+$("goDict").onclick=function(){ goPractice("dict"); };
+
+// ---------- 学习过程 ----------
+var S=null;
+function startSession(kind,mode,ids){
+  S={kind:kind,mode:mode,queue:ids.slice(),total:ids.length,done:0,seen:{},again:{},right:0,wrong:0,wrongList:[],step:"front"};
+  $("study").classList.add("on");
+  document.body.style.overflow="hidden";
+  showCard();
+}
+function endSession(){
+  $("study").classList.remove("on"); document.body.style.overflow=""; S=null;
+  try{ speechSynthesis.cancel(); }catch(e){}
+  goView(curView);
+}
+$("sQuit").onclick=function(){
+  if(S && S.queue.length && S.done>0){ showDone(true); return; }
+  endSession();
+};
+$("sSay2").onclick=function(){ if(S && S.cur) speak(WORDS[S.cur].w); };
+function showCard(){
+  if(!S.queue.length){ showDone(false); return; }
+  var id=S.queue[0], w=WORDS[id]; S.cur=id; S.step="front";
+  $("sCount").textContent=(S.kind==="new"?"新词 ":S.kind==="review"?"复习 ":(S.mode==="spell"?"拼写 ":"听写 "))+(S.done+1)+" / "+(S.done+S.queue.length);
+  $("sProg").style.width=(S.done/(S.done+S.queue.length)*100)+"%";
+  if(S.mode==="card") renderFront(w);
+  else renderSpell(w);
+}
+function tagFor(w){ return '<span class="tag">'+esc(groupName(w.g))+'</span>'; }
+function exHtml(w){ return w.ex ? '<div class="ex">'+esc(w.ex)+' <button data-say-ex="1">🔊</button></div>' : ''; }
+function renderFront(w){
+  var isNew = !db.prog[w.id];
+  $("sBody").innerHTML='<div class="word">'+esc(w.w)+'</div>'+(w.ipa?'<div class="ipa">/'+esc(w.ipa)+'/</div>':'')+
+    '<button class="say" data-say="1">🔊 发音</button>'+
+    (isNew && S.kind==="new" ? '<p class="sub" style="text-align:center;margin-top:30px">新词：先自己想想意思，再点下面看答案</p>' : '<p class="sub" style="text-align:center;margin-top:30px">想一想它是什么意思</p>');
+  $("sFoot").innerHTML='<button class="btn full" id="reveal" style="padding:15px">看答案</button>';
+  $("reveal").onclick=function(){ renderBack(w); };
+  if(db.set.auto) speak(w.w);
+}
+function renderBack(w){
+  S.step="back";
+  $("sBody").innerHTML='<div class="word" style="margin-top:14px">'+esc(w.w)+'</div>'+(w.ipa?'<div class="ipa">/'+esc(w.ipa)+'/</div>':'')+
+    '<button class="say" data-say="1">🔊 发音</button>'+
+    '<div class="ans">'+tagFor(w)+'<div class="cn">'+esc(w.cn)+'</div>'+exHtml(w)+'</div>';
+  var p=db.prog[w.id], n0 = !p || p.n===0;
+  function nxt(q){ var iv; if(q===0) return "再来"; if(q===3) return "不再出现";
+    if(!p||p.n===0) iv=1; else if(q===1) iv=Math.max(1,Math.round(p.iv*1.2)); else iv=(p.n===1?3:Math.round(p.iv*p.ef));
+    return iv+" 天后"; }
+  $("sFoot").innerHTML='<div class="grades">'+
+    '<button class="g0" data-q="0">不认识<small>'+nxt(0)+'</small></button>'+
+    '<button class="g1" data-q="1">模糊<small>'+nxt(1)+'</small></button>'+
+    '<button class="g2" data-q="2">认识<small>'+nxt(2)+'</small></button>'+
+    '<button class="g3" data-q="3">太简单<small>'+nxt(3)+'</small></button></div>';
+}
+$("sFoot").addEventListener("click",function(e){
+  var b=e.target.closest("button[data-q]"); if(!b||!S) return;
+  var q=+b.dataset.q, id=S.cur;
+  if(!S.seen[id]){ grade(id,q); S.seen[id]=1; if(q===0){ S.wrong++; S.wrongList.push(id); } else S.right++; }
+  else if(q===0){ /* 本轮已记过，不重复记 */ }
+  S.queue.shift();
+  if(q===0 && (S.again[id]||0)<3){ S.again[id]=(S.again[id]||0)+1; S.queue.splice(Math.min(S.queue.length,3),0,id); }
+  else if(S.seen[id]===1 && q!==0 && S.again[id]){ // 本轮忘过、后来记起来：明天再复习
+    var p=db.prog[id]; if(p && !p.skip){ p.n=1; p.iv=1; p.due=dayNum()+1; persist(); }
+    S.done++;
+  } else S.done++;
+  showCard();
+});
+document.addEventListener("click",function(e){
+  var b=e.target.closest("[data-say],[data-say-ex]"); if(!b) return;
+  var id=b.dataset.id || (S&&S.cur); if(!id||!WORDS[id]) return;
+  if(b.dataset.sayEx) speak(WORDS[id].ex); else speak(WORDS[id].w, b.dataset.slow==="1");
+});
+
+function norm(s){ return String(s).toLowerCase().replace(/[’']/g,"'").replace(/[^a-z' -]/g,"").replace(/\s+/g," ").trim(); }
+function renderSpell(w){
+  var dict=S.mode==="dict";
+  $("sBody").innerHTML = (dict
+    ? '<div style="text-align:center;margin-top:40px"><button class="say" data-say="1" style="font-size:20px;padding:14px 26px">🔊 再听一遍</button><button class="say" data-say="1" data-slow="1">🐢 慢速</button></div><p class="sub" style="text-align:center;margin-top:14px">听发音，写出这个词</p>'
+    : '<div class="ans" style="margin-top:30px;text-align:center">'+tagFor(w)+'<div class="cn">'+esc(w.cn)+'</div>'+(w.ipa?'<div class="sub" style="margin:6px 0 0">/'+esc(w.ipa)+'/</div>':'')+'</div><p class="sub" style="text-align:center;margin-top:14px">写出英文（首字母：'+esc(w.w.charAt(0))+'）</p>')+
+    '<div class="spin"><input id="spIn" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="done" placeholder="在这里输入"></div><div class="res" id="spRes"></div>';
+  $("sFoot").innerHTML='<div class="row"><button class="ghost" id="spSkip" style="flex:1">不会</button><button class="btn" id="spOk" style="flex:2">确定</button></div>';
+  var inp=$("spIn");
+  setTimeout(function(){ inp.focus(); },60);
+  if(dict) setTimeout(function(){ speak(w.w); },250);
+  inp.addEventListener("keydown",function(e){ if(e.key==="Enter"){ e.preventDefault(); $("spOk").click(); } });
+  $("spOk").onclick=function(){ checkSpell(w, inp.value); };
+  $("spSkip").onclick=function(){ checkSpell(w, ""); };
+}
+function checkSpell(w,val){
+  if(S.step==="checked"){ next(); return; }
+  var ok = norm(val)===norm(w.w);
+  S.step="checked";
+  var L=logDay(); L.sp++; if(ok) L.spok++;
+  var p=db.prog[w.id];
+  if(ok){ S.right++; }
+  else {
+    S.wrong++; S.wrongList.push(w.id);
+    if(!p){ p=db.prog[w.id]={n:0,iv:0,ef:2.5,due:dayNum(),lap:0,first:dayNum()}; }
+    p.sw=(p.sw||0)+1; if(!p.skip){ p.due=Math.min(p.due,dayNum()); } p.last=dayNum();
+  }
+  persist();
+  $("spRes").innerHTML = (ok ? '<div class="ok">✓ 正确</div>' : '<div class="ng">✗ '+(val?'写成了 '+esc(val):'没关系，记一下')+'</div>')+
+    '<div class="right">'+esc(w.w)+'</div>'+(w.ipa?'<div class="sub" style="margin:0">/'+esc(w.ipa)+'/</div>':'')+'<div>'+esc(w.cn)+'</div>';
+  $("spIn").disabled=true;
+  speak(w.w);
+  $("sFoot").innerHTML='<button class="btn full" id="spNext" style="padding:15px">下一个</button>';
+  $("spNext").onclick=next;
+  function next(){ S.queue.shift(); S.done++; showCard(); }
+}
+function showDone(early){
+  var total=S.right+S.wrong;
+  var pct = total? Math.round(S.right/total*100) : 0;
+  var msg = S.kind==="new" ? "学了 "+S.done+" 个新词" : S.kind==="review" ? "复习了 "+S.done+" 个词" : "练习了 "+S.done+" 个词";
+  var cheer = pct>=90?"太厉害了 🎉":pct>=70?"不错，继续保持 💪":"错的词会更常出现，多见几次就记住了 🙂";
+  $("sProg").style.width="100%";
+  $("sBody").innerHTML='<div class="done"><div class="big">'+(early?"👍":"🎉")+'</div><h2 style="margin-top:10px">'+(early?"先到这里":"完成！")+'</h2><p class="sub">'+msg+(total?"，正确率 "+pct+"%":"")+'<br>'+cheer+'</p>'+
+    (S.wrongList.length? '<div class="card" style="text-align:left;margin-top:20px"><h2>这次没记住的</h2><div class="list">'+uniq(S.wrongList).map(itemHtml).join("")+'</div></div>' : '')+'</div>';
+  $("sFoot").innerHTML='<button class="btn full" id="sEnd" style="padding:15px">返回</button>';
+  $("sEnd").onclick=endSession;
+}
+function uniq(a){ var s={}; return a.filter(function(x){ if(s[x]) return false; s[x]=1; return true; }); }
+function itemHtml(id){ var w=WORDS[id]; return '<div class="it" data-w="'+id+'"><span class="dot '+status(id)+'"></span><span class="w">'+esc(w.w)+'</span><span class="c">'+esc(w.cn)+'</span><button class="ghost" data-say="1" data-id="'+id+'" style="padding:4px 9px;border:0">🔊</button></div>'; }
+
+// ---------- 词库 ----------
+var libGroup=null;
+function renderLib(){
+  if(libGroup){ renderLibWords(); return; }
+  $("libGroups").hidden=false; $("libWords").hidden=true;
+  $("myGroups").innerHTML = db.groups.map(function(g){ return grpRow("m:"+g); }).join("") || '<p class="sub">还没有分组。</p>';
+  $("topicGroups").innerHTML = TOPICS.map(function(t,i){ return grpRow("t"+i); }).join("");
+}
+function grpRow(g){
+  var ids=wordsIn(g), l=0; ids.forEach(function(id){ if(db.prog[id]) l++; });
+  return '<div class="grp" data-g="'+esc(g)+'"><div><div style="font-weight:600">'+esc(groupName(g))+'</div><div class="bar"><i style="width:'+(ids.length?l/ids.length*100:0)+'%"></i></div></div><div class="sub" style="margin:0">'+l+' / '+ids.length+' ›</div></div>';
+}
+$("libGroups").addEventListener("click",function(e){ var r=e.target.closest(".grp"); if(!r) return; libGroup=r.dataset.g; renderLibWords(); window.scrollTo(0,0); });
+$("libBack").onclick=function(){ libGroup=null; renderLib(); };
+function renderLibWords(){
+  if(libGroup[0]==="m" && db.groups.indexOf(libGroup.slice(2))<0){ libGroup=null; renderLib(); return; }
+  $("libGroups").hidden=true; $("libWords").hidden=false;
+  $("libTitle").textContent=groupName(libGroup);
+  $("grpMenu").hidden = libGroup[0]!=="m";
+  var ids=wordsIn(libGroup);
+  $("libList").innerHTML = ids.map(itemHtml).join("") || '<p class="sub">这个分组还没有词，点「词库」页的「＋ 添加」加进来。</p>';
+}
+$("q").addEventListener("input",function(){
+  var q=this.value.trim().toLowerCase();
+  if(!q){ $("qRes").hidden=true; return; }
+  var r=Object.keys(WORDS).filter(function(id){ var w=WORDS[id]; return w.w.toLowerCase().indexOf(q)>=0 || w.cn.indexOf(q)>=0; }).slice(0,40);
+  $("qRes").hidden=false;
+  $("qList").innerHTML = r.map(itemHtml).join("") || '<p class="sub">没有找到。可以点「＋ 添加」把它加进生词本。</p>';
+});
+document.addEventListener("click",function(e){
+  if(e.target.closest("[data-say]")) return;
+  var r=e.target.closest(".it[data-w]"); if(!r || $("study").classList.contains("on")) return;
+  openWord(r.dataset.w);
+});
+function openWord(id){
+  var w=WORDS[id], p=db.prog[id], today=dayNum(), st;
+  if(!p) st="还没学";
+  else if(p.skip) st="标记为太简单，不再出现";
+  else st = p.due<=today ? "今天该复习" : (p.due-today)+" 天后复习";
+  if(p && (p.lap||p.sw)) st+="（忘记 "+(p.lap||0)+" 次，拼错 "+(p.sw||0)+" 次）";
+  sheet('<div class="word" style="margin-top:4px;font-size:32px">'+esc(w.w)+'</div>'+(w.ipa?'<div class="ipa">/'+esc(w.ipa)+'/</div>':'')+
+    '<button class="say" data-say="1" data-id="'+id+'">🔊 发音</button>'+
+    '<div class="ans" style="background:var(--bg)">'+tagFor(w)+'<div class="cn">'+esc(w.cn)+'</div>'+(w.ex?'<div class="ex">'+esc(w.ex)+' <button data-say-ex="1" data-id="'+id+'">🔊</button></div>':'')+'</div>'+
+    '<p class="sub" style="margin-top:12px">'+st+'</p>'+
+    '<div class="row" style="flex-wrap:wrap">'+
+      (!p||p.skip ? '<button class="ghost" data-act="learn" style="flex:1">'+(p?'恢复复习':'加入今天复习')+'</button>' : '<button class="ghost" data-act="skip" style="flex:1">标为太简单</button>')+
+      (p && !p.skip ? '<button class="ghost" data-act="reset" style="flex:1">重新学</button>' : '')+
+    '</div>'+
+    (w.custom ? '<div class="row" style="margin-top:10px"><button class="ghost" data-act="edit" style="flex:1">编辑</button><button class="ghost" data-act="del" style="flex:1;color:var(--bad)">删除</button></div>' : '')+
+    '<button class="btn full" data-act="close" style="margin-top:12px">关闭</button>', function(act){
+      var today=dayNum();
+      if(act==="learn"){ if(!p) db.prog[id]={n:0,iv:0,ef:2.5,due:today,lap:0,first:today}; else { delete p.skip; p.due=today; } persist(); toast("已加入今天的复习"); }
+      if(act==="skip"){ p.skip=1; p.iv=Math.max(p.iv,30); persist(); toast("好的，不再出现"); }
+      if(act==="reset"){ delete db.prog[id]; persist(); toast("已重置为没学过"); }
+      if(act==="edit"){ closeSheet(); editWord(id); return; }
+      if(act==="del"){ if(!confirmDel(id)) return; }
+      closeSheet(); refresh();
+    });
+}
+var delArm=null;
+function confirmDel(id){
+  if(delArm!==id){ delArm=id; toast("再点一次「删除」确认",2000); setTimeout(function(){ delArm=null; },2500); return false; }
+  db.custom=db.custom.filter(function(c){ return c.id!==id; }); delete db.prog[id]; rebuildCustom(); persist(); toast("已删除"); return true;
+}
+function refresh(){ goView(curView); var q=$("q"); if(q.value) q.dispatchEvent(new Event("input")); }
+
+// 弹层
+var sheetCb=null;
+function sheet(html,cb){ $("sheetIn").innerHTML=html; sheetCb=cb; $("sheet").classList.add("on"); }
+function closeSheet(){ $("sheet").classList.remove("on"); sheetCb=null; }
+$("sheet").addEventListener("click",function(e){
+  if(e.target===this){ closeSheet(); return; }
+  var b=e.target.closest("[data-act]"); if(!b) return;
+  if(b.dataset.act==="close"){ closeSheet(); return; }
+  if(sheetCb) sheetCb(b.dataset.act, b);
+});
+
+// 添加生词
+function groupSelect(cur){
+  return '<select id="fG">'+db.groups.map(function(g){ return '<option'+(g===cur?' selected':'')+'>'+esc(g)+'</option>'; }).join("")+'<option value="__new">＋ 新建分组…</option></select><input id="fGn" placeholder="新分组名字，比如：王陆 第3章" style="margin-top:8px;display:none">';
+}
+function bindGroupSelect(){ $("fG").onchange=function(){ $("fGn").style.display=this.value==="__new"?"block":"none"; if(this.value==="__new") $("fGn").focus(); }; }
+function readGroup(){ var g=$("fG").value; if(g==="__new"){ g=$("fGn").value.trim(); if(!g){ toast("请填分组名字"); return null; } if(db.groups.indexOf(g)<0) db.groups.push(g); } return g; }
+$("addBtn").onclick=function(){ addWord(libGroup && libGroup[0]==="m" ? libGroup.slice(2) : db.lastGroup); };
+function addWord(grp){
+  sheet('<h2>添加生词</h2><div class="chips" id="addMode"><button class="on" data-m="one">一个一个加</button><button data-m="many">批量粘贴</button></div>'+
+    '<div id="addOne"><label class="f">英文 *</label><input id="fW" autocapitalize="off" autocorrect="off" spellcheck="false"><label class="f">中文意思 *</label><input id="fC" placeholder="比如：n. 环境">'+
+    '<label class="f">音标（选填）</label><input id="fI" autocapitalize="off" autocorrect="off" spellcheck="false"><label class="f">例句（选填）</label><input id="fE" autocapitalize="off"></div>'+
+    '<div id="addMany" style="display:none"><label class="f">每行一个词：英文 + 空格 + 中文。也可以用 | 分开写：英文|中文|例句</label><textarea id="fM" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="deposit 押金\nreceipt 收据\nwork out|解决；锻炼"></textarea></div>'+
+    '<label class="f">放到哪个分组</label>'+groupSelect(grp||db.groups[0])+
+    '<div class="row" style="margin-top:14px"><button class="ghost" data-act="close" style="flex:1">取消</button><button class="btn" data-act="save" style="flex:2">保存</button></div>', function(act){
+      if(act!=="save") return;
+      var g=readGroup(); if(g==null) return;
+      var many=$("addMany").style.display!=="none", added=0;
+      if(!many){
+        var w=$("fW").value.trim(), c=$("fC").value.trim();
+        if(!w||!c){ toast("英文和中文都要填"); return; }
+        pushCustom(w,c,$("fI").value.trim().replace(/^\/|\/$/g,""),$("fE").value.trim(),g); added=1;
+      } else {
+        $("fM").value.split(/\n/).forEach(function(line){
+          line=line.trim(); if(!line) return; var w,c,ex="";
+          if(line.indexOf("|")>=0){ var a=line.split("|"); w=a[0].trim(); c=(a[1]||"").trim(); ex=(a[2]||"").trim(); }
+          else { var m=line.match(/^([A-Za-z][A-Za-z'’\-\. ]*?)\s+(.+)$/); if(m){ w=m[1].trim(); c=m[2].trim(); } }
+          if(w&&c){ pushCustom(w,c,"",ex,g); added++; }
+        });
+        if(!added){ toast("没认出来，检查一下格式"); return; }
+      }
+      db.lastGroup=g; rebuildCustom(); persist(); closeSheet(); toast("已添加 "+added+" 个"); refresh();
+    });
+  bindGroupSelect();
+  $("addMode").onclick=function(e){ var b=e.target.closest("button"); if(!b) return; [].forEach.call(this.children,function(x){x.classList.toggle("on",x===b);}); $("addOne").style.display=b.dataset.m==="one"?"":"none"; $("addMany").style.display=b.dataset.m==="many"?"":"none"; };
+}
+function pushCustom(w,c,ipa,ex,g){ db.custom.push({id:"c"+(db.nextId++),w:w,cn:c,ipa:ipa,ex:ex,g:g}); }
+function editWord(id){
+  var c=db.custom.filter(function(x){return x.id===id;})[0]; if(!c) return;
+  sheet('<h2>编辑生词</h2><label class="f">英文</label><input id="fW" value="'+esc(c.w)+'" autocapitalize="off"><label class="f">中文意思</label><input id="fC" value="'+esc(c.cn)+'">'+
+    '<label class="f">音标</label><input id="fI" value="'+esc(c.ipa)+'" autocapitalize="off"><label class="f">例句</label><input id="fE" value="'+esc(c.ex)+'" autocapitalize="off">'+
+    '<label class="f">分组</label>'+groupSelect(c.g)+
+    '<div class="row" style="margin-top:14px"><button class="ghost" data-act="close" style="flex:1">取消</button><button class="btn" data-act="save" style="flex:2">保存</button></div>', function(act){
+      if(act!=="save") return; var g=readGroup(); if(g==null) return;
+      var w=$("fW").value.trim(), cn=$("fC").value.trim(); if(!w||!cn){ toast("英文和中文都要填"); return; }
+      c.w=w; c.cn=cn; c.ipa=$("fI").value.trim().replace(/^\/|\/$/g,""); c.ex=$("fE").value.trim(); c.g=g;
+      rebuildCustom(); persist(); closeSheet(); toast("已保存"); refresh();
+    });
+  bindGroupSelect();
+}
+$("grpMenu").onclick=function(){
+  var g=libGroup.slice(2), n=wordsIn(libGroup).length;
+  sheet('<h2>管理分组「'+esc(g)+'」</h2><label class="f">改名</label><input id="gN" value="'+esc(g)+'">'+
+    '<button class="btn full" data-act="ren" style="margin-top:12px">保存名字</button>'+
+    '<button class="ghost full" data-act="add" style="margin-top:10px">＋ 往这个分组加词</button>'+
+    '<button class="ghost full" data-act="del" style="margin-top:10px;color:var(--bad)">删除分组（连同 '+n+' 个词）</button>'+
+    '<button class="ghost full" data-act="close" style="margin-top:10px">关闭</button>', function(act){
+      if(act==="ren"){ var nn=$("gN").value.trim(); if(!nn) return; if(nn!==g && db.groups.indexOf(nn)>=0){ toast("已经有这个名字了"); return; }
+        db.groups[db.groups.indexOf(g)]=nn; db.custom.forEach(function(c){ if(c.g===g) c.g=nn; }); libGroup="m:"+nn; rebuildCustom(); persist(); closeSheet(); refresh(); }
+      if(act==="add"){ closeSheet(); addWord(g); }
+      if(act==="del"){ if(delArm!=="g"+g){ delArm="g"+g; toast("再点一次确认删除",2000); setTimeout(function(){delArm=null;},2500); return; }
+        db.custom.filter(function(c){return c.g===g;}).forEach(function(c){ delete db.prog[c.id]; });
+        db.custom=db.custom.filter(function(c){return c.g!==g;}); db.groups=db.groups.filter(function(x){return x!==g;});
+        if(!db.groups.length) db.groups=["我的生词"];
+        libGroup=null; rebuildCustom(); persist(); closeSheet(); toast("已删除分组"); refresh(); }
+    });
+};
+
+// ---------- 进度 ----------
+function weekStats(){
+  var today=dayNum(), r={days:0,nw:0,rv:0,ok:0,ng:0,sp:0,spok:0};
+  for(var i=0;i<7;i++){ var L=db.log[dayStr(today-i)]; if(!L) continue; if(L.nw+L.rv+L.sp>0) r.days++; ["nw","rv","ok","ng","sp","spok"].forEach(function(k){ r[k]+=L[k]||0; }); }
+  return r;
+}
+function totals(){
+  var learned=0,mastered=0,hard=[];
+  Object.keys(db.prog).forEach(function(id){ if(!WORDS[id]) return; learned++; var s=status(id); if(s==="m"||s==="e") mastered++; if(s==="x") hard.push(id); });
+  hard.sort(function(a,b){ var A=db.prog[a],B=db.prog[b]; return ((B.lap||0)+(B.sw||0))-((A.lap||0)+(A.sw||0)); });
+  return {learned:learned,mastered:mastered,hard:hard};
+}
+function streak(){
+  var d=dayNum(), n=0; var L=db.log[dayStr(d)]; if(!L||!(L.nw+L.rv+L.sp)) d--;
+  while(true){ L=db.log[dayStr(d)]; if(L && (L.nw+L.rv+L.sp)>0){ n++; d--; } else break; }
+  return n;
+}
+function renderStat(){
+  var t=totals(), w=weekStats(), tot=w.ok+w.ng+w.sp;
+  var acc = tot ? Math.round((w.ok+w.spok)/tot*100)+"%" : "—";
+  $("stats").innerHTML=[["已学",t.learned],["已掌握",t.mastered],["易错",t.hard.length],["近7天学习",w.days+" 天"],["近7天新学",w.nw],["正确率",acc]]
+    .map(function(a){ return '<div><b>'+a[1]+'</b><span>'+a[0]+'</span></div>'; }).join("");
+  var today=dayNum(), start=today-83, h="";
+  for(var c=0;c<12;c++) for(var r=0;r<7;r++){ var d=start+c*7+r; }
+  // 按列（每周一列）显示：转成行优先网格
+  var cells=[]; for(var i=0;i<84;i++){ var d2=start+i, L=db.log[dayStr(d2)], n=L?L.nw+L.rv+L.sp:0; cells.push(n===0?"":n<15?"a1":n<40?"a2":"a3"); }
+  for(r=0;r<7;r++) for(c=0;c<12;c++) h+='<i class="'+cells[c*7+r]+'"></i>';
+  $("cal").innerHTML=h;
+  $("hardList").innerHTML = t.hard.slice(0,30).map(itemHtml).join("") || '<p class="sub" style="margin:6px 0 0">暂时没有，很棒！</p>';
+}
+
+// 学习报告
+var reportBlob=null, reportText="";
+$("mkReport").onclick=function(){
+  var t=totals(), w=weekStats(), tot=w.ok+w.ng+w.sp, acc=tot?Math.round((w.ok+w.spok)/tot*100):null;
+  var name=db.name||"我", today=dayNum();
+  var range=dayStr(today-6).slice(5).replace("-","/")+" – "+dayStr(today).slice(5).replace("-","/");
+  var exam=""; if(db.set.exam){ var left=dayNum(new Date(db.set.exam+"T00:00:00"))-today; if(left>=0) exam="距雅思考试还有 "+left+" 天"; }
+  var W=1080,H=1500, cv=document.createElement("canvas"); cv.width=W; cv.height=H; var x=cv.getContext("2d");
+  var F='-apple-system,"PingFang SC","Helvetica Neue",sans-serif';
+  var g=x.createLinearGradient(0,0,W,520); g.addColorStop(0,"#2a5bd7"); g.addColorStop(1,"#16a3b8"); x.fillStyle=g; x.fillRect(0,0,W,H);
+  x.fillStyle="#fff"; x.font='800 66px '+F; x.fillText(name+"的单词周报",70,140);
+  x.font='400 38px '+F; x.globalAlpha=.9; x.fillText(range+(exam?"  ·  "+exam:""),70,205); x.globalAlpha=1;
+  function rr(X,Y,w,h,r,c){ x.fillStyle=c; x.beginPath(); x.moveTo(X+r,Y); x.arcTo(X+w,Y,X+w,Y+h,r); x.arcTo(X+w,Y+h,X,Y+h,r); x.arcTo(X,Y+h,X,Y,r); x.arcTo(X,Y,X+w,Y,r); x.fill(); }
+  rr(50,260,W-100,H-320,40,"#ffffff");
+  var items=[["学习天数",w.days+"/7"],["新学单词",w.nw],["复习次数",w.rv],["拼写听写",w.sp],["正确率",acc==null?"—":acc+"%"],["连续学习",streak()+" 天"],["累计已学",t.learned],["已经掌握",t.mastered],["易错词",t.hard.length]];
+  items.forEach(function(it,i){ var cx=50+((W-100)/3)*(i%3)+(W-100)/6, cy=360+Math.floor(i/3)*190;
+    x.textAlign="center"; x.fillStyle="#1d2433"; x.font='800 72px '+F; x.fillText(String(it[1]),cx,cy+40);
+    x.fillStyle="#7c8597"; x.font='400 34px '+F; x.fillText(it[0],cx,cy+95); });
+  x.textAlign="left";
+  var y=980; x.fillStyle="#1d2433"; x.font='700 42px '+F; x.fillText("这周要多看几眼的词",100,y);
+  x.font='400 36px '+F; var hard=t.hard.slice(0,6);
+  if(!hard.length){ x.fillStyle="#2e9c6a"; x.fillText("没有易错词，继续保持 👍",100,y+70); }
+  hard.forEach(function(id,i){ var wd=WORDS[id]; var yy=y+70+i*62; x.fillStyle="#2457c5"; x.font='700 38px '+F; x.fillText(wd.w,100,yy);
+    var ww=x.measureText(wd.w).width; x.fillStyle="#555e70"; x.font='400 34px '+F; var cn=wd.cn; if(cn.length>16) cn=cn.slice(0,16)+"…"; x.fillText(cn,Math.max(380,100+ww+30),yy); });
+  x.fillStyle="#a0a8b8"; x.font='400 28px '+F; x.textAlign="center"; x.fillText("雅思单词本 · "+dayStr(today),W/2,H-90);
+  reportText=name+"的单词周报（"+range+"）\n学习 "+w.days+"/7 天，新学 "+w.nw+" 个，复习 "+w.rv+" 次，拼写听写 "+w.sp+" 次，正确率 "+(acc==null?"—":acc+"%")+"\n累计已学 "+t.learned+"，已掌握 "+t.mastered+"，易错 "+t.hard.length+(exam?"\n"+exam:"")+
+    (hard.length?"\n易错词："+hard.map(function(id){return WORDS[id].w;}).join("、"):"");
+  $("reportImg").src=cv.toDataURL("image/png");
+  $("reportBox").hidden=false;
+  cv.toBlob(function(b){ reportBlob=b; },"image/png");
+  db.lastReport=Date.now(); persist();
+};
+$("shareReport").onclick=function(){
+  if(!reportBlob){ toast("请稍等一下再点"); return; }
+  var f=new File([reportBlob],"单词周报-"+dayStr(dayNum())+".png",{type:"image/png"});
+  if(navigator.canShare && navigator.canShare({files:[f]})){ navigator.share({files:[f]}).catch(function(){}); }
+  else toast("长按图片保存，再发到微信",2600);
+};
+$("copyReport").onclick=function(){
+  if(navigator.clipboard) navigator.clipboard.writeText(reportText).then(function(){ toast("已复制，去微信粘贴吧"); },function(){ toast("复制失败"); });
+};
+
+// ---------- 设置 ----------
+function chipSet(el,opts,cur,cb){
+  el.innerHTML=opts.map(function(o){ return '<button data-v="'+o[0]+'" class="'+(String(o[0])===String(cur)?"on":"")+'">'+o[1]+'</button>'; }).join("");
+  el.onclick=function(e){ var b=e.target.closest("button"); if(!b) return; cb(b.dataset.v); persist(); renderSet(); };
+}
+function renderSet(){
+  $("setName").value=db.name||"";
+  chipSet($("setAccent"),[["en-GB","英音"],["en-US","美音"]],db.set.accent,function(v){ db.set.accent=v; speak("environment"); });
+  chipSet($("setRate"),[["0.75","慢"],["0.9","正常"],["1","稍快"]],db.set.rate,function(v){ db.set.rate=+v; speak("environment"); });
+  chipSet($("setAuto"),[["1","开"],["0","关"]],db.set.auto?"1":"0",function(v){ db.set.auto=v==="1"; });
+  chipSet($("setCap"),[["30","30 个"],["50","50 个"],["100","100 个"],["9999","不限"]],db.set.cap,function(v){ db.set.cap=+v; });
+  $("setExam").value=db.set.exam||"";
+  var n=Object.keys(db.prog).length;
+  $("countInfo").textContent="已学 "+n+" 个词，自己加了 "+db.custom.length+" 个。"+(db.lastBackup?"上次备份："+new Date(db.lastBackup).toLocaleDateString("zh-CN")+"。":"还没有备份过。");
+}
+$("setName").addEventListener("change",function(){ db.name=this.value.trim()||db.name; persist(); });
+$("setExam").addEventListener("change",function(){ db.set.exam=this.value; persist(); });
+$("testVoice").onclick=function(){ speak("Practice makes perfect."); };
+
+// 备份
+function shareOrDownload(name,text,type){
+  var blob=new Blob([text],{type:type});
+  var f; try{ f=new File([blob],name,{type:type}); }catch(e){}
+  if(f && navigator.canShare && navigator.canShare({files:[f]})){ navigator.share({files:[f]}).catch(function(){}); return; }
+  var a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=name; document.body.appendChild(a); a.click(); setTimeout(function(){ a.remove(); },500);
+}
+$("exportJson").onclick=function(){
+  var out={app:"danci",v:1,at:Date.now(),db:db};
+  shareOrDownload("单词本备份-"+dayStr(dayNum())+".json", JSON.stringify(out), "application/json");
+  db.lastBackup=Date.now(); delete db.bkSnooze; persist(); renderSet();
+};
+$("importBtn").onclick=function(){ $("importFile").click(); };
+$("importFile").onchange=function(){
+  var f=this.files[0]; if(!f) return; var r=new FileReader();
+  r.onload=function(){
+    try{ var o=JSON.parse(r.result); if(o.app!=="danci"||!o.db) throw 0;
+      sheet('<h2>从备份恢复？</h2><p class="sub">备份里有 '+Object.keys(o.db.prog||{}).length+' 个已学的词、'+(o.db.custom||[]).length+' 个自己加的词。恢复后会替换这台手机上现在的学习记录。</p><div class="row"><button class="ghost" data-act="close" style="flex:1">取消</button><button class="btn" data-act="ok" style="flex:1">恢复</button></div>',function(act){
+        if(act!=="ok") return; db=o.db; load2(); closeSheet(); toast("已恢复"); goView("home"); });
+    }catch(e){ toast("这不是单词本的备份文件",2500); }
+  };
+  r.readAsText(f); this.value="";
+};
+function load2(){ persist(); load(); rebuildCustom(); }
+function checkBackup(){
+  var now=Date.now(), since=db.lastBackup||db.created, days=Math.floor((now-since)/DAY);
+  var show = Object.keys(db.prog).length>0 && days>=30 && !(db.bkSnooze && now<db.bkSnooze);
+  $("bkCard").hidden=!show;
+  if(show) $("bkText").textContent = db.lastBackup ? "📦 已经 "+days+" 天没有备份了，花 10 秒备份一下吧。" : "📦 用了一个月啦，记得备份一次，换手机时能恢复学习记录。";
+}
+$("bkGo").onclick=function(){ goView("set"); };
+$("bkLater").onclick=function(){ db.bkSnooze=Date.now()+3*DAY; persist(); checkBackup(); };
+
+// ---------- 启动 ----------
+if(!db.name){ $("welcome").classList.add("on"); }
+$("wGo").onclick=function(){ var n=$("wName").value.trim(); if(!n){ $("wName").focus(); return; } db.name=n; persist(); $("welcome").classList.remove("on"); renderHome(); };
+renderHome();
+if("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(function(){});
+})();
+</script>
+</body>
+</html>
