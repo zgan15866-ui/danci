@@ -105,6 +105,12 @@
   .stats b{display:block;font-size:22px;font-variant-numeric:tabular-nums}
   .stats span{font-size:12px;color:var(--muted)}
   #reportImg{width:100%;border-radius:12px;margin-top:10px}
+  .hero .help{position:absolute;right:12px;top:12px;border:0;background:rgba(255,255,255,.22);color:#fff;border-radius:999px;padding:6px 12px;font-size:14px;z-index:1}
+  .qopt{display:block;width:100%;text-align:left;border:1.5px solid var(--line);background:var(--card);color:var(--ink);border-radius:12px;padding:13px 14px;font-size:17px;margin-top:10px}
+  .qopt.ok{border-color:var(--good);background:rgba(46,156,106,.12)} .qopt.ng{border-color:var(--bad);background:rgba(214,80,74,.12)}
+  .qq{font-size:20px;font-weight:600;line-height:1.5;margin-top:24px}
+  .help h2{margin-top:4px} .help p,.help li{font-size:15px;line-height:1.7} .help ol,.help ul{padding-left:20px;margin:6px 0}
+  .tip{background:var(--soft);border-radius:10px;padding:10px 12px;font-size:14px;line-height:1.6;margin-top:8px}
   .welcome{position:fixed;inset:0;background:var(--bg);z-index:60;display:none;align-items:center;justify-content:center;padding:24px}
   .welcome.on{display:flex}
 </style>
@@ -117,6 +123,7 @@
   <section class="view on" id="v-home">
     <div class="hero">
       <div class="deco">Aa</div>
+      <button class="help" data-go="help">❓ 使用说明</button>
       <div class="t" id="heroT">雅思单词本</div>
       <div class="s" id="heroS">今天也来背几个吧</div>
       <div class="m" id="heroM"></div>
@@ -138,6 +145,12 @@
       <label class="f">这一组学几个</label>
       <div class="chips" id="newSize"></div>
       <button class="btn full" id="goNew">开始学新词</button>
+    </div>
+    <div class="card">
+      <h2>📷 拍书页 · AI 出题</h2>
+      <p class="sub">拍下今天看的书页，让豆包出题，再把结果粘贴回来，就能做测验，生词也会加进复习计划。</p>
+      <button class="btn full" data-go="ai">开始</button>
+      <div id="quizList" style="margin-top:6px"></div>
     </div>
     <div class="card">
       <h2>拼写 · 听写练习</h2>
@@ -224,6 +237,12 @@
       <button class="ghost full" id="testVoice" style="margin-top:12px">🔊 试听发音</button>
     </div>
     <div class="card">
+      <h2>💡 提建议</h2>
+      <p class="sub">用着哪里不顺手、想要什么新功能，写下来发给爸爸，爸爸会请 Claude 改进。</p>
+      <button class="btn full" id="sugBtn">写建议</button>
+      <button class="ghost full" data-go="help" style="margin-top:10px">❓ 使用说明</button>
+    </div>
+    <div class="card">
       <h2>备份</h2>
       <p class="sub">学习记录只保存在这台手机上。建议每月导出一次备份，存到「文件」或发给自己。换手机时用「从备份恢复」。</p>
       <div class="row"><button class="ghost" id="exportJson" style="flex:1">导出备份</button><button class="ghost" id="importBtn" style="flex:1">从备份恢复</button></div>
@@ -231,6 +250,131 @@
       <p class="sub" id="countInfo" style="margin-top:10px"></p>
     </div>
     <p class="sub" style="text-align:center">内置词和例句为自编整理。请从桌面图标打开，别只在 Safari 里用。</p>
+  </section>
+
+  <!-- AI 出题 -->
+  <section class="view" id="v-ai">
+    <button class="ghost" data-go="home" style="margin:4px 0 6px">‹ 返回</button>
+    <h1>拍书页 · AI 出题</h1>
+    <div class="card">
+      <h2>① 复制指令</h2>
+      <label class="f" style="margin-top:0">出几道题</label>
+      <div class="chips" id="aiN"></div>
+      <div class="row"><button class="btn" id="cpQuiz" style="flex:3">复制「出题」指令</button><button class="ghost" id="cpWords" style="flex:2">只整理单词</button></div>
+      <p class="sub" style="margin:10px 0 0">「只整理单词」适合拍单词表：豆包只把词整理好，不出题。</p>
+    </div>
+    <div class="card">
+      <h2>② 发给豆包</h2>
+      <p class="sub" style="margin:0">打开豆包 → 新建对话 → 点「＋」或相机按钮，选书页照片（可以一次选几张）→ 在输入框长按，点「粘贴」→ 发送。</p>
+    </div>
+    <div class="card">
+      <h2>③ 粘贴豆包的回复</h2>
+      <p class="sub">在豆包里点回复下面的「复制」按钮，回到这里。</p>
+      <button class="ghost full" id="aiPaste">📋 从剪贴板粘贴</button>
+      <textarea id="aiIn" style="margin-top:10px" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="也可以在这里长按粘贴"></textarea>
+      <label class="f">给这次起个名字</label>
+      <input id="aiName">
+      <button class="btn full" id="aiGo" style="margin-top:12px">识别并保存</button>
+      <p class="sub" id="aiMsg" style="margin:8px 0 0"></p>
+    </div>
+    <div class="card">
+      <h2>我的测验</h2>
+      <div id="quizAll"></div>
+    </div>
+  </section>
+
+  <!-- 使用说明 -->
+  <section class="view help" id="v-help">
+    <button class="ghost" data-go="home" style="margin:4px 0 6px">‹ 返回</button>
+    <h1>使用说明</h1>
+    <div class="card">
+      <h2>🚀 快速开始</h2>
+      <ol>
+        <li>首页「学新词」：选一个词库，学一组新词。</li>
+        <li>过一两天，首页「复习」会出现要复习的词，点「开始复习」。</li>
+        <li>有空就打开，不用每天打卡。住校没手机的日子跳过就行，回来后按忘记的顺序补上。</li>
+      </ol>
+      <div class="tip">请从手机桌面图标打开，不要只在 Safari 里用，否则学习记录可能被系统清掉。</div>
+    </div>
+
+    <div class="card">
+      <h2>🧠 背单词的四个按钮</h2>
+      <p>看到单词先自己想意思，再点「看答案」，然后按实际情况选：</p>
+      <ul>
+        <li><b>不认识</b>：这一轮会再出现几次，明天还会复习。</li>
+        <li><b>模糊</b>：想了半天才想起来，很快再复习。</li>
+        <li><b>认识</b>：间隔会越拉越长：1 天、3 天、一周……</li>
+        <li><b>太简单</b>：以后不再出现（在词库里点这个词可以恢复）。</li>
+      </ul>
+      <div class="tip">诚实选就好。选「认识」但其实没记住，只会让它更晚出现、更容易忘。</div>
+    </div>
+
+    <div class="card">
+      <h2>✍️ 拼写和听写</h2>
+      <ul>
+        <li><b>看中文拼写</b>：练写作时的拼写，会提示首字母。</li>
+        <li><b>听音写词</b>：听发音写出单词，可以点「慢速」。适合配合王陆听力语料库：把一章的词加成一个分组，然后按分组听写。</li>
+        <li>拼错的词会自动放回今天的复习里，并记进「易错词」。</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>➕ 自己加生词</h2>
+      <ol>
+        <li>「词库」→ 右上角「＋ 添加」。</li>
+        <li>一个一个加：填英文和中文，音标、例句可以不填。</li>
+        <li>批量粘贴：每行一个，格式是「英文 空格 中文」，比如 <code>deposit 押金</code>；也可以写成「英文|中文|例句」。</li>
+        <li>建议按书分组，比如「新概念1 第5课」「王陆 第3章」「剑18 Test1」，以后可以按组复习、听写。</li>
+      </ol>
+    </div>
+
+    <div class="card">
+      <h2>📸 拍照直接取词（不用 AI）</h2>
+      <p>iPhone 自带「实况文本」，能直接识别照片里的文字：</p>
+      <ol>
+        <li>打开相机对准单词表，右下角出现「文字识别」小图标（一个方框里有几行字）时点它。也可以先拍照，再在「照片」里打开这张图。</li>
+        <li>长按文字，拖动选中要的部分（或点「全选」），再点「拷贝」。</li>
+        <li>回到单词本 →「词库」→「＋ 添加」→「批量粘贴」→ 长按输入框 → 粘贴。</li>
+        <li>检查一下格式：每行要是「英文 空格 中文」。如果书上排版乱，就用下面的「只整理单词」让豆包整理。</li>
+      </ol>
+    </div>
+
+    <div class="card">
+      <h2>🤖 拍书页让豆包出题</h2>
+      <ol>
+        <li>首页「📷 拍书页 · AI 出题」→ 选出几道题 → 点「复制出题指令」。</li>
+        <li>打开豆包 → 新建对话 → 点「＋」或相机按钮选书页照片 → 在输入框长按「粘贴」指令 → 发送。</li>
+        <li>等豆包回复完，点回复下面的「复制」。</li>
+        <li>回到单词本，点「从剪贴板粘贴」→ 起个名字 →「识别并保存」。</li>
+        <li>点「开始测验」做题。书页里的生词会自动加进同名分组，进入复习计划。</li>
+      </ol>
+      <div class="tip">拍照小技巧：书页拍平、光线够亮、字要清楚，一次 1～4 页效果最好。豆包偶尔会出错，觉得哪道题不对就跳过。</div>
+      <div class="tip">如果提示「没识别到」：多半是豆包没按格式回复。可以对豆包说「请严格按我给的格式重新输出」，再复制一次。</div>
+    </div>
+
+    <div class="card">
+      <h2>📈 进度和学习报告</h2>
+      <ul>
+        <li>「进度」页能看到已学、已掌握、易错词，以及最近 12 周的学习日历。</li>
+        <li>点「生成报告」会生成最近 7 天的报告图片，点「分享图片」可以发到微信家庭群。</li>
+        <li>「设置」里填上雅思考试日期，首页会显示倒计时。</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>💡 提建议</h2>
+      <p>「设置」→「写建议」：写下哪里不好用、想加什么功能，点「发给爸爸」，选微信发送。爸爸会请 Claude 修改，改好后重新打开 App 就是新版本，不用重新安装。</p>
+    </div>
+
+    <div class="card">
+      <h2>📦 备份和换手机</h2>
+      <ul>
+        <li>「设置」→「导出备份」：保存到「文件」或用微信发给自己。建议每月一次，超过 30 天没备份首页会提醒。</li>
+        <li>换手机：在新手机上装好单词本 →「设置」→「从备份恢复」→ 选备份文件。</li>
+        <li>不要删除桌面图标，删掉会连带删除学习记录。</li>
+      </ul>
+    </div>
+
   </section>
 </main>
 
@@ -291,6 +435,7 @@ function load(){
   db.custom = db.custom || [];
   db.groups = db.groups || ["我的生词"];
   db.log = db.log || {};
+  db.quizzes = db.quizzes || [];
   if(!db.nextId) db.nextId=1;
   if(!db.created) db.created=Date.now();
 }
@@ -374,11 +519,12 @@ var curView="home";
 function goView(v){
   curView=v;
   [].forEach.call(document.querySelectorAll(".view"),function(s){ s.classList.toggle("on", s.id==="v-"+v); });
-  [].forEach.call($("tabs").children,function(b){ b.classList.toggle("on", b.dataset.v===v); });
+  [].forEach.call($("tabs").children,function(b){ b.classList.toggle("on", b.dataset.v===v || (b.dataset.v==="home" && (v==="ai"||v==="help"))); });
   if(v==="home") renderHome();
   if(v==="lib") renderLib();
   if(v==="stat") renderStat();
   if(v==="set") renderSet();
+  if(v==="ai") renderAI();
   window.scrollTo(0,0);
 }
 $("tabs").addEventListener("click",function(e){ var b=e.target.closest("button"); if(b) goView(b.dataset.v); });
@@ -424,6 +570,7 @@ function renderHome(){
   if(db.set.pr && $("prSrc").querySelector('option[value="'+db.set.pr.replace(/"/g,'\\"')+'"]')) $("prSrc").value=db.set.pr;
   $("newSize").innerHTML=[5,10,20,30].map(function(n){ return '<button data-n="'+n+'" class="'+(n===db.set.batch?"on":"")+'">'+n+' 个</button>'; }).join("");
   checkBackup();
+  renderQuizHome();
 }
 $("newSize").addEventListener("click",function(e){ var b=e.target.closest("button"); if(!b) return; db.set.batch=+b.dataset.n; persist(); renderHome(); });
 $("newSrc").addEventListener("change",function(){ db.set.src=this.value; persist(); });
@@ -471,6 +618,7 @@ $("sQuit").onclick=function(){
 $("sSay2").onclick=function(){ if(S && S.cur) speak(WORDS[S.cur].w); };
 function showCard(){
   if(!S.queue.length){ showDone(false); return; }
+  if(S.mode==="quiz"){ $("sCount").textContent="测验 "+(S.done+1)+" / "+(S.done+S.queue.length); $("sProg").style.width=(S.done/(S.done+S.queue.length)*100)+"%"; renderQuiz(); return; }
   var id=S.queue[0], w=WORDS[id]; S.cur=id; S.step="front";
   $("sCount").textContent=(S.kind==="new"?"新词 ":S.kind==="review"?"复习 ":(S.mode==="spell"?"拼写 ":"听写 "))+(S.done+1)+" / "+(S.done+S.queue.length);
   $("sProg").style.width=(S.done/(S.done+S.queue.length)*100)+"%";
@@ -559,13 +707,14 @@ function checkSpell(w,val){
   function next(){ S.queue.shift(); S.done++; showCard(); }
 }
 function showDone(early){
+  if(S.mode==="quiz") finishQuiz();
   var total=S.right+S.wrong;
   var pct = total? Math.round(S.right/total*100) : 0;
-  var msg = S.kind==="new" ? "学了 "+S.done+" 个新词" : S.kind==="review" ? "复习了 "+S.done+" 个词" : "练习了 "+S.done+" 个词";
+  var msg = S.kind==="new" ? "学了 "+S.done+" 个新词" : S.kind==="review" ? "复习了 "+S.done+" 个词" : S.kind==="quiz" ? "做了 "+S.done+" 道题" : "练习了 "+S.done+" 个词";
   var cheer = pct>=90?"太厉害了 🎉":pct>=70?"不错，继续保持 💪":"错的词会更常出现，多见几次就记住了 🙂";
   $("sProg").style.width="100%";
   $("sBody").innerHTML='<div class="done"><div class="big">'+(early?"👍":"🎉")+'</div><h2 style="margin-top:10px">'+(early?"先到这里":"完成！")+'</h2><p class="sub">'+msg+(total?"，正确率 "+pct+"%":"")+'<br>'+cheer+'</p>'+
-    (S.wrongList.length? '<div class="card" style="text-align:left;margin-top:20px"><h2>这次没记住的</h2><div class="list">'+uniq(S.wrongList).map(itemHtml).join("")+'</div></div>' : '')+'</div>';
+    (S.wrongList.length? '<div class="card" style="text-align:left;margin-top:20px"><h2>'+(S.mode==="quiz"?"做错的题":"这次没记住的")+'</h2><div class="list">'+(S.mode==="quiz"?S.wrongList.map(function(q){ return '<div class="it" style="display:block"><div>'+esc(q.q)+'</div><div class="sub" style="margin:4px 0 0">答案：'+esc(q.t==="mc"?"ABCD".charAt(q.a)+". "+q.o[q.a]:q.a)+'</div></div>'; }).join(""):uniq(S.wrongList).map(itemHtml).join(""))+'</div></div>' : '')+'</div>';
   $("sFoot").innerHTML='<button class="btn full" id="sEnd" style="padding:15px">返回</button>';
   $("sEnd").onclick=endSession;
 }
@@ -787,6 +936,202 @@ $("shareReport").onclick=function(){
 };
 $("copyReport").onclick=function(){
   if(navigator.clipboard) navigator.clipboard.writeText(reportText).then(function(){ toast("已复制，去微信粘贴吧"); },function(){ toast("复制失败"); });
+};
+
+// ---------- 通用跳转 ----------
+document.addEventListener("click",function(e){
+  var b=e.target.closest("[data-go]"); if(!b || $("study").classList.contains("on")) return;
+  goView(b.dataset.go);
+});
+
+// ---------- AI 出题（豆包） ----------
+db.quizzes = db.quizzes || [];
+if(!db.set.aiN) db.set.aiN=10;
+function promptQuiz(n){
+  return "你是一位雅思老师。请仔细读我发的书页照片，严格按下面的格式输出纯文本，不要加任何其他文字、标题、序号或说明，也不要用表格和代码块。\n\n"+
+  "#词\n（列出照片里值得掌握的英文单词或短语，最多 30 个，每行一个，格式：英文|英式音标|词性和中文意思|一个雅思风格的英文例句。音标不要加斜杠。）\n\n"+
+  "#题\n（根据这些词和书页内容出 "+n+" 道题，两种题型混合，每行一道：\n"+
+  "选择|题干|选项A|选项B|选项C|选项D|正确答案字母|一句中文解析\n"+
+  "填空|一个英文句子，要填的词用___代替|正确答案（单词或短语）|中文提示）\n\n"+
+  "要求：题目考查词义、搭配和用法，难度接近雅思；选择题的四个选项都要合理、不能重复；填空题答案必须是上面列出的词或它的正确变形。\n\n"+
+  "格式示例（只是示例，请按照片内容出题）：\n#词\nenvironment|ɪnˈvaɪrənmənt|n. 环境|We should protect the environment.\n#题\n选择|\"reliable\" 最接近哪个意思？|可靠的|昂贵的|方便的|古老的|A|reliable 意思是可靠的、可信赖的\n填空|Air ___ is a serious problem in big cities.|pollution|污染";
+}
+function promptWords(){
+  return "请仔细读我发的照片（单词表或书页），把里面的英文单词或短语整理出来，严格按下面的格式输出纯文本，不要加任何其他文字、标题、序号或说明，也不要用表格和代码块。\n\n"+
+  "#词\n（每行一个，格式：英文|英式音标|词性和中文意思|一个简单的英文例句。音标不要加斜杠。照片里有中文意思的，以照片为准。）\n\n"+
+  "格式示例：\n#词\ndeposit|dɪˈpɒzɪt|n. 押金；定金|You need to pay a deposit first.";
+}
+function copyText(t,msg){
+  function fallback(){ var ta=document.createElement("textarea"); ta.value=t; ta.style.position="fixed"; ta.style.opacity="0"; document.body.appendChild(ta); ta.focus(); ta.select(); try{ document.execCommand("copy"); toast(msg,2600); }catch(e){ toast("复制失败，请手动复制",2600); } ta.remove(); }
+  if(navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(function(){ toast(msg,2600); },fallback); else fallback();
+}
+$("cpQuiz").onclick=function(){ copyText(promptQuiz(db.set.aiN),"已复制出题指令，去豆包粘贴吧"); };
+$("cpWords").onclick=function(){ copyText(promptWords(),"已复制整理单词指令，去豆包粘贴吧"); };
+$("aiPaste").onclick=function(){
+  if(!navigator.clipboard || !navigator.clipboard.readText){ toast("请在下面的框里长按粘贴",2400); $("aiIn").focus(); return; }
+  navigator.clipboard.readText().then(function(t){ if(!t){ toast("剪贴板是空的"); return; } $("aiIn").value=t; toast("已粘贴"); },function(){ toast("请在下面的框里长按粘贴",2400); $("aiIn").focus(); });
+};
+function todayLabel(){ var d=new Date(); return (d.getMonth()+1)+"月"+d.getDate()+"日"; }
+function renderAI(){
+  $("aiN").innerHTML=[5,10,15,20].map(function(n){ return '<button data-n="'+n+'" class="'+(n===db.set.aiN?"on":"")+'">'+n+' 道</button>'; }).join("");
+  if(!$("aiName").value) $("aiName").value="拍照 "+todayLabel();
+  $("aiMsg").textContent="";
+  $("quizAll").innerHTML = db.quizzes.length ? db.quizzes.slice().reverse().map(quizRow).join("") : '<p class="sub" style="margin:0">还没有测验。</p>';
+}
+$("aiN").onclick=function(e){ var b=e.target.closest("button"); if(!b) return; db.set.aiN=+b.dataset.n; persist(); renderAI(); };
+function cleanCell(x){ return String(x||"").replace(/^[\s*`]+|[\s*`]+$/g,"").trim(); }
+function parseAI(text){
+  var sec="", words=[], qs=[];
+  text.replace(/\r/g,"").split("\n").forEach(function(raw){
+    var line=raw.replace(/｜/g,"|").replace(/^\s*(?:[-*•]|\d+[\.、\)）])\s*/,"").trim();
+    if(!line || /^```/.test(line)) return;
+    if(/^#+\s*词/.test(line)){ sec="w"; return; }
+    if(/^#+\s*题/.test(line)){ sec="q"; return; }
+    if(line.indexOf("|")<0) return;
+    var a=line.split("|").map(cleanCell);
+    if(a[0]==="选择" || a[0]==="选择题"){
+      if(a.length<7) return;
+      var opts=a.slice(2,6), k=(a[6]||"").toUpperCase().replace(/[^ABCD]/g,"").charAt(0);
+      if(!k) { var idx=opts.indexOf(a[6]); if(idx>=0) k="ABCD".charAt(idx); }
+      if(!k || !a[1]) return;
+      qs.push({t:"mc",q:a[1],o:opts,a:"ABCD".indexOf(k),x:a[7]||""}); return;
+    }
+    if(a[0]==="填空" || a[0]==="填空题"){
+      if(a.length<3 || !a[1] || !a[2]) return;
+      var q=a[1]; if(q.indexOf("___")<0) q=q.replace(/_{2,}|（\s*）|\(\s*\)/,"___");
+      qs.push({t:"fill",q:q,a:a[2],h:a[3]||""}); return;
+    }
+    if(sec==="w" || (sec==="" && a.length>=3 && /^[A-Za-z]/.test(a[0]))){
+      if(!/^[A-Za-z][A-Za-z'’\-\. ]*$/.test(a[0])) return;
+      if(a.length>=4) words.push({w:a[0],ipa:a[1].replace(/^\/|\/$/g,""),cn:a[2],ex:a[3]||""});
+      else if(a.length===3) words.push({w:a[0],ipa:"",cn:a[1],ex:a[2]});
+      else words.push({w:a[0],ipa:"",cn:a[1],ex:""});
+    }
+  });
+  return {words:words,qs:qs};
+}
+$("aiGo").onclick=function(){
+  var r=parseAI($("aiIn").value);
+  if(!r.words.length && !r.qs.length){ $("aiMsg").textContent="没识别到内容。请确认粘贴的是豆包的回复，或者让豆包「严格按格式重新输出」后再复制。"; return; }
+  var name=$("aiName").value.trim()||("拍照 "+todayLabel());
+  var added=0, ids=[];
+  if(r.words.length){
+    if(db.groups.indexOf(name)<0) db.groups.push(name);
+    r.words.forEach(function(w){
+      var ex=db.custom.filter(function(c){ return c.g===name && c.w.toLowerCase()===w.w.toLowerCase(); })[0];
+      if(ex){ ids.push(ex.id); return; }
+      var id="c"+(db.nextId++); db.custom.push({id:id,w:w.w,cn:w.cn,ipa:w.ipa,ex:w.ex,g:name}); ids.push(id); added++;
+    });
+    rebuildCustom();
+  }
+  var quiz=null;
+  if(r.qs.length){ quiz={id:"q"+(db.nextId++),name:name,at:Date.now(),qs:r.qs,best:null,times:0}; db.quizzes.push(quiz); if(db.quizzes.length>60) db.quizzes.shift(); }
+  persist();
+  $("aiIn").value=""; $("aiName").value="";
+  sheet('<h2>✅ 已保存</h2><p class="sub">'+(r.words.length?'识别到 '+r.words.length+' 个词，新加入分组「'+esc(name)+'」'+added+' 个，可以在首页「学新词」里选这个分组来学。<br>':'')+
+    (r.qs.length?'生成了 '+r.qs.length+' 道题。':'这次没有题目（只整理了单词）。')+'</p>'+
+    '<div class="row">'+(quiz?'<button class="btn" data-act="quiz" style="flex:1">开始测验</button>':'')+
+    (r.words.length?'<button class="ghost" data-act="learn" style="flex:1">学这些新词</button>':'')+'</div>'+
+    '<button class="ghost full" data-act="close" style="margin-top:10px">稍后再说</button>', function(act){
+      closeSheet();
+      if(act==="quiz") startQuiz(quiz.id);
+      if(act==="learn"){ var nw=ids.filter(function(id){ return !db.prog[id]; }); if(nw.length) startSession("new","card",nw.slice(0,30)); else toast("这些词都学过了"); }
+    });
+  renderAI();
+};
+function quizRow(q){
+  var d=new Date(q.at);
+  return '<div class="grp" data-quiz="'+q.id+'"><div style="min-width:0"><div style="font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+esc(q.name)+'</div><div class="sub" style="margin:2px 0 0">'+(d.getMonth()+1)+'/'+d.getDate()+' · '+q.qs.length+' 道'+(q.best!=null?' · 最好 '+q.best+'%':' · 还没做')+'</div></div><button class="ghost" data-quiz-go="'+q.id+'" style="padding:7px 12px;flex:none">'+(q.times?'再做一次':'做题')+'</button></div>';
+}
+function renderQuizHome(){
+  var h=db.quizzes.slice(-3).reverse().map(quizRow).join("");
+  $("quizList").innerHTML = h ? '<p class="sub" style="margin:10px 0 0">最近的测验</p>'+h : "";
+}
+document.addEventListener("click",function(e){
+  var b=e.target.closest("[data-quiz-go]"); if(b){ startQuiz(b.dataset.quizGo); return; }
+  var r=e.target.closest(".grp[data-quiz]"); if(r && !e.target.closest("button")) quizMenu(r.dataset.quiz);
+});
+function quizMenu(id){
+  var q=db.quizzes.filter(function(x){return x.id===id;})[0]; if(!q) return;
+  sheet('<h2>'+esc(q.name)+'</h2><p class="sub">'+q.qs.length+' 道题，做过 '+(q.times||0)+' 次'+(q.best!=null?'，最好成绩 '+q.best+'%':'')+'。</p>'+
+    '<button class="btn full" data-act="go">做题</button><button class="ghost full" data-act="del" style="margin-top:10px;color:var(--bad)">删除这个测验</button><button class="ghost full" data-act="close" style="margin-top:10px">关闭</button>',function(act){
+      if(act==="go"){ closeSheet(); startQuiz(id); }
+      if(act==="del"){ if(delArm!=="q"+id){ delArm="q"+id; toast("再点一次确认删除",2000); setTimeout(function(){delArm=null;},2500); return; }
+        db.quizzes=db.quizzes.filter(function(x){return x.id!==id;}); persist(); closeSheet(); toast("已删除"); goView(curView); }
+    });
+}
+function startQuiz(id){
+  var q=db.quizzes.filter(function(x){return x.id===id;})[0]; if(!q) return;
+  S={kind:"quiz",mode:"quiz",quiz:q,queue:shuffle(q.qs.map(function(_,i){return i;})),total:q.qs.length,done:0,seen:{},again:{},right:0,wrong:0,wrongList:[],step:"front"};
+  $("study").classList.add("on"); document.body.style.overflow="hidden";
+  showCard();
+}
+function findWordId(w){
+  w=norm(w); var id=null;
+  Object.keys(WORDS).forEach(function(k){ if(!id && norm(WORDS[k].w)===w) id=k; });
+  return id;
+}
+function renderQuiz(){
+  var qi=S.queue[0], q=S.quiz.qs[qi]; S.step="front"; S.cur=null;
+  if(q.t==="mc"){
+    $("sBody").innerHTML='<span class="tag">选择题</span><div class="qq">'+esc(q.q)+'</div>'+q.o.map(function(o,i){ return '<button class="qopt" data-opt="'+i+'">'+"ABCD".charAt(i)+'. '+esc(o)+'</button>'; }).join("")+'<div class="res" id="qRes"></div>';
+    $("sFoot").innerHTML='<button class="ghost full" id="qSkip">跳过这题</button>';
+    [].forEach.call(document.querySelectorAll(".qopt"),function(b){ b.onclick=function(){ answerMC(q,+b.dataset.opt); }; });
+  } else {
+    $("sBody").innerHTML='<span class="tag">填空题</span><div class="qq">'+esc(q.q).replace("___",'<u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u>')+'</div>'+(q.h?'<p class="sub" style="margin-top:8px">提示：'+esc(q.h)+'</p>':'')+
+      '<div class="spin"><input id="spIn" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="done" placeholder="填入的词"></div><div class="res" id="qRes"></div>';
+    $("sFoot").innerHTML='<div class="row"><button class="ghost" id="qSkip" style="flex:1">不会</button><button class="btn" id="qOk" style="flex:2">确定</button></div>';
+    setTimeout(function(){ $("spIn").focus(); },60);
+    $("spIn").addEventListener("keydown",function(e){ if(e.key==="Enter"){ e.preventDefault(); $("qOk").click(); } });
+    $("qOk").onclick=function(){ answerFill(q,$("spIn").value); };
+  }
+  $("qSkip").onclick=function(){ if(q.t==="mc") answerMC(q,-1); else answerFill(q,""); };
+}
+function quizResult(ok,q){
+  var L=logDay(); L.sp++; if(ok){ L.spok++; S.right++; } else { S.wrong++; S.wrongList.push(q); }
+  persist();
+  $("sFoot").innerHTML='<button class="btn full" id="qNext" style="padding:15px">下一题</button>';
+  $("qNext").onclick=function(){ S.queue.shift(); S.done++; showCard(); };
+}
+function answerMC(q,i){
+  if(S.step!=="front") return; S.step="checked";
+  var ok=i===q.a;
+  [].forEach.call(document.querySelectorAll(".qopt"),function(b){ var k=+b.dataset.opt; if(k===q.a) b.classList.add("ok"); else if(k===i) b.classList.add("ng"); b.disabled=true; });
+  $("qRes").innerHTML=(ok?'<div class="ok">✓ 正确</div>':'<div class="ng">✗ 正确答案是 '+"ABCD".charAt(q.a)+'</div>')+(q.x?'<div class="sub" style="margin-top:6px">'+esc(q.x)+'</div>':'');
+  quizResult(ok,q);
+}
+function answerFill(q,val){
+  if(S.step!=="front") return; S.step="checked";
+  var ok = norm(val)===norm(q.a);
+  $("spIn").disabled=true;
+  var sent=esc(q.q).replace("___",'<b style="color:var(--good)">'+esc(q.a)+'</b>');
+  $("qRes").innerHTML=(ok?'<div class="ok">✓ 正确</div>':'<div class="ng">✗ '+(val?'写成了 '+esc(val):'没关系，记一下')+'</div>')+'<div style="margin-top:8px;font-size:17px">'+sent+'</div>';
+  var id=findWordId(q.a); if(id){ S.cur=id; speak(WORDS[id].w);
+    if(!ok){ var p=db.prog[id]; if(!p) p=db.prog[id]={n:0,iv:0,ef:2.5,due:dayNum(),lap:0,first:dayNum()}; p.sw=(p.sw||0)+1; if(!p.skip) p.due=Math.min(p.due,dayNum()); p.last=dayNum(); } }
+  quizResult(ok,q);
+}
+function finishQuiz(){
+  var q=S.quiz, total=S.right+S.wrong, pct=total?Math.round(S.right/total*100):0;
+  if(S.done>=q.qs.length){ q.times=(q.times||0)+1; if(q.best==null||pct>q.best) q.best=pct; persist(); }
+}
+
+// ---------- 提建议 ----------
+$("sugBtn").onclick=function(){
+  var kinds=["想要新功能","用着不顺手","出错了","其他"];
+  sheet('<h2>💡 提建议</h2><div class="chips" id="sugK">'+kinds.map(function(k,i){ return '<button class="'+(i===0?"on":"")+'">'+k+'</button>'; }).join("")+'</div>'+
+    '<textarea id="sugT" placeholder="比如：希望复习时能看到这个词是哪本书里的；听写的时候发音太快……"></textarea>'+
+    '<p class="sub" style="margin-top:8px">需要配图的话，截图后在微信里单独发给爸爸。</p>'+
+    '<div class="row"><button class="ghost" data-act="close" style="flex:1">取消</button><button class="btn" data-act="send" style="flex:2">发给爸爸</button></div>', function(act){
+      if(act!=="send") return;
+      var t=$("sugT").value.trim(); if(!t){ toast("先写几句吧"); $("sugT").focus(); return; }
+      var k=document.querySelector("#sugK button.on").textContent;
+      var msg="【单词本建议】"+k+"\n来自："+(db.name||"孩子")+"，"+new Date().toLocaleDateString("zh-CN")+"\n\n"+t+"\n\n（爸爸：把这条消息转给 Claude，说「请按单词本里的建议优化」就行）";
+      db.sugs=db.sugs||[]; db.sugs.push({at:Date.now(),k:k,t:t}); persist();
+      closeSheet();
+      if(navigator.share){ navigator.share({text:msg}).catch(function(){}); }
+      else copyText(msg,"已复制，去微信粘贴发给爸爸");
+    });
+  $("sugK").onclick=function(e){ var b=e.target.closest("button"); if(!b) return; [].forEach.call(this.children,function(x){ x.classList.toggle("on",x===b); }); };
 };
 
 // ---------- 设置 ----------
