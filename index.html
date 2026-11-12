@@ -238,7 +238,7 @@
     </div>
     <div class="card">
       <h2>💡 提建议</h2>
-      <p class="sub">用着哪里不顺手、想要什么新功能，写下来发给爸爸，爸爸会请 Claude 改进。</p>
+      <p class="sub" id="sugDesc">用着哪里不顺手、想要什么新功能，写下来发出去，转交 Claude 改进。</p>
       <button class="btn full" id="sugBtn">写建议</button>
       <button class="ghost full" data-go="help" style="margin-top:10px">❓ 使用说明</button>
     </div>
@@ -366,7 +366,7 @@
 
     <div class="card">
       <h2>💡 提建议</h2>
-      <p>「设置」→「写建议」：写下哪里不好用、想加什么功能，点「发给爸爸」，选微信发送。爸爸会请 Claude 修改，改好后重新打开 App 就是新版本，不用重新安装。</p>
+      <p>「设置」→「写建议」：写下哪里不好用、想加什么功能，填好发送给谁（默认是爸爸），点「发送给爸爸，转交 Claude」，选微信发送。对方把消息转给 Claude 修改，改好后重新打开 App 就是新版本，不用重新安装。</p>
     </div>
 
     <div class="card">
@@ -1122,18 +1122,22 @@ function finishQuiz(){
 $("sugBtn").onclick=function(){
   var kinds=["想要新功能","用着不顺手","出错了","其他"];
   sheet('<h2>💡 提建议</h2><div class="chips" id="sugK">'+kinds.map(function(k,i){ return '<button class="'+(i===0?"on":"")+'">'+k+'</button>'; }).join("")+'</div>'+
+    '<label class="f" style="margin-top:0">发送给谁（由他转交 Claude）</label><input id="sugTo" value="'+esc(db.set.sugTo||"爸爸")+'" style="margin-bottom:10px">'+
     '<textarea id="sugT" placeholder="比如：希望复习时能看到这个词是哪本书里的；听写的时候发音太快……"></textarea>'+
-    '<p class="sub" style="margin-top:8px">需要配图的话，截图后在微信里单独发给爸爸。</p>'+
-    '<div class="row"><button class="ghost" data-act="close" style="flex:1">取消</button><button class="btn" data-act="send" style="flex:2">发给爸爸</button></div>', function(act){
+    '<p class="sub" style="margin-top:8px">需要配图的话，截图后在微信里单独发过去。</p>'+
+    '<div class="row"><button class="ghost" data-act="close" style="flex:1">取消</button><button class="btn" data-act="send" id="sugSend" style="flex:2"></button></div>', function(act){
       if(act!=="send") return;
       var t=$("sugT").value.trim(); if(!t){ toast("先写几句吧"); $("sugT").focus(); return; }
       var k=document.querySelector("#sugK button.on").textContent;
-      var msg="【单词本建议】"+k+"\n来自："+(db.name||"孩子")+"，"+new Date().toLocaleDateString("zh-CN")+"\n\n"+t+"\n\n（爸爸：把这条消息转给 Claude，说「请按单词本里的建议优化」就行）";
+      var to=$("sugTo").value.trim()||"爸爸"; db.set.sugTo=to;
+      var msg="【单词本建议 · 请转交 Claude】"+k+"\n来自："+(db.name||"我")+"，"+new Date().toLocaleDateString("zh-CN")+"\n\n"+t+"\n\n（"+to+"：请把这条消息转给 Claude，说「请按单词本里的建议优化」就行）";
       db.sugs=db.sugs||[]; db.sugs.push({at:Date.now(),k:k,t:t}); persist();
       closeSheet();
       if(navigator.share){ navigator.share({text:msg}).catch(function(){}); }
-      else copyText(msg,"已复制，去微信粘贴发给爸爸");
+      else copyText(msg,"已复制，去微信粘贴发给"+to);
     });
+  function sugLabel(){ $("sugSend").textContent="发送给"+($("sugTo").value.trim()||"爸爸")+"，转交 Claude"; }
+  sugLabel(); $("sugTo").oninput=sugLabel;
   $("sugK").onclick=function(e){ var b=e.target.closest("button"); if(!b) return; [].forEach.call(this.children,function(x){ x.classList.toggle("on",x===b); }); };
 };
 
