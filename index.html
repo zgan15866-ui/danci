@@ -7,7 +7,8 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="雅思修行">
-<meta name="theme-color" content="#f3f6fb">
+<meta name="theme-color" content="#f3f6fb" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#11151d" media="(prefers-color-scheme: dark)">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="icon" href="icon-180.png">
@@ -17,7 +18,9 @@
     --accent:#2457c5; --soft:#e8effc; --g1:#2a5bd7; --g2:#16a3b8;
     --bad:#d6504a; --mid:#e0912b; --good:#2e9c6a; --easy:#7a5cd0; }
   @media (prefers-color-scheme: dark){
-    :root{ --bg:#11151d; --card:#1b212c; --ink:#eef2f8; --muted:#97a0b2; --line:#2b3240; --soft:#1f2a40; --accent:#7aa2ff; }
+    :root{ color-scheme:dark; --bg:#11151d; --card:#1b212c; --ink:#f2f5fa; --muted:#b0b9ca; --line:#3a4558; --soft:#22304d; --accent:#8fb2ff;
+      --g1:#2552c4; --g2:#0e7f94; --bad:#ff8a80; --mid:#f5b052; --good:#52c88f; --easy:#b7a4ff;
+      --ctl:#6b7790; --track:#46567a; --onacc:#0b1220; }
   }
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
   html,body{margin:0;background:var(--bg);color:var(--ink);
@@ -184,6 +187,25 @@
   .tip{background:var(--soft);border-radius:10px;padding:10px 12px;font-size:14px;line-height:1.6;margin-top:8px}
   .welcome{position:fixed;inset:0;background:var(--bg);z-index:60;display:none;align-items:center;justify-content:center;padding:24px}
   .welcome.on{display:flex}
+  /* 深色模式可读性：只在深色下生效，浅色不受影响 */
+  @media (prefers-color-scheme: dark){
+    .card{box-shadow:inset 0 0 0 1px var(--line)}
+    .btn,.chips button.on{color:var(--onacc)}
+    .chips button,.ghost,.track button,.qopt,select,input,textarea,details.more>summary{border-color:var(--ctl)}
+    ::placeholder{color:var(--muted);opacity:1}
+    .prog,.vbar,.bar,.cal i{background:var(--track)}
+    .vbar i{background:linear-gradient(90deg,#5b8cff,#35c4d8)}
+    .cal i.a1{background:#4f6fb8}.cal i.a2{background:#7ba0f0}.cal i.a3{background:#b5ccff}
+    .g0{background:#c23b34}.g1{background:#9a5a00}.g2{background:#1f7a50}.g3{background:#6a4cc4}
+    .hero .s{opacity:1}
+    .hero .m span,.hero .help{background:rgba(0,0,0,.28)}
+    .battle{border-color:rgba(255,255,255,.18)}
+    .battle .bt{opacity:.85}
+    .battle .go{background:linear-gradient(135deg,#d93a2e,#b85a08);box-shadow:0 6px 20px rgba(217,58,46,.3)}
+    .ko.k{color:var(--bad)}.ko.w{color:var(--good)}
+    .toast{box-shadow:0 0 0 1px rgba(255,255,255,.22)}
+    .sheet .in{border-top:1px solid var(--line)}
+  }
 </style>
 </head>
 <body>
