@@ -6,12 +6,12 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="单词本">
+<meta name="apple-mobile-web-app-title" content="雅思修行">
 <meta name="theme-color" content="#f3f6fb">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="icon" href="icon-180.png">
-<title>雅思单词本</title>
+<title>雅思修行</title>
 <style>
   :root{ --bg:#f3f6fb; --card:#fff; --ink:#1d2433; --muted:#7c8597; --line:#e4e9f2;
     --accent:#2457c5; --soft:#e8effc; --g1:#2a5bd7; --g2:#16a3b8;
@@ -168,6 +168,11 @@
     #printView .pv-page{max-width:none;padding:0}
     #printView tr{page-break-inside:avoid}
   }
+  .track{display:flex;flex-direction:column;gap:8px;margin-top:8px}
+  .track button{text-align:left;border:1.5px solid var(--line);background:var(--card);color:var(--ink);border-radius:14px;padding:12px 14px}
+  .track button.on{border-color:var(--accent);background:var(--soft)}
+  .track button b{display:block;font-size:16px}
+  .track button span{display:block;font-size:13px;color:var(--muted);margin-top:4px;font-weight:400;line-height:1.5}
   .tip{background:var(--soft);border-radius:10px;padding:10px 12px;font-size:14px;line-height:1.6;margin-top:8px}
   .welcome{position:fixed;inset:0;background:var(--bg);z-index:60;display:none;align-items:center;justify-content:center;padding:24px}
   .welcome.on{display:flex}
@@ -182,7 +187,7 @@
     <div class="hero">
       <div class="deco">Aa</div>
       <button class="help" data-go="help">❓ 使用说明</button>
-      <div class="t" id="heroT">雅思单词本</div>
+      <div class="t" id="heroT">雅思修行</div>
       <div class="s" id="heroS">今天也来背几个吧</div>
       <div class="m" id="heroM"></div>
     </div>
@@ -300,6 +305,11 @@
   <section class="view" id="v-set">
     <h1>设置与备份</h1>
     <div class="card">
+      <h2>学习程度</h2>
+      <p class="sub" style="margin-top:4px">切换不会清掉已学的词，各档用自己的词量和目标。</p>
+      <div class="track" id="setTrack"></div>
+    </div>
+    <div class="card">
       <label class="f" style="margin-top:0">称呼</label>
       <input id="setName">
       <label class="f">发音</label>
@@ -414,7 +424,7 @@
       <ol>
         <li>打开相机对准单词表，右下角出现「文字识别」小图标（一个方框里有几行字）时点它。也可以先拍照，再在「照片」里打开这张图。</li>
         <li>长按文字，拖动选中要的部分（或点「全选」），再点「拷贝」。</li>
-        <li>回到单词本 →「词库」→「＋ 添加」→「批量粘贴」→ 长按输入框 → 粘贴。</li>
+        <li>回到雅思修行 →「词库」→「＋ 添加」→「批量粘贴」→ 长按输入框 → 粘贴。</li>
         <li>检查一下格式：每行要是「英文 空格 中文」。如果书上排版乱，就用下面的「只整理单词」让豆包整理。</li>
       </ol>
     </div>
@@ -425,7 +435,7 @@
         <li>首页「📷 拍书页 · AI 出题」→ 选出几道题 → 点「复制出题指令」。</li>
         <li>打开豆包 → 新建对话 → 点「＋」或相机按钮选书页照片 → 在输入框长按「粘贴」指令 → 发送。</li>
         <li>等豆包回复完，点回复下面的「复制」。</li>
-        <li>回到单词本，点「从剪贴板粘贴」→ 起个名字 →「识别并保存」。</li>
+        <li>回到雅思修行，点「从剪贴板粘贴」→ 起个名字 →「识别并保存」。</li>
         <li>点「开始测验」做题。书页里的生词会自动加进同名分组，进入复习计划。</li>
       </ol>
       <div class="tip">拍照小技巧：书页拍平、光线够亮、字要清楚，一次 1～4 页效果最好。豆包偶尔会出错，觉得哪道题不对就跳过。</div>
@@ -453,7 +463,7 @@
       <h2>📦 备份和换手机</h2>
       <ul>
         <li>「设置」→「导出备份」：保存到「文件」或用微信发给自己。建议每月一次，超过 30 天没备份首页会提醒。</li>
-        <li>换手机：在新手机上装好单词本 →「设置」→「从备份恢复」→ 选备份文件。</li>
+        <li>换手机：在新手机上装好雅思修行 →「设置」→「从备份恢复」→ 选备份文件。</li>
         <li>不要删除桌面图标，删掉会连带删除学习记录。</li>
       </ul>
     </div>
@@ -461,11 +471,12 @@
     <div class="card">
       <h2>📚 分级词库、会用的词、同义替换</h2>
       <ul>
-        <li><b>词库有三层</b>：内置话题词（原来的 416 个）→ <b>话题核心词</b>（按 13 个话题扩充）→ <b>学术词 AWL</b>（学术文章最常见的 570 个词族，分 10 级，第 1 级最常见）。首页「学新词」选「全部」会按这个顺序往下学。</li>
+        <li><b>学习程度</b>：在「设置」里选「备考」或「入门」。默认是备考，给准备雅思的人用。入门档从最常用生活词开始，学完再进入话题核心词，不进入 AWL。切换档位不会清掉进度。</li>
+        <li><b>词库有三层</b>：入门词（最常用生活词）→ 内置话题词（原来的 416 个）和 <b>话题核心词</b> → <b>学术词 AWL</b>（学术文章最常见的 570 个词族，分 10 级）。备考档「开打」按话题核心再到 AWL；入门档先走入门词。</li>
         <li><b>✍️ 会用</b>：带这个标记的词，写作和口语要会拼、会用，学完建议去「看中文拼写」「听音写词」练一练；没有标记的词，阅读和听力认识就够。</li>
         <li><b>同义替换</b>：很多词下面有常见的替换说法，雅思阅读、听力常考“同义替换”，写作里也能避免重复。</li>
         <li><b>词汇量进度</b>：首页会显示已学词数和离目标还差多少。目标在「设置」里改（默认 7000）。这里只统计在本应用里学过的词，标为「太简单」的词不计入。</li>
-        <li><b>⚡ 开打</b>：首页一个按钮就行，先复习到期的词，再按顺序学新词（内置/话题核心 → AWL 第 1→10 级）。周五 16:00 到周日 16:00 自动进入周末模式：每局新词约 35 个、复习上限 150，进度按周算（本周已学 / 目标 70）。复习积压多会分批，告诉你还剩多少。</li>
+        <li><b>⚡ 开打</b>：首页一个按钮就行，先复习到期的词，再按当前程度的顺序学新词。周五 16:00 到周日 16:00 自动进入周末模式。备考档：每局新词约 35 个、复习上限 150，本周目标 70。入门档：平日每局约 8 个、周末约 20 个，复习上限 80，本周目标 40。复习积压多会分批，告诉你还剩多少。</li>
         <li><b>段位</b>按已学词数升级：新手 → 青铜 → 白银 → 黄金 → 铂金 → 钻石 → 大师 → 传奇。连续答对有 COMBO，打完一局有结算。「🖨️ 导出本周词表」可以打印或截图，平日拿纸背。</li>
         <li>新增的词库放在单独的文件里，第一次联网打开后就能离线用；已有的学习记录不会受影响。</li>
       </ul>
@@ -475,6 +486,7 @@
       <h2>🧾 词表来源与说明</h2>
       <ul>
         <li><b>Academic Word List（学术词表）</b>：Averil Coxhead, 2000, <i>A New Academic Word List</i>, TESOL Quarterly 34(2)。本应用使用其 570 个词族的首词（词表由 Victoria University of Wellington 公开发布），AWL 的分级沿用原表。</li>
+        <li><b>入门词</b>：选词参考 New Dolch List 1.1（Browne &amp; Culligan）和 New General Service List 1.2（Browne, Culligan &amp; Phillips），二者均为 <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>。本应用只使用其词目和频率排序（数字、星期、月份来自 NGSL 补充表），英式拼写为自行调整，释义和例句为自编。</li>
         <li><b>释义、例句、同义替换、话题分类</b>：全部为自编整理，没有抄录任何教材或商业词典，可能有疏漏，发现不准的词请在「设置」里提建议。</li>
         <li><b>音标</b>：由开源语音引擎 eSpeak NG 自动生成（英式），再做了格式整理，个别词可能与词典略有出入，请以词典和发音为准。</li>
         <li>本应用不包含《雅思词汇真经》或其他受版权保护的书籍内容。</li>
@@ -510,7 +522,7 @@
 
 <div class="welcome" id="welcome">
   <div class="card" style="width:100%;max-width:420px">
-    <h2>👋 欢迎使用雅思单词本</h2>
+    <h2>👋 欢迎使用雅思修行</h2>
     <p class="sub">先告诉我怎么称呼你，首页和学习报告上会显示。</p>
     <input id="wName" placeholder="比如：小明">
     <button class="btn full" id="wGo" style="margin-top:14px">开始</button>
@@ -553,6 +565,7 @@ function load(){
   if(!s.batch) s.batch=10;
   if(!s.goal) s.goal=7000;
   if(!s.weekGoal) s.weekGoal=70;
+  // track 缺省当备考（exam）。不要在这里写成 beginner，以免已装用户被切走。
   db.prog = db.prog || {};
   db.custom = db.custom || [];
   db.groups = db.groups || ["我的生词"];
@@ -571,7 +584,7 @@ load();
 // 所有词：内置 416 个 + 扩充词库（packs/*.json 静态文件）+ 自己加的
 // 内置词 ID 永远是 "b"+下标（b0–b415），不能插入、删除、重排；扩充词用稳定 ID（awl:xxx / core:xxx）。
 var TOPICS = BUILTIN.t;
-var WORDS = {}; var BUILT_IDS=[]; var CORE_IDS=[], AWL_PACK_IDS=[], AWL_BY={}; var packState={loaded:false, failed:false};
+var WORDS = {}; var BUILT_IDS=[]; var CORE_IDS=[], AWL_PACK_IDS=[], AWL_BY={}; var JUNIOR_IDS=[], JUNIOR_NEW=0; var packState={loaded:false, failed:false};
 BUILTIN.w.forEach(function(a,i){ var id="b"+i; WORDS[id]={id:id,w:a[0],ipa:a[1],cn:a[2],ex:a[3],g:"t"+a[4],use:(a[4]===11?"productive":"receptive"),syns:[]}; BUILT_IDS.push(id); });
 function rebuildCustom(){
   Object.keys(WORDS).forEach(function(k){ if(WORDS[k].custom) delete WORDS[k]; });
@@ -589,6 +602,10 @@ function addPack(p){
     WORDS[x.id]=w;
     if(p.pack==="core") CORE_IDS.push(x.id);
   });
+  if(p.pack==="junior"){
+    JUNIOR_IDS=(p.order||p.words.map(function(x){return x.id;})).filter(function(id){ return !!WORDS[id]; });
+    JUNIOR_NEW=JUNIOR_IDS.filter(function(id){ return WORDS[id] && WORDS[id].pack==="junior"; }).length;
+  }
 }
 function indexAwl(){
   AWL_BY={}; AWL_PACK_IDS=[];
@@ -600,21 +617,35 @@ function indexAwl(){
 }
 function getJson(url){ return fetch(url).then(function(r){ if(!r.ok) throw new Error(url); return r.json(); }); }
 function loadPacks(){
-  return Promise.all([getJson("packs/meta.json"),getJson("packs/core.json"),getJson("packs/awl.json")]).then(function(a){
-    applyMeta(a[0]); addPack(a[1]); addPack(a[2]); indexAwl(); packState.loaded=true;
+  return Promise.all([getJson("packs/meta.json"),getJson("packs/core.json"),getJson("packs/awl.json"),getJson("packs/junior.json")]).then(function(a){
+    applyMeta(a[0]); addPack(a[1]); addPack(a[2]); addPack(a[3]); indexAwl(); packState.loaded=true;
   });
 }
 function awlAll(){ var o=[]; for(var n=1;n<=10;n++) o=o.concat(AWL_BY[n]||[]); return o; }
-function libTotal(){ return BUILT_IDS.length+CORE_IDS.length+AWL_PACK_IDS.length; }
+function isBeginner(){ return db.set.track==="beginner"; }
+function trackWeekGoal(){ return isBeginner() ? 40 : (db.set.weekGoal||70); }
+function trackGoal(){ return isBeginner() ? (db.set.goalBeginner||2000) : (db.set.goal||7000); }
+function libTotal(){ return BUILT_IDS.length+CORE_IDS.length+AWL_PACK_IDS.length+JUNIOR_NEW; }
+var JTOPICS={basic:"基础用语",number:"数字",time:"时间",color:"颜色",family:"家庭",people:"人物",animal:"动物",food:"食物与饮料",body:"身体与健康",clothes:"服装",home:"家与生活",school:"学校",action:"常用动作",weather:"天气与自然",place:"地点",travel:"出行",shop:"购物与金钱",feel:"感受与性格",sport:"运动与爱好",job:"工作",adj:"常用形容",life:"日常用词"};
 function groupName(g){
   if(g[0]==="t") return TOPICS[+g.slice(1)];
   if(g==="k:core") return "话题核心词";
+  if(g==="k:junior") return "入门词";
   if(g==="k:awl") return "学术词 AWL（全部）";
   if(g.indexOf("k:awl")===0) return "AWL 第"+g.slice(5)+"级";
+  if(g.indexOf("j:")===0) return JTOPICS[g.slice(2)]||"入门词";
   return g.slice(2);
 }
 function wordsIn(g){
-  if(g==="all") return BUILT_IDS.concat(CORE_IDS, AWL_PACK_IDS, db.custom.map(function(c){return c.id;}));
+  if(g==="all"){
+    if(isBeginner()){
+      var seen={}, out=[];
+      JUNIOR_IDS.concat(BUILT_IDS, CORE_IDS, db.custom.map(function(c){return c.id;})).forEach(function(id){ if(!seen[id] && WORDS[id]){ seen[id]=1; out.push(id); } });
+      return out;
+    }
+    return BUILT_IDS.concat(CORE_IDS, AWL_PACK_IDS, db.custom.map(function(c){return c.id;}));
+  }
+  if(g==="k:junior") return JUNIOR_IDS;
   if(g==="k:core") return CORE_IDS;
   if(g==="k:awl") return awlAll();
   if(g.indexOf("k:awl")===0) return AWL_BY[+g.slice(5)]||[];
@@ -626,7 +657,7 @@ function wordsIn(g){
 // 孩子住校：只有周五 16:00 到周日 16:00 能用手机。自动判断，不设开关。
 function isWeekend(d){ d=d||new Date(); var w=d.getDay(), h=d.getHours(); return (w===5&&h>=16)||w===6||(w===0&&h<16); }
 function weekStartOf(n){ return n-((n+3)%7); } // 以周一为一周的开始（1970-01-01 是周四）
-function effCap(){ var c=db.set.cap||50; return isWeekend()&&c<150 ? 150 : c; }
+function effCap(){ var c=db.set.cap||50; if(!isWeekend()) return c; var floor=isBeginner()?80:150; return c<floor?floor:c; }
 function weekNewCount(){ var ws=weekStartOf(dayNum()), n=0; Object.keys(db.prog).forEach(function(id){ if(WORDS[id] && db.prog[id].first>=ws) n++; }); return n; }
 function weekActive(ws){ for(var i=0;i<7;i++){ var L=db.log[dayStr(ws+i)]; if(L && (L.nw+L.rv+L.sp)>0) return true; } return false; }
 function weekStreak(){ var ws=weekStartOf(dayNum()), n=weekActive(ws)?1:0; ws-=7; while(weekActive(ws)){ n++; ws-=7; } return n; }
@@ -742,8 +773,8 @@ function sourceOptions(sel, withPractice){
   function opt(g,label){ var ids=wordsIn(g); var left=ids.filter(function(id){return !db.prog[id];}).length;
     return '<option value="'+g+'">'+esc(label)+(withPractice?'（'+ids.length+'）':'（剩 '+left+'）')+'</option>'; }
   h+='<optgroup label="分级词库">';
-  if(!withPractice) h+='<option value="all">全部，按顺序（内置→话题核心→AWL）</option>';
-  h+=opt("k:core","话题核心词")+opt("k:awl","学术词 AWL（全部）");
+  if(!withPractice) h+='<option value="all">全部，按顺序（'+(isBeginner()?'入门→话题核心':'内置→话题核心→AWL')+'）</option>';
+  h+=opt("k:junior","入门词")+opt("k:core","话题核心词")+opt("k:awl","学术词 AWL（全部）");
   for(var n=1;n<=10;n++) h+=opt("k:awl"+n,"AWL 第 "+n+" 级"+(n===1?"（最常见）":""));
   h+='</optgroup>';
   h+='<optgroup label="话题词（内置+核心）">';
@@ -754,7 +785,7 @@ function sourceOptions(sel, withPractice){
 }
 function renderHome(){
   var name=db.name||"我";
-  $("heroT").textContent=name+"的雅思单词本";
+  $("heroT").textContent=name+"的雅思修行";
   var today=dayNum(), L=db.log[dayStr(today)];
   var learned=0, mastered=0; Object.keys(db.prog).forEach(function(id){ if(!WORDS[id]) return; learned++; var s=status(id); if(s==="m"||s==="e") mastered++; });
   $("heroS").textContent = L && (L.nw+L.rv) ? "今天已经学了 "+(L.nw+L.rv)+" 次，真棒 👏" : "有空就背几个，一点一点积累";
@@ -777,16 +808,20 @@ function renderHome(){
   checkBackup();
   renderQuizHome();
 }
-function newOrder(){ // 没学过的词按顺序：内置 → 话题核心 → AWL 第 1→10 级
-  var seen={}, out=[];
-  BUILT_IDS.concat(CORE_IDS, awlAll()).forEach(function(id){ if(seen[id]||db.prog[id]) return; seen[id]=1; out.push(id); });
+function newOrder(){
+  var seen={}, out=[], seq;
+  if(isBeginner()) seq=JUNIOR_IDS.concat(BUILT_IDS, CORE_IDS); // 入门词 → 话题核心，不进入 AWL
+  else seq=BUILT_IDS.concat(CORE_IDS, awlAll());
+  seq.forEach(function(id){ if(seen[id]||db.prog[id]||!WORDS[id]) return; seen[id]=1; out.push(id); });
   return out;
 }
 function battlePlan(){
   var we=isWeekend(), cap=effCap(), due=dueList(), rev=due.slice(0,cap), nw=[];
   if(due.length<=cap){
-    var remain=(db.set.weekGoal||70)-weekNewCount();
-    var n = we ? (remain>0 ? Math.min(35, Math.max(remain,10)) : 15) : (db.set.batch||10);
+    var remain=trackWeekGoal()-weekNewCount();
+    var n;
+    if(isBeginner()) n = we ? (remain>0 ? Math.min(20, Math.max(remain,8)) : 8) : (remain>0 ? 8 : 5);
+    else n = we ? (remain>0 ? Math.min(35, Math.max(remain,10)) : 15) : (db.set.batch||10);
     nw=newOrder().slice(0,n);
   }
   return {we:we, cap:cap, due:due.length, rev:rev, nw:nw, left:due.length-rev.length};
@@ -795,7 +830,7 @@ function renderVocab(){
   funInit();
   var learned=0, easy=0;
   Object.keys(db.prog).forEach(function(id){ if(!WORDS[id]) return; if(db.prog[id].skip) easy++; else learned++; });
-  var goal=db.set.goal||7000, total=libTotal(), left=Math.max(0,goal-learned), wg=db.set.weekGoal||70;
+  var goal=trackGoal(), total=libTotal(), left=Math.max(0,goal-learned), wg=trackWeekGoal();
   var wn=weekNewCount();
   $("weekText").textContent="本周已学 "+wn+" / 目标 "+wg+(wn>=wg?" ✅":"");
   $("weekBar").style.width=Math.min(100,wn/wg*100)+"%";
@@ -804,13 +839,13 @@ function renderVocab(){
   var rb=$("rankBadge"); rb.textContent=rk[0]; rb.style.color=rk[2];
   $("rankNext").textContent = nx ? "已学 "+n+" 个词 · 再学 "+(nx[1]-n)+" 个升「"+nx[0]+"」" : "已学 "+n+" 个词 · 最高段位";
   var h='词汇量：已学 '+learned+' / 目标 '+goal+'，还差 '+left+' 个';
-  if(left>0 && db.set.exam){ var dl=dayNum(new Date(db.set.exam+"T00:00:00"))-dayNum(); if(dl>0){ var wk=Math.max(1,Math.ceil(dl/7)); h+='；离考试 '+wk+' 周，平均每周约 '+Math.ceil(left/wk)+' 个'; } }
+  if(left>0 && db.set.exam && !isBeginner()){ var dl=dayNum(new Date(db.set.exam+"T00:00:00"))-dayNum(); if(dl>0){ var wk=Math.max(1,Math.ceil(dl/7)); h+='；离考试 '+wk+' 周，平均每周约 '+Math.ceil(left/wk)+' 个'; } }
   h+='。词库现有 '+total+' 个。';
   if(packState.failed) h+='<br>扩充词库没加载上，联网后重新打开 App。';
   if(easy>0) h+='<br>另有 '+easy+' 个标为「太简单」，没算在内。';
   $("vocabText").innerHTML=h;
   var pl=battlePlan(), btn=$("battleBtn"), sub;
-  $("battleT").textContent = pl.we ? "本周 · 周末模式" : "对战";
+  $("battleT").textContent = isBeginner() ? (pl.we ? "入门 · 周末模式" : "入门") : (pl.we ? "本周 · 周末模式" : "对战");
   if(!pl.rev.length && !pl.nw.length){ btn.disabled=true; sub="词库都学完了 🎉"; }
   else {
     btn.disabled=false;
@@ -824,8 +859,8 @@ function startBattle(){
   try{ if(window.speechSynthesis) speechSynthesis.resume(); }catch(e){}
   var pl=battlePlan();
   if(!pl.rev.length && !pl.nw.length){ toast("词库都学完了 🎉"); return; }
-  startSession("battle","card",pl.rev.concat(pl.nw));
-  S.newSet={}; pl.nw.forEach(function(id){ S.newSet[id]=1; });
+  var ns={}; pl.nw.forEach(function(id){ ns[id]=1; });
+  startSession("battle","card",pl.rev.concat(pl.nw),ns);
 }
 $("battleBtn").onclick=startBattle;
 $("newSize").addEventListener("click",function(e){ var b=e.target.closest("button"); if(!b) return; db.set.batch=+b.dataset.n; persist(); renderHome(); });
@@ -860,8 +895,8 @@ $("goDict").onclick=function(){
 
 // ---------- 学习过程 ----------
 var S=null;
-function startSession(kind,mode,ids){
-  S={kind:kind,mode:mode,queue:ids.slice(),total:ids.length,done:0,seen:{},again:{},right:0,wrong:0,wrongList:[],step:"front",combo:0,maxCombo:0,xp:0,newSet:{},nNew:0,nRev:0};
+function startSession(kind,mode,ids,newSet){
+  S={kind:kind,mode:mode,queue:ids.slice(),total:ids.length,done:0,seen:{},again:{},right:0,wrong:0,wrongList:[],step:"front",combo:0,maxCombo:0,xp:0,newSet:newSet||{},nNew:0,nRev:0};
   $("comboFx").className=""; $("sBody").onclick=null; funInit();
   $("study").classList.add("on");
   document.body.style.overflow="hidden";
@@ -1048,9 +1083,9 @@ function renderLib(){
   if(libGroup){ renderLibWords(); return; }
   $("libGroups").hidden=false; $("libWords").hidden=true;
   $("myGroups").innerHTML = db.groups.map(function(g){ return grpRow("m:"+g); }).join("") || '<p class="sub">还没有分组。</p>';
-  var tiers=["k:core","k:awl"]; for(var n=1;n<=10;n++) tiers.push("k:awl"+n);
+  var tiers=["k:junior","k:core","k:awl"]; for(var n=1;n<=10;n++) tiers.push("k:awl"+n);
   $("tierGroups").innerHTML = tiers.map(grpRow).join("");
-  $("tierSub").textContent = packState.failed ? "扩充词库没加载上，联网后重新打开 App。" : "话题核心词 "+CORE_IDS.length+" 个，按 13 个话题扩充（也在下面的话题里）；学术词 AWL 是学术文章最常见的 570 个词族，分 10 级。";
+  $("tierSub").textContent = packState.failed ? "扩充词库没加载上，联网后重新打开 App。" : "入门词 "+JUNIOR_IDS.length+" 个（最常用生活词）；话题核心词 "+CORE_IDS.length+" 个；学术词 AWL 是学术文章最常见的 570 个词族，分 10 级。";
   $("topicSub").textContent = "内置 "+BUILT_IDS.length+" 个 + 话题核心扩充 "+CORE_IDS.length+" 个，带音标、例句。";
   $("topicGroups").innerHTML = TOPICS.map(function(t,i){ return grpRow("t"+i); }).join("");
 }
@@ -1283,7 +1318,7 @@ $("mkReport").onclick=function(){
   if(!hard.length){ x.fillStyle="#2e9c6a"; x.fillText("没有易错词，继续保持 👍",100,y+70); }
   hard.forEach(function(id,i){ var wd=WORDS[id]; var yy=y+70+i*62; x.fillStyle="#2457c5"; x.font='700 38px '+F; x.fillText(wd.w,100,yy);
     var ww=x.measureText(wd.w).width; x.fillStyle="#555e70"; x.font='400 34px '+F; var cn=wd.cn; if(cn.length>16) cn=cn.slice(0,16)+"…"; x.fillText(cn,Math.max(380,100+ww+30),yy); });
-  x.fillStyle="#a0a8b8"; x.font='400 28px '+F; x.textAlign="center"; x.fillText("雅思单词本 · "+dayStr(today),W/2,H-90);
+  x.fillStyle="#a0a8b8"; x.font='400 28px '+F; x.textAlign="center"; x.fillText("雅思修行 · "+dayStr(today),W/2,H-90);
   reportText=name+"的单词周报（"+range+"）\n学习 "+w.days+"/7 天，新学 "+w.nw+" 个，复习 "+w.rv+" 次，拼写听写 "+w.sp+" 次，正确率 "+(acc==null?"—":acc+"%")+"\n累计已学 "+t.learned+"，已掌握 "+t.mastered+"，易错 "+t.hard.length+(exam?"\n"+exam:"")+
     (hard.length?"\n易错词："+hard.map(function(id){return WORDS[id].w;}).join("、"):"");
   $("reportImg").src=cv.toDataURL("image/png");
@@ -1497,7 +1532,7 @@ $("sugBtn").onclick=function(){
       var t=$("sugT").value.trim(); if(!t){ toast("先写几句吧"); $("sugT").focus(); return; }
       var k=document.querySelector("#sugK button.on").textContent;
       var to=$("sugTo").value.trim()||"爸爸"; db.set.sugTo=to;
-      var msg="【单词本建议 · 请转交 Claude】"+k+"\n来自："+(db.name||"我")+"，"+new Date().toLocaleDateString("zh-CN")+"\n\n"+t+"\n\n（"+to+"：请把这条消息转给 Claude，说「请按单词本里的建议优化」就行）";
+      var msg="【雅思修行建议 · 请转交 Claude】"+k+"\n来自："+(db.name||"我")+"，"+new Date().toLocaleDateString("zh-CN")+"\n\n"+t+"\n\n（"+to+"：请把这条消息转给 Claude，说「请按雅思修行里的建议优化」就行）";
       db.sugs=db.sugs||[]; db.sugs.push({at:Date.now(),k:k,t:t}); persist();
       closeSheet();
       if(navigator.share){ navigator.share({text:msg}).catch(function(){}); }
@@ -1513,13 +1548,26 @@ function chipSet(el,opts,cur,cb){
   el.innerHTML=opts.map(function(o){ return '<button data-v="'+o[0]+'" class="'+(String(o[0])===String(cur)?"on":"")+'">'+o[1]+'</button>'; }).join("");
   el.onclick=function(e){ var b=e.target.closest("button"); if(!b) return; cb(b.dataset.v); persist(); renderSet(); };
 }
+function renderTrack(){
+  var cur=isBeginner()?"beginner":"exam";
+  var opts=[["exam","备考（雅思）","为雅思考试准备：周末多学，词库按话题核心再到学术词。"],["beginner","入门（初中基础）","从最常用生活词开始，节奏更缓，适合打基础。"]];
+  $("setTrack").innerHTML=opts.map(function(o){ return '<button type="button" data-v="'+o[0]+'" class="'+(cur===o[0]?"on":"")+'"><b>'+o[1]+'</b><span>'+o[2]+'</span></button>'; }).join("");
+}
+if(!$("setTrack")._ok){ $("setTrack")._ok=1; $("setTrack").addEventListener("click",function(e){
+  var b=e.target.closest("button"); if(!b) return;
+  var v=b.dataset.v; if((v==="beginner")===isBeginner()) return;
+  db.set.track=v; persist(); renderSet();
+  toast(v==="beginner"?"已切换到入门档，学习记录都还在":"已切换到备考档，学习记录都还在",2600);
+}); }
 function renderSet(){
   $("setName").value=db.name||"";
+  renderTrack();
   chipSet($("setAccent"),[["en-GB","英音"],["en-US","美音"]],db.set.accent,function(v){ db.set.accent=v; speak("environment"); });
   chipSet($("setRate"),[["0.75","慢"],["0.9","正常"],["1","稍快"]],db.set.rate,function(v){ db.set.rate=+v; speak("environment"); });
   chipSet($("setAuto"),[["1","开"],["0","关"]],db.set.auto?"1":"0",function(v){ db.set.auto=v==="1"; });
   chipSet($("setCap"),[["30","30 个"],["50","50 个"],["100","100 个"],["9999","不限"]],db.set.cap,function(v){ db.set.cap=+v; });
-  chipSet($("setGoal"),[["5000","5000"],["6000","6000"],["7000","7000"],["8000","8000"]],db.set.goal,function(v){ db.set.goal=+v; });
+  if(isBeginner()) chipSet($("setGoal"),[["1000","1000"],["1500","1500"],["2000","2000"],["3000","3000"]],db.set.goalBeginner||2000,function(v){ db.set.goalBeginner=+v; });
+  else chipSet($("setGoal"),[["5000","5000"],["6000","6000"],["7000","7000"],["8000","8000"]],db.set.goal,function(v){ db.set.goal=+v; });
   $("setExam").value=db.set.exam||"";
   var n=Object.keys(db.prog).length;
   $("countInfo").textContent="已学 "+n+" 个词，自己加了 "+db.custom.length+" 个。"+(db.lastBackup?"上次备份："+new Date(db.lastBackup).toLocaleDateString("zh-CN")+"。":"还没有备份过。");
@@ -1541,7 +1589,7 @@ function shareOrDownload(name,text,type,onDone){
 }
 $("exportJson").onclick=function(){
   var out={app:"danci",v:1,at:Date.now(),db:db};
-  shareOrDownload("单词本备份-"+dayStr(dayNum())+".json", JSON.stringify(out), "application/json", function(){
+  shareOrDownload("雅思修行备份-"+dayStr(dayNum())+".json", JSON.stringify(out), "application/json", function(){
     db.lastBackup=Date.now(); delete db.bkSnooze; persist(); renderSet(); checkBackup(); toast("已备份 📦");
   });
 };
@@ -1552,7 +1600,7 @@ $("importFile").onchange=function(){
     try{ var o=JSON.parse(r.result); if(o.app!=="danci"||!o.db) throw 0;
       sheet('<h2>从备份恢复？</h2><p class="sub">备份里有 '+Object.keys(o.db.prog||{}).length+' 个已学的词、'+(o.db.custom||[]).length+' 个自己加的词。恢复后会替换这台手机上现在的学习记录。</p><div class="row"><button class="ghost" data-act="close" style="flex:1">取消</button><button class="btn" data-act="ok" style="flex:1">恢复</button></div>',function(act){
         if(act!=="ok") return; db=o.db; load2(); closeSheet(); toast("已恢复"); goView("home"); });
-    }catch(e){ toast("这不是单词本的备份文件",2500); }
+    }catch(e){ toast("这不是雅思修行的备份文件",2500); }
   };
   r.readAsText(f); this.value="";
 };
