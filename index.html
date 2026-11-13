@@ -75,6 +75,14 @@
   .sbody{flex:1;overflow:auto;padding:20px 16px;max-width:560px;width:100%;margin:0 auto}
   .word{font-size:40px;font-weight:800;text-align:center;margin-top:34px;word-break:break-word}
   .ipa{text-align:center;color:var(--muted);font-size:18px;margin-top:6px}
+  .iparow{display:flex;align-items:baseline;justify-content:center;gap:8px;margin-top:8px;line-height:1.4}
+  .iparow .ilab{font-size:13px;color:var(--muted);letter-spacing:1px}
+  .iparow .iph{font-size:18px;color:var(--ink)}
+  .ans .gl{margin-top:14px}
+  .ans .glab{font-size:12px;color:var(--muted);letter-spacing:1px;margin-bottom:4px}
+  .ans .gpos{font-size:16px;font-weight:600}
+  .ans .gpos small{font-weight:400;color:var(--muted);font-size:12px;margin-left:6px}
+  .ans .gcn{font-size:28px;font-weight:800;line-height:1.35;word-break:break-word}
   .say{display:block;margin:14px auto 0;border:0;background:var(--soft);color:var(--accent);border-radius:999px;padding:9px 18px;font-size:16px}
   .say-lg{display:inline-block;margin:0;font-size:22px;padding:16px 40px;border-radius:16px;font-weight:700}
   .dict-play{text-align:center;margin-top:36px}
@@ -936,9 +944,42 @@ function tagFor(w){
 }
 function synHtml(w){ return (w.syns && w.syns.length) ? '<div class="syn">同义替换：'+w.syns.map(esc).join(" · ")+'</div>' : ''; }
 function exHtml(w){ return w.ex ? '<div class="ex">'+esc(w.ex)+' <button data-say-ex="1">🔊</button></div>' : ''; }
+var POS_CN={n:"名词",v:"动词",vi:"不及物动词",vt:"及物动词",adj:"形容词",adv:"副词",prep:"介词",conj:"连词",pron:"代词",art:"冠词",det:"限定词",aux:"助动词",interj:"感叹词",int:"感叹词",num:"数词",phr:"短语",modal:"情态动词"};
+function parseCn(cn){
+  var s=String(cn||"").trim();
+  var re=/^(?:(interj|prep|conj|pron|adj|adv|art|det|aux|phr|num|vi|vt|int|n|v)\.|(modal)\.?)\s*/i;
+  var pos=[], rest=s, more=true;
+  while(more){
+    var m=re.exec(rest);
+    if(!m) break;
+    pos.push((m[1]||m[2]).toLowerCase());
+    rest=rest.slice(m[0].length);
+    var sp=/^\/\s*/.exec(rest);
+    if(sp) rest=rest.slice(sp[0].length);
+    else more=false;
+  }
+  rest=rest.trim();
+  if(!pos.length) return {pos:[], meaning:s};
+  return {
+    pos:pos,
+    label:pos.map(function(p){ return POS_CN[p]||p; }).join(" / "),
+    abbr:pos.map(function(p){ return p==="modal"?"modal":p+"."; }).join(" / "),
+    meaning:rest||s
+  };
+}
+function ipaRow(w){
+  return w.ipa ? '<div class="iparow"><span class="ilab">音标</span><span class="iph">/'+esc(w.ipa)+'/</span></div>' : '';
+}
+function glossHtml(w){
+  var p=parseCn(w.cn), h=tagFor(w);
+  if(p.pos.length) h+='<div class="gl"><div class="glab">词性</div><div class="gpos">'+esc(p.label)+' <small>'+esc(p.abbr)+'</small></div></div>';
+  h+='<div class="gl"><div class="glab">意思</div><div class="gcn">'+esc(p.meaning)+'</div></div>';
+  if(w.ex) h+='<div class="gl"><div class="glab">例句</div>'+exHtml(w)+'</div>';
+  return h+synHtml(w);
+}
 function renderFront(w){
   var isNew = !db.prog[w.id];
-  $("sBody").innerHTML='<div class="word">'+esc(w.w)+'</div>'+(w.ipa?'<div class="ipa">/'+esc(w.ipa)+'/</div>':'')+
+  $("sBody").innerHTML='<div class="word">'+esc(w.w)+'</div>'+ipaRow(w)+
     '<button class="say" data-say="1">🔊 发音</button>'+
     (isNew && (S.kind==="new"||S.kind==="battle") ? '<p class="sub" style="text-align:center;margin-top:30px">新词：先自己想想意思，再点下面看答案</p>' : '<p class="sub" style="text-align:center;margin-top:30px">想一想它是什么意思</p>');
   $("sFoot").innerHTML='<button class="btn full" id="reveal" style="padding:15px">看答案</button>';
@@ -947,9 +988,9 @@ function renderFront(w){
 }
 function renderBack(w){
   S.step="back";
-  $("sBody").innerHTML='<div class="word" style="margin-top:14px">'+esc(w.w)+'</div>'+(w.ipa?'<div class="ipa">/'+esc(w.ipa)+'/</div>':'')+
+  $("sBody").innerHTML='<div class="word" style="margin-top:14px">'+esc(w.w)+'</div>'+ipaRow(w)+
     '<button class="say" data-say="1">🔊 发音</button>'+
-    '<div class="ans">'+tagFor(w)+'<div class="cn">'+esc(w.cn)+'</div>'+exHtml(w)+synHtml(w)+'</div>';
+    '<div class="ans">'+glossHtml(w)+'</div>';
   var p=db.prog[w.id], n0 = !p || p.n===0;
   function nxt(q){ var iv; if(q===0) return "再来"; if(q===3) return "不再出现";
     if(!p||p.n===0) iv=1; else if(q===1) iv=Math.max(1,Math.round(p.iv*1.2)); else iv=(p.n===1?3:Math.round(p.iv*p.ef));
