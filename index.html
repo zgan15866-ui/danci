@@ -76,6 +76,8 @@
   .word{font-size:40px;font-weight:800;text-align:center;margin-top:34px;word-break:break-word}
   .ipa{text-align:center;color:var(--muted);font-size:18px;margin-top:6px}
   .say{display:block;margin:14px auto 0;border:0;background:var(--soft);color:var(--accent);border-radius:999px;padding:9px 18px;font-size:16px}
+  .say-lg{display:inline-block;margin:0;font-size:22px;padding:16px 40px;border-radius:16px;font-weight:700}
+  .dict-play{text-align:center;margin-top:36px}
   .ans{margin-top:26px;background:var(--card);border-radius:16px;padding:16px;line-height:1.6}
   .ans .cn{font-size:20px;font-weight:600}
   .ans .ex{margin-top:10px;color:var(--ink)}
@@ -511,27 +513,46 @@ function dueList(){
 
 // ---------- 发音 ----------
 var voices=[];
-function loadVoices(){ try{ voices=speechSynthesis.getVoices()||[]; }catch(e){} }
-if(window.speechSynthesis){ loadVoices(); speechSynthesis.onvoiceschanged=loadVoices; }
-function pickVoice(){
-  var lang=db.set.accent, same=voices.filter(function(v){ return (v.lang||"").replace("_","-")===lang; });
-  var pref = lang==="en-GB" ? /Daniel|Arthur|Kate|Serena/ : /Samantha|Alex|Ava|Allison/;
-  return same.filter(function(v){ return pref.test(v.name); })[0] || same[0] || voices.filter(function(v){ return /^en/.test(v.lang); })[0] || null;
+function loadVoices(){
+  try{ voices=(window.speechSynthesis && speechSynthesis.getVoices())||[]; }catch(e){ voices=[]; }
 }
-function speak(text,slow,immediate){
+if(window.speechSynthesis){
+  loadVoices();
+  try{ speechSynthesis.addEventListener("voiceschanged", loadVoices); }catch(e){}
+  speechSynthesis.onvoiceschanged=loadVoices;
+}
+function normLang(l){ return String(l||"").replace("_","-").toLowerCase(); }
+function pickVoice(){
+  loadVoices();
+  if(!voices.length) return null; // iOS: getVoices() 可能仍为空，交给系统默认音色
+  var lang=normLang(db.set.accent||"en-GB");
+  var same=voices.filter(function(v){ return normLang(v.lang)===lang; });
+  if(!same.length) same=voices.filter(function(v){ return normLang(v.lang).indexOf(lang)===0; });
+  var pref = lang.indexOf("en-gb")===0 ? /Daniel|Arthur|Kate|Serena|Martha|Moira/ : /Samantha|Alex|Ava|Allison|Nicky|Aaron/;
+  return same.filter(function(v){ return pref.test(v.name); })[0] || same[0] || voices.filter(function(v){ return /^en/i.test(v.lang||""); })[0] || null;
+}
+// iOS Safari / 主屏幕 PWA：speak() 必须在点击调用栈里同步执行，cancel() 后 setTimeout 再 speak 会被静音。
+// 系统还常把 speechSynthesis 置于 paused，需要 resume()。不要把无效的 voice 对象赋上去。
+function speak(text,slow){
   if(!window.speechSynthesis){ toast("这台设备不支持朗读"); return; }
+  if(!text) return;
   try{
-    var u=new SpeechSynthesisUtterance(text);
-    u.lang=db.set.accent; var v=pickVoice(); if(v) u.voice=v;
-    u.rate = slow ? 0.6 : db.set.rate;
-    clearTimeout(speak._t);
-    if(immediate){
-      if(speechSynthesis.speaking || speechSynthesis.pending) speechSynthesis.cancel();
-      speechSynthesis.speak(u);
-    } else {
-      speechSynthesis.cancel();
-      speak._t=setTimeout(function(){ try{ speechSynthesis.speak(u); }catch(e){} }, 50);
+    if(speak._t){ clearTimeout(speak._t); speak._t=null; }
+    var u=new SpeechSynthesisUtterance(String(text));
+    var v=pickVoice();
+    if(v){
+      try{ u.voice=v; }catch(e){}
+      u.lang=v.lang||db.set.accent||"en-GB";
+    } else { u.lang=db.set.accent||"en-GB"; }
+    u.rate = slow ? 0.6 : (Number(db.set.rate)||0.9);
+    try{ speechSynthesis.resume(); }catch(e){}
+    if(speechSynthesis.speaking || speechSynthesis.pending){
+      try{ speechSynthesis.cancel(); }catch(e){}
+      try{ speechSynthesis.resume(); }catch(e){}
     }
+    speak._u=u;
+    speechSynthesis.speak(u);
+    try{ speechSynthesis.resume(); }catch(e){}
   }catch(e){}
 }
 
@@ -617,7 +638,10 @@ function goPractice(mode){
   startSession("practice",mode,shuffle(ids.slice()).slice(0,20));
 }
 $("goSpell").onclick=function(){ goPractice("spell"); };
-$("goDict").onclick=function(){ goPractice("dict"); };
+$("goDict").onclick=function(){
+  try{ if(window.speechSynthesis) speechSynthesis.resume(); }catch(e){}
+  goPractice("dict");
+};
 
 // ---------- 学习过程 ----------
 var S=null;
@@ -692,16 +716,32 @@ document.addEventListener("click",function(e){
 });
 
 function norm(s){ return String(s).toLowerCase().replace(/[’']/g,"'").replace(/[^a-z' -]/g,"").replace(/\s+/g," ").trim(); }
+function focusAfterSpeak(el){
+  if(!el) return;
+  var done=false;
+  function go(){ if(done) return; done=true; try{ el.focus(); }catch(e){} }
+  var u=speak._u;
+  if(u){
+    try{ u.addEventListener("end", go); u.addEventListener("error", go); }catch(e){}
+  }
+  setTimeout(go, 1500);
+}
 function renderSpell(w){
   var dict=S.mode==="dict";
   $("sBody").innerHTML = (dict
-    ? '<div style="text-align:center;margin-top:40px"><button class="say" data-say="1" style="font-size:20px;padding:14px 26px">🔊 再听一遍</button><button class="say" data-say="1" data-slow="1">🐢 慢速</button></div><p class="sub" style="text-align:center;margin-top:14px">听发音，写出这个词</p>'
+    ? '<div class="dict-play"><button class="btn say-lg" id="dictPlay">🔊 播放</button><div style="margin-top:12px"><button class="ghost" id="dictSlow">🐢 慢速</button></div><p class="sub" style="text-align:center;margin-top:14px">听发音，写出这个词。没声音就再点「播放」。</p></div>'
     : '<div class="ans" style="margin-top:30px;text-align:center">'+tagFor(w)+'<div class="cn">'+esc(w.cn)+'</div>'+(w.ipa?'<div class="sub" style="margin:6px 0 0">/'+esc(w.ipa)+'/</div>':'')+'</div><p class="sub" style="text-align:center;margin-top:14px">写出英文（首字母：'+esc(w.w.charAt(0))+'）</p>')+
     '<div class="spin"><input id="spIn" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="done" placeholder="在这里输入"></div><div class="res" id="spRes"></div>';
   $("sFoot").innerHTML='<div class="row"><button class="ghost" id="spSkip" style="flex:1">不会</button><button class="btn" id="spOk" style="flex:2">确定</button></div>';
   var inp=$("spIn");
-  setTimeout(function(){ inp.focus(); },60);
-  if(dict) speak(w.w, false, true);
+  if(dict){
+    $("dictPlay").onclick=function(){ speak(w.w); };
+    $("dictSlow").onclick=function(){ speak(w.w, true); };
+    speak(w.w);
+    focusAfterSpeak(inp);
+  } else {
+    setTimeout(function(){ try{ inp.focus(); }catch(e){} },60);
+  }
   inp.addEventListener("keydown",function(e){ if(e.key==="Enter"){ e.preventDefault(); $("spOk").click(); } });
   $("spOk").onclick=function(){ checkSpell(w, inp.value); };
   $("spSkip").onclick=function(){ checkSpell(w, ""); };
@@ -1250,7 +1290,13 @@ $("bkLater").onclick=function(){ db.bkSnooze=Date.now()+3*DAY; persist(); checkB
 if(!db.name){ $("welcome").classList.add("on"); }
 $("wGo").onclick=function(){ var n=$("wName").value.trim(); if(!n){ $("wName").focus(); return; } db.name=n; persist(); $("welcome").classList.remove("on"); renderHome(); };
 renderHome();
-if("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(function(){});
+if("serviceWorker" in navigator){
+  navigator.serviceWorker.register("sw.js").then(function(reg){ try{ reg.update(); }catch(e){} }).catch(function(){});
+  var swRefreshing=false;
+  navigator.serviceWorker.addEventListener("controllerchange", function(){
+    if(swRefreshing) return; swRefreshing=true; location.reload();
+  });
+}
 })();
 </script>
 </body>
