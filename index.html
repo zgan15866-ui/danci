@@ -112,6 +112,10 @@
   .sheet .in{background:var(--card);width:100%;max-width:560px;border-radius:20px 20px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom) + var(--kb, 0px));max-height:min(88vh, calc(100vh - var(--kb, 0px)));overflow:auto}
   .toast{position:fixed;left:50%;top:calc(env(safe-area-inset-top) + 14px);transform:translateX(-50%);background:rgba(20,25,35,.9);color:#fff;padding:10px 16px;border-radius:12px;font-size:15px;z-index:50;display:none;max-width:90%}
   .toast.bottom{top:auto;bottom:calc(88px + env(safe-area-inset-bottom) + var(--kb, 0px))}
+  .updbar{display:none;position:fixed;left:10px;right:10px;bottom:calc(76px + env(safe-area-inset-bottom) + 8px);z-index:15;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:14px;padding:10px 10px 10px 12px;box-shadow:0 8px 24px rgba(0,0,0,.16);align-items:center;gap:10px}
+  .updbar.on{display:flex}
+  .updbar p{margin:0;flex:1;min-width:0;font-size:13px;line-height:1.45}
+  .updbar button{flex:none;border:0;background:var(--accent);color:#fff;border-radius:10px;padding:8px 12px;font-size:14px;font-weight:700;white-space:nowrap}
   .cal{display:grid;grid-template-columns:16px repeat(12,1fr);gap:4px;margin-top:6px;align-items:center}
   .cal .wd{font-size:10px;color:var(--muted);text-align:center;line-height:1}
   .cal i{aspect-ratio:1;border-radius:4px;background:var(--soft);display:block}
@@ -204,12 +208,15 @@
     .battle .go{background:linear-gradient(135deg,#d93a2e,#b85a08);box-shadow:0 6px 20px rgba(217,58,46,.3)}
     .ko.k{color:var(--bad)}.ko.w{color:var(--good)}
     .toast{box-shadow:0 0 0 1px rgba(255,255,255,.22)}
+    .updbar{border-color:var(--ctl);box-shadow:0 8px 24px rgba(0,0,0,.4)}
+    .updbar button{color:var(--onacc)}
     .sheet .in{border-top:1px solid var(--line)}
   }
 </style>
 </head>
 <body>
 <div class="toast" id="toast"></div>
+<div class="updbar" id="updBar"><p>有新版本，点「立即更新」即可生效。若没反应，请完全关闭软件再重新打开（需两次）。</p><button type="button" id="updGo">立即更新</button></div>
 
 <main>
   <!-- 首页 -->
@@ -1689,7 +1696,7 @@ $("bkLater").onclick=function(){ db.bkSnooze=Date.now()+3*DAY; persist(); checkB
 // 只上传：姓名、学习统计、近 35 天按天记录、最难的词。不上传：自建词、建议文字、备份文件。
 // 同步用独立的 localStorage 键 danci.sync，不碰 danci.v1。
 var SYNC_DEFAULT = {t:"w3f", k:"778b50de-d990-4df5-a20b-156e8a6fbfaf", f:"zganyasi"}; // Web3Forms 访问密钥是公开的（只能发信到赵干邮箱），不是机密
-var SYNC_APPV = "v13";
+var SYNC_APPV = "v14";
 var SYNC_KEY = "danci.sync";
 var syncSt = null, syncTimer = null, syncBusy = false;
 function syncLoad(){
@@ -1822,11 +1829,42 @@ loadPacks().then(function(){
 }).catch(function(){
   packState.failed=true; renderHome(); toast("扩充词库没加载上，联网后重新打开 App",3500);
 });
+var APPV="danci-v14", APPV_KEY="danci.appv";
+var updWaiting=null, updClicked=false, updReloading=false, updJustUpdated=false;
+try{
+  var _hadSw=!("serviceWorker" in navigator) ? false : !!navigator.serviceWorker.controller;
+  var _prev=localStorage.getItem(APPV_KEY);
+  if((_prev && _prev!==APPV) || (!_prev && _hadSw)){ updJustUpdated=true; toast("已更新到新版本",2600); }
+  if(_prev!==APPV) localStorage.setItem(APPV_KEY, APPV);
+}catch(e){}
+function updShow(sw){
+  if(!sw || !navigator.serviceWorker.controller || updJustUpdated) return;
+  updWaiting=sw;
+  $("updBar").classList.add("on");
+}
+function updReload(){ if(updReloading) return; updReloading=true; location.reload(); }
+$("updGo").onclick=function(){
+  updClicked=true;
+  if(updWaiting){ try{ updWaiting.postMessage("SKIP_WAITING"); }catch(e){} }
+  setTimeout(updReload, 500);
+};
 if("serviceWorker" in navigator){
-  navigator.serviceWorker.register("sw.js").then(function(reg){ try{ reg.update(); }catch(e){} }).catch(function(){});
-  var swRefreshing=false;
+  navigator.serviceWorker.register("sw.js").then(function(reg){
+    function watch(sw){
+      if(!sw) return;
+      if(sw.state==="installed") updShow(sw);
+      sw.addEventListener("statechange", function(){ if(sw.state==="installed") updShow(sw); });
+    }
+    if(reg.waiting) updShow(reg.waiting);
+    if(reg.installing) watch(reg.installing);
+    reg.addEventListener("updatefound", function(){ watch(reg.installing); });
+    try{ reg.update(); }catch(e){}
+    document.addEventListener("visibilitychange", function(){
+      if(document.visibilityState==="visible"){ try{ reg.update(); }catch(e){} }
+    });
+  }).catch(function(){});
   navigator.serviceWorker.addEventListener("controllerchange", function(){
-    if(swRefreshing) return; swRefreshing=true; location.reload();
+    if(updClicked) updReload();
   });
 }
 })();

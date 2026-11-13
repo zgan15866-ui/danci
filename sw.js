@@ -1,11 +1,14 @@
 // 离线缓存：第一次打开后，没网也能用
-const CACHE = "danci-v13";
+const CACHE = "danci-v14";
 const FILES = ["./", "./index.html", "./manifest.json", "./icon-180.png", "./icon-512.png", "./packs/meta.json", "./packs/core.json", "./packs/awl.json", "./packs/junior.json"];
 self.addEventListener("install", e => {
-  e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES)).then(() => self.skipWaiting()));
+  e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES)));
 });
 self.addEventListener("activate", e => {
   e.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim()));
+});
+self.addEventListener("message", e => {
+  if (e.data === "SKIP_WAITING") self.skipWaiting();
 });
 // 先用网络（拿到更新），没网时用缓存
 self.addEventListener("fetch", e => {
