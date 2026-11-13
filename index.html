@@ -10,6 +10,7 @@
 <meta name="theme-color" content="#f3f6fb">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-180.png">
 <title>雅思单词本</title>
 <style>
   :root{ --bg:#f3f6fb; --card:#fff; --ink:#1d2433; --muted:#7c8597; --line:#e4e9f2;
@@ -27,8 +28,8 @@
   h2{font-size:17px;margin:0 0 10px}
   .sub{color:var(--muted);font-size:14px;line-height:1.55;margin:0 0 10px}
   .hero{background:linear-gradient(135deg,var(--g1),var(--g2));color:#fff;border-radius:20px;padding:18px;margin:4px 0 14px;position:relative;overflow:hidden}
-  .hero .t{font-size:22px;font-weight:800}
-  .hero .s{opacity:.9;margin-top:4px;font-size:15px}
+  .hero .t{font-size:22px;font-weight:800;padding-right:120px}
+  .hero .s{opacity:.9;margin-top:4px;font-size:15px;padding-right:120px}
   .hero .m{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap}
   .hero .m span{background:rgba(255,255,255,.2);padding:5px 11px;border-radius:999px;font-size:13px}
   .hero .deco{position:absolute;right:-6px;top:-10px;font-size:84px;font-weight:900;opacity:.13;font-family:Georgia,serif}
@@ -65,7 +66,7 @@
   .chips button{border:1px solid var(--line);background:none;color:var(--ink);padding:7px 13px;border-radius:999px;font-size:14px}
   .chips button.on{background:var(--accent);border-color:var(--accent);color:#fff}
   /* 学习界面 */
-  #study{position:fixed;inset:0;background:var(--bg);z-index:20;display:none;flex-direction:column;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
+  #study{position:fixed;inset:0;background:var(--bg);z-index:20;display:none;flex-direction:column;padding:env(safe-area-inset-top) 0 calc(env(safe-area-inset-bottom) + var(--kb, 0px))}
   #study.on{display:flex}
   .stop{display:flex;align-items:center;justify-content:space-between;padding:12px 16px}
   .stop button{border:0;background:none;color:var(--accent);font-size:16px}
@@ -95,11 +96,14 @@
   /* 弹层 */
   .sheet{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:30;display:none;align-items:flex-end;justify-content:center}
   .sheet.on{display:flex}
-  .sheet .in{background:var(--card);width:100%;max-width:560px;border-radius:20px 20px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom));max-height:88vh;overflow:auto}
+  .sheet .in{background:var(--card);width:100%;max-width:560px;border-radius:20px 20px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom) + var(--kb, 0px));max-height:min(88vh, calc(100vh - var(--kb, 0px)));overflow:auto}
   .toast{position:fixed;left:50%;top:calc(env(safe-area-inset-top) + 14px);transform:translateX(-50%);background:rgba(20,25,35,.9);color:#fff;padding:10px 16px;border-radius:12px;font-size:15px;z-index:50;display:none;max-width:90%}
-  .cal{display:grid;grid-template-columns:repeat(12,1fr);gap:4px;margin-top:6px}
+  .toast.bottom{top:auto;bottom:calc(88px + env(safe-area-inset-bottom) + var(--kb, 0px))}
+  .cal{display:grid;grid-template-columns:16px repeat(12,1fr);gap:4px;margin-top:6px;align-items:center}
+  .cal .wd{font-size:10px;color:var(--muted);text-align:center;line-height:1}
   .cal i{aspect-ratio:1;border-radius:4px;background:var(--soft);display:block}
   .cal i.a1{background:#a9c3f3}.cal i.a2{background:#5f8ce6}.cal i.a3{background:#2457c5}
+  .cal i.today{box-shadow:0 0 0 2px var(--accent)}
   .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;text-align:center}
   .stats div{background:var(--bg);border-radius:12px;padding:10px 4px}
   .stats b{display:block;font-size:22px;font-variant-numeric:tabular-nums}
@@ -199,7 +203,7 @@
     </div>
     <div class="card">
       <h2>最近 12 周</h2>
-      <p class="sub" style="margin:0">每格一天，颜色越深学得越多。</p>
+      <p class="sub" style="margin:0">每格一天，颜色越深学得越多。描边的格子是今天。</p>
       <div class="cal" id="cal"></div>
     </div>
     <div class="card">
@@ -417,7 +421,15 @@ var KEY = "danci.v1";
 var DAY = 86400000;
 var $ = function(id){ return document.getElementById(id); };
 function esc(s){ return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];}); }
-function toast(t,ms){ var e=$("toast"); e.textContent=t; e.style.display="block"; clearTimeout(toast.t); toast.t=setTimeout(function(){e.style.display="none";},ms||1800); }
+function toast(t,ms){ var e=$("toast"); e.textContent=t; e.classList.toggle("bottom", !!( $("study") && $("study").classList.contains("on") )); e.style.display="block"; clearTimeout(toast.t); toast.t=setTimeout(function(){e.style.display="none";},ms||1800); }
+function updateKb(){
+  var kb=0;
+  if(window.visualViewport){ kb=Math.max(0, Math.round(window.innerHeight - visualViewport.height - visualViewport.offsetTop)); }
+  document.documentElement.style.setProperty("--kb", kb+"px");
+}
+if(window.visualViewport){ visualViewport.addEventListener("resize", updateKb); visualViewport.addEventListener("scroll", updateKb); }
+window.addEventListener("resize", updateKb);
+updateKb();
 function dayNum(d){ d=d||new Date(); return Math.floor((d.getTime()-d.getTimezoneOffset()*60000)/DAY); }
 function dayStr(n){ var d=new Date(n*DAY); return d.getUTCFullYear()+"-"+("0"+(d.getUTCMonth()+1)).slice(-2)+"-"+("0"+d.getUTCDate()).slice(-2); }
 function shuffle(a){ for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
@@ -506,14 +518,20 @@ function pickVoice(){
   var pref = lang==="en-GB" ? /Daniel|Arthur|Kate|Serena/ : /Samantha|Alex|Ava|Allison/;
   return same.filter(function(v){ return pref.test(v.name); })[0] || same[0] || voices.filter(function(v){ return /^en/.test(v.lang); })[0] || null;
 }
-function speak(text,slow){
+function speak(text,slow,immediate){
   if(!window.speechSynthesis){ toast("这台设备不支持朗读"); return; }
   try{
-    speechSynthesis.cancel();
     var u=new SpeechSynthesisUtterance(text);
     u.lang=db.set.accent; var v=pickVoice(); if(v) u.voice=v;
     u.rate = slow ? 0.6 : db.set.rate;
-    speechSynthesis.speak(u);
+    clearTimeout(speak._t);
+    if(immediate){
+      if(speechSynthesis.speaking || speechSynthesis.pending) speechSynthesis.cancel();
+      speechSynthesis.speak(u);
+    } else {
+      speechSynthesis.cancel();
+      speak._t=setTimeout(function(){ try{ speechSynthesis.speak(u); }catch(e){} }, 50);
+    }
   }catch(e){}
 }
 
@@ -683,7 +701,7 @@ function renderSpell(w){
   $("sFoot").innerHTML='<div class="row"><button class="ghost" id="spSkip" style="flex:1">不会</button><button class="btn" id="spOk" style="flex:2">确定</button></div>';
   var inp=$("spIn");
   setTimeout(function(){ inp.focus(); },60);
-  if(dict) setTimeout(function(){ speak(w.w); },250);
+  if(dict) speak(w.w, false, true);
   inp.addEventListener("keydown",function(e){ if(e.key==="Enter"){ e.preventDefault(); $("spOk").click(); } });
   $("spOk").onclick=function(){ checkSpell(w, inp.value); };
   $("spSkip").onclick=function(){ checkSpell(w, ""); };
@@ -809,6 +827,7 @@ function bindGroupSelect(){ $("fG").onchange=function(){ $("fGn").style.display=
 function readGroup(){ var g=$("fG").value; if(g==="__new"){ g=$("fGn").value.trim(); if(!g){ toast("请填分组名字"); return null; } if(db.groups.indexOf(g)<0) db.groups.push(g); } return g; }
 $("addBtn").onclick=function(){ addWord(libGroup && libGroup[0]==="m" ? libGroup.slice(2) : db.lastGroup); };
 function addWord(grp){
+  sheet._dupeOk=false;
   sheet('<h2>添加生词</h2><div class="chips" id="addMode"><button class="on" data-m="one">一个一个加</button><button data-m="many">批量粘贴</button></div>'+
     '<div id="addOne"><label class="f">英文 *</label><input id="fW" autocapitalize="off" autocorrect="off" spellcheck="false"><label class="f">中文意思 *</label><input id="fC" placeholder="比如：n. 环境">'+
     '<label class="f">音标（选填）</label><input id="fI" autocapitalize="off" autocorrect="off" spellcheck="false"><label class="f">例句（选填）</label><input id="fE" autocapitalize="off"></div>'+
@@ -817,24 +836,43 @@ function addWord(grp){
     '<div class="row" style="margin-top:14px"><button class="ghost" data-act="close" style="flex:1">取消</button><button class="btn" data-act="save" style="flex:2">保存</button></div>', function(act){
       if(act!=="save") return;
       var g=readGroup(); if(g==null) return;
-      var many=$("addMany").style.display!=="none", added=0;
+      var many=$("addMany").style.display!=="none", added=0, rows=[];
       if(!many){
         var w=$("fW").value.trim(), c=$("fC").value.trim();
         if(!w||!c){ toast("英文和中文都要填"); return; }
-        pushCustom(w,c,$("fI").value.trim().replace(/^\/|\/$/g,""),$("fE").value.trim(),g); added=1;
+        rows.push({w:w,c:c,ipa:$("fI").value.trim().replace(/^\/|\/$/g,""),ex:$("fE").value.trim()});
       } else {
         $("fM").value.split(/\n/).forEach(function(line){
           line=line.trim(); if(!line) return; var w,c,ex="";
           if(line.indexOf("|")>=0){ var a=line.split("|"); w=a[0].trim(); c=(a[1]||"").trim(); ex=(a[2]||"").trim(); }
           else { var m=line.match(/^([A-Za-z][A-Za-z'’\-\. ]*?)\s+(.+)$/); if(m){ w=m[1].trim(); c=m[2].trim(); } }
-          if(w&&c){ pushCustom(w,c,"",ex,g); added++; }
+          if(w&&c) rows.push({w:w,c:c,ipa:"",ex:ex});
         });
-        if(!added){ toast("没认出来，检查一下格式"); return; }
+        if(!rows.length){ toast("没认出来，检查一下格式"); return; }
       }
+      var dupes=rows.filter(function(r){ return findDupes(r.w).length; });
+      if(dupes.length && !sheet._dupeOk){
+        var sample=dupes.slice(0,3).map(function(r){ return dupeText(r.w); }).join("；");
+        toast((dupes.length===1?sample:("有 "+dupes.length+" 个词已在词库中："+sample))+"。再点一次「保存」确认仍要添加",3600);
+        sheet._dupeOk=true; return;
+      }
+      rows.forEach(function(r){ pushCustom(r.w,r.c,r.ipa,r.ex,g); added++; });
       db.lastGroup=g; rebuildCustom(); persist(); closeSheet(); toast("已添加 "+added+" 个"); refresh();
     });
   bindGroupSelect();
-  $("addMode").onclick=function(e){ var b=e.target.closest("button"); if(!b) return; [].forEach.call(this.children,function(x){x.classList.toggle("on",x===b);}); $("addOne").style.display=b.dataset.m==="one"?"":"none"; $("addMany").style.display=b.dataset.m==="many"?"":"none"; };
+  sheet._dupeOk=false;
+  ["fW","fM"].forEach(function(id){ var el=$(id); if(el) el.addEventListener("input", function(){ sheet._dupeOk=false; }); });
+  $("addMode").onclick=function(e){ var b=e.target.closest("button"); if(!b) return; sheet._dupeOk=false; [].forEach.call(this.children,function(x){x.classList.toggle("on",x===b);}); $("addOne").style.display=b.dataset.m==="one"?"":"none"; $("addMany").style.display=b.dataset.m==="many"?"":"none"; };
+}
+function findDupes(w){
+  var nw=norm(w), hits=[];
+  Object.keys(WORDS).forEach(function(id){ if(norm(WORDS[id].w)===nw) hits.push(WORDS[id]); });
+  return hits;
+}
+function dupeText(w){
+  var hits=findDupes(w);
+  if(!hits.length) return "";
+  return hits.map(function(x){ return "「"+x.w+"」已在「"+groupName(x.g)+"」"; }).join("、");
 }
 function pushCustom(w,c,ipa,ex,g){ db.custom.push({id:"c"+(db.nextId++),w:w,cn:c,ipa:ipa,ex:ex,g:g}); }
 function editWord(id){
@@ -891,10 +929,13 @@ function renderStat(){
   $("stats").innerHTML=[["已学",t.learned],["已掌握",t.mastered],["易错",t.hard.length],["近7天学习",w.days+" 天"],["近7天新学",w.nw],["正确率",acc]]
     .map(function(a){ return '<div><b>'+a[1]+'</b><span>'+a[0]+'</span></div>'; }).join("");
   var today=dayNum(), start=today-83, h="";
-  for(var c=0;c<12;c++) for(var r=0;r<7;r++){ var d=start+c*7+r; }
-  // 按列（每周一列）显示：转成行优先网格
-  var cells=[]; for(var i=0;i<84;i++){ var d2=start+i, L=db.log[dayStr(d2)], n=L?L.nw+L.rv+L.sp:0; cells.push(n===0?"":n<15?"a1":n<40?"a2":"a3"); }
-  for(r=0;r<7;r++) for(c=0;c<12;c++) h+='<i class="'+cells[c*7+r]+'"></i>';
+  var cells=[]; for(var i=0;i<84;i++){ var d2=start+i, L=db.log[dayStr(d2)], n=L?L.nw+L.rv+L.sp:0;
+    cells.push({cls:(n===0?"":n<15?"a1":n<40?"a2":"a3")+(d2===today?" today":""), day:dayStr(d2)}); }
+  var wdNames=["日","一","二","三","四","五","六"];
+  for(var r=0;r<7;r++){
+    h+='<span class="wd">'+wdNames[new Date((start+r)*DAY).getUTCDay()]+'</span>';
+    for(var c=0;c<12;c++) h+='<i class="'+cells[c*7+r].cls+'" title="'+cells[c*7+r].day+'"></i>';
+  }
   $("cal").innerHTML=h;
   $("hardList").innerHTML = t.hard.slice(0,30).map(itemHtml).join("") || '<p class="sub" style="margin:6px 0 0">暂时没有，很棒！</p>';
 }
@@ -1017,12 +1058,14 @@ $("aiGo").onclick=function(){
   var r=parseAI($("aiIn").value);
   if(!r.words.length && !r.qs.length){ $("aiMsg").textContent="没识别到内容。请确认粘贴的是豆包的回复，或者让豆包「严格按格式重新输出」后再复制。"; return; }
   var name=$("aiName").value.trim()||("拍照 "+todayLabel());
-  var added=0, ids=[];
+  var added=0, ids=[], skipped=[];
   if(r.words.length){
     if(db.groups.indexOf(name)<0) db.groups.push(name);
     r.words.forEach(function(w){
-      var ex=db.custom.filter(function(c){ return c.g===name && c.w.toLowerCase()===w.w.toLowerCase(); })[0];
-      if(ex){ ids.push(ex.id); return; }
+      var ex=db.custom.filter(function(c){ return c.g===name && norm(c.w)===norm(w.w); })[0];
+      if(ex){ ids.push(ex.id); skipped.push({w:w.w,g:name}); return; }
+      var hits=findDupes(w.w);
+      if(hits.length){ ids.push(hits[0].id); skipped.push({w:w.w,g:groupName(hits[0].g)}); return; }
       var id="c"+(db.nextId++); db.custom.push({id:id,w:w.w,cn:w.cn,ipa:w.ipa,ex:w.ex,g:name}); ids.push(id); added++;
     });
     rebuildCustom();
@@ -1031,7 +1074,12 @@ $("aiGo").onclick=function(){
   if(r.qs.length){ quiz={id:"q"+(db.nextId++),name:name,at:Date.now(),qs:r.qs,best:null,times:0}; db.quizzes.push(quiz); if(db.quizzes.length>60) db.quizzes.shift(); }
   persist();
   $("aiIn").value=""; $("aiName").value="";
-  sheet('<h2>✅ 已保存</h2><p class="sub">'+(r.words.length?'识别到 '+r.words.length+' 个词，新加入分组「'+esc(name)+'」'+added+' 个，可以在首页「学新词」里选这个分组来学。<br>':'')+
+  var skipMsg="";
+  if(skipped.length){
+    var seen={}, uniqS=skipped.filter(function(x){ var k=norm(x.w); if(seen[k]) return false; seen[k]=1; return true; });
+    skipMsg="其中 "+uniqS.length+" 个已在词库中，没有重复加入："+uniqS.slice(0,6).map(function(x){ return esc(x.w)+"（"+esc(x.g)+"）"; }).join("、")+(uniqS.length>6?" 等":"")+"。<br>";
+  }
+  sheet('<h2>✅ 已保存</h2><p class="sub">'+(r.words.length?'识别到 '+r.words.length+' 个词，新加入分组「'+esc(name)+'」'+added+' 个，可以在首页「学新词」里选这个分组来学。<br>':'')+skipMsg+
     (r.qs.length?'生成了 '+r.qs.length+' 道题。':'这次没有题目（只整理了单词）。')+'</p>'+
     '<div class="row">'+(quiz?'<button class="btn" data-act="quiz" style="flex:1">开始测验</button>':'')+
     (r.words.length?'<button class="ghost" data-act="learn" style="flex:1">学这些新词</button>':'')+'</div>'+
