@@ -116,6 +116,11 @@
   .qopt.ok{border-color:var(--good);background:rgba(46,156,106,.12)} .qopt.ng{border-color:var(--bad);background:rgba(214,80,74,.12)}
   .qq{font-size:20px;font-weight:600;line-height:1.5;margin-top:24px}
   .help h2{margin-top:4px} .help p,.help li{font-size:15px;line-height:1.7} .help ol,.help ul{padding-left:20px;margin:6px 0}
+  .syn{margin-top:10px;font-size:15px;line-height:1.5;color:var(--muted)}
+  .vbar{height:10px;background:var(--soft);border-radius:6px;overflow:hidden;margin:10px 0 6px}
+  .vbar i{display:block;height:100%;background:linear-gradient(90deg,#2a5bd7,#16a3b8)}
+  .tag.use{background:rgba(46,156,106,.14);color:var(--good);margin-left:6px}
+  .tag.awl{background:rgba(224,145,43,.16);color:var(--mid);margin-left:6px}
   .tip{background:var(--soft);border-radius:10px;padding:10px 12px;font-size:14px;line-height:1.6;margin-top:8px}
   .welcome{position:fixed;inset:0;background:var(--bg);z-index:60;display:none;align-items:center;justify-content:center;padding:24px}
   .welcome.on{display:flex}
@@ -133,6 +138,11 @@
       <div class="t" id="heroT">雅思单词本</div>
       <div class="s" id="heroS">今天也来背几个吧</div>
       <div class="m" id="heroM"></div>
+    </div>
+    <div class="card" id="vocabCard">
+      <div class="row sp"><h2 style="margin:0">词汇量进度</h2><span class="sub" style="margin:0" id="vocabGoal"></span></div>
+      <div class="vbar"><i id="vocabBar" style="width:0"></i></div>
+      <div id="vocabText" style="font-size:15px;line-height:1.6"></div>
     </div>
     <div class="card bk" id="bkCard" hidden>
       <div id="bkText"></div>
@@ -182,8 +192,13 @@
         <div id="myGroups"></div>
       </div>
       <div class="card">
-        <h2>内置话题词</h2>
-        <p class="sub">按雅思常考话题整理，带音标、例句。</p>
+        <h2>分级词库</h2>
+        <p class="sub" id="tierSub">话题核心词按话题扩充；学术词 AWL 是学术文章里最常见的 570 个词族，分 10 级。</p>
+        <div id="tierGroups"></div>
+      </div>
+      <div class="card">
+        <h2>话题词</h2>
+        <p class="sub" id="topicSub">按雅思常考话题整理，带音标、例句。</p>
         <div id="topicGroups"></div>
       </div>
     </div>
@@ -238,6 +253,8 @@
       <div class="chips" id="setAuto"></div>
       <label class="f">一次复习最多几个（积压多时分批来，不会累死）</label>
       <div class="chips" id="setCap"></div>
+      <label class="f">词汇量目标（首页按它显示还差多少）</label>
+      <div class="chips" id="setGoal"></div>
       <label class="f">雅思考试日期（选填，首页显示倒计时）</label>
       <input type="date" id="setExam">
       <button class="ghost full" id="testVoice" style="margin-top:12px">🔊 试听发音</button>
@@ -255,7 +272,7 @@
       <input type="file" id="importFile" accept=".json,application/json" hidden>
       <p class="sub" id="countInfo" style="margin-top:10px"></p>
     </div>
-    <p class="sub" style="text-align:center">内置词和例句为自编整理。请从桌面图标打开，别只在 Safari 里用。</p>
+    <p class="sub" style="text-align:center">释义和例句为自编整理，词表来源见「使用说明」最后一节。请从桌面图标打开，别只在 Safari 里用。</p>
   </section>
 
   <!-- AI 出题 -->
@@ -384,6 +401,27 @@
       </ul>
     </div>
 
+    <div class="card">
+      <h2>📚 分级词库、会用的词、同义替换</h2>
+      <ul>
+        <li><b>词库有三层</b>：内置话题词（原来的 416 个）→ <b>话题核心词</b>（按 13 个话题扩充）→ <b>学术词 AWL</b>（学术文章最常见的 570 个词族，分 10 级，第 1 级最常见）。首页「学新词」选「全部」会按这个顺序往下学。</li>
+        <li><b>✍️ 会用</b>：带这个标记的词，写作和口语要会拼、会用，学完建议去「看中文拼写」「听音写词」练一练；没有标记的词，阅读和听力认识就够。</li>
+        <li><b>同义替换</b>：很多词下面有常见的替换说法，雅思阅读、听力常考“同义替换”，写作里也能避免重复。</li>
+        <li><b>词汇量进度</b>：首页会显示已学词数和离目标还差多少。目标在「设置」里改（默认 7000）。这里只统计在本应用里学过的词，标为「太简单」的词不计入。</li>
+        <li>新增的词库放在单独的文件里，第一次联网打开后就能离线用；已有的学习记录不会受影响。</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>🧾 词表来源与说明</h2>
+      <ul>
+        <li><b>Academic Word List（学术词表）</b>：Averil Coxhead, 2000, <i>A New Academic Word List</i>, TESOL Quarterly 34(2)。本应用使用其 570 个词族的首词（词表由 Victoria University of Wellington 公开发布），AWL 的分级沿用原表。</li>
+        <li><b>释义、例句、同义替换、话题分类</b>：全部为自编整理，没有抄录任何教材或商业词典，可能有疏漏，发现不准的词请在「设置」里提建议。</li>
+        <li><b>音标</b>：由开源语音引擎 eSpeak NG 自动生成（英式），再做了格式整理，个别词可能与词典略有出入，请以词典和发音为准。</li>
+        <li>本应用不包含《雅思词汇真经》或其他受版权保护的书籍内容。</li>
+      </ul>
+    </div>
+
   </section>
 </main>
 
@@ -448,6 +486,7 @@ function load(){
   if(s.auto==null) s.auto=true;
   if(!s.cap) s.cap=50;
   if(!s.batch) s.batch=10;
+  if(!s.goal) s.goal=7000;
   db.prog = db.prog || {};
   db.custom = db.custom || [];
   db.groups = db.groups || ["我的生词"];
@@ -462,19 +501,57 @@ function persist(){
 }
 load();
 
-// 所有词：内置 + 自己加的
+// 所有词：内置 416 个 + 扩充词库（packs/*.json 静态文件）+ 自己加的
+// 内置词 ID 永远是 "b"+下标（b0–b415），不能插入、删除、重排；扩充词用稳定 ID（awl:xxx / core:xxx）。
 var TOPICS = BUILTIN.t;
-var WORDS = {}; var BUILT_IDS=[];
-BUILTIN.w.forEach(function(a,i){ var id="b"+i; WORDS[id]={id:id,w:a[0],ipa:a[1],cn:a[2],ex:a[3],g:"t"+a[4]}; BUILT_IDS.push(id); });
+var WORDS = {}; var BUILT_IDS=[]; var CORE_IDS=[], AWL_PACK_IDS=[], AWL_BY={}; var packState={loaded:false, failed:false};
+BUILTIN.w.forEach(function(a,i){ var id="b"+i; WORDS[id]={id:id,w:a[0],ipa:a[1],cn:a[2],ex:a[3],g:"t"+a[4],use:(a[4]===11?"productive":"receptive"),syns:[]}; BUILT_IDS.push(id); });
 function rebuildCustom(){
-  Object.keys(WORDS).forEach(function(k){ if(k[0]==="c") delete WORDS[k]; });
+  Object.keys(WORDS).forEach(function(k){ if(WORDS[k].custom) delete WORDS[k]; });
   db.custom.forEach(function(c){ WORDS[c.id]={id:c.id,w:c.w,ipa:c.ipa||"",cn:c.cn,ex:c.ex||"",g:"m:"+c.g,custom:true}; });
 }
 rebuildCustom();
-function groupName(g){ return g[0]==="t" ? TOPICS[+g.slice(1)] : g.slice(2); }
+function applyMeta(meta){
+  BUILT_IDS.forEach(function(id){ var m=meta[id]; if(!m) return; var w=WORDS[id]; if(m.use) w.use=m.use; if(m.syns) w.syns=m.syns; if(m.awl) w.awl=m.awl; });
+}
+function addPack(p){
+  (p.words||[]).forEach(function(x){
+    if(WORDS[x.id]) return;
+    var w={id:x.id,w:x.w,ipa:x.ipa||"",cn:x.cn,ex:x.ex||"",g:x.g,pack:p.pack,use:x.use||"receptive",syns:x.syns||[]};
+    var m=/^k:awl(\d+)$/.exec(x.g); if(m) w.awl=+m[1];
+    WORDS[x.id]=w;
+    if(p.pack==="core") CORE_IDS.push(x.id);
+  });
+}
+function indexAwl(){
+  AWL_BY={}; AWL_PACK_IDS=[];
+  Object.keys(WORDS).forEach(function(id){ var w=WORDS[id]; if(w.awl) (AWL_BY[w.awl]=AWL_BY[w.awl]||[]).push(id); });
+  for(var n=1;n<=10;n++){
+    var l=AWL_BY[n]||[]; l.sort(function(a,b){ return WORDS[a].w<WORDS[b].w?-1:1; }); AWL_BY[n]=l;
+    l.forEach(function(id){ if(WORDS[id].pack==="awl") AWL_PACK_IDS.push(id); });
+  }
+}
+function getJson(url){ return fetch(url).then(function(r){ if(!r.ok) throw new Error(url); return r.json(); }); }
+function loadPacks(){
+  return Promise.all([getJson("packs/meta.json"),getJson("packs/core.json"),getJson("packs/awl.json")]).then(function(a){
+    applyMeta(a[0]); addPack(a[1]); addPack(a[2]); indexAwl(); packState.loaded=true;
+  });
+}
+function awlAll(){ var o=[]; for(var n=1;n<=10;n++) o=o.concat(AWL_BY[n]||[]); return o; }
+function libTotal(){ return BUILT_IDS.length+CORE_IDS.length+AWL_PACK_IDS.length; }
+function groupName(g){
+  if(g[0]==="t") return TOPICS[+g.slice(1)];
+  if(g==="k:core") return "话题核心词";
+  if(g==="k:awl") return "学术词 AWL（全部）";
+  if(g.indexOf("k:awl")===0) return "AWL 第"+g.slice(5)+"级";
+  return g.slice(2);
+}
 function wordsIn(g){
-  if(g==="all") return BUILT_IDS.concat(db.custom.map(function(c){return c.id;}));
-  if(g[0]==="t") return BUILT_IDS.filter(function(id){ return WORDS[id].g===g; });
+  if(g==="all") return BUILT_IDS.concat(CORE_IDS, AWL_PACK_IDS, db.custom.map(function(c){return c.id;}));
+  if(g==="k:core") return CORE_IDS;
+  if(g==="k:awl") return awlAll();
+  if(g.indexOf("k:awl")===0) return AWL_BY[+g.slice(5)]||[];
+  if(g[0]==="t") return BUILT_IDS.filter(function(id){ return WORDS[id].g===g; }).concat(CORE_IDS.filter(function(id){ return WORDS[id].g===g; }));
   return db.custom.filter(function(c){ return "m:"+c.g===g; }).map(function(c){return c.id;});
 }
 
@@ -575,17 +652,22 @@ $("tabs").addEventListener("click",function(e){ var b=e.target.closest("button")
 function sourceOptions(sel, withPractice){
   var h="";
   if(withPractice){
-    h+='<option value="p:today">今天学过的词</option><option value="p:hard">易错词</option><option value="p:week">最近 7 天学过的</option><option value="p:learned">全部学过的词</option>';
+    h+='<option value="p:today">今天学过的词</option><option value="p:hard">易错词</option><option value="p:week">最近 7 天学过的</option><option value="p:learned">全部学过的词</option><option value="p:prod">已学的「会用」词（写作口语）</option>';
   }
   if(db.custom.length || db.groups.length){
     h+='<optgroup label="我的生词">';
     db.groups.forEach(function(g){ var n=wordsIn("m:"+g).length; h+='<option value="m:'+esc(g)+'">'+esc(g)+'（'+n+'）</option>'; });
     h+='</optgroup>';
   }
-  h+='<optgroup label="内置话题词">';
-  if(!withPractice) h+='<option value="all">全部话题，按顺序</option>';
-  TOPICS.forEach(function(t,i){ var ids=wordsIn("t"+i); var left=ids.filter(function(id){return !db.prog[id];}).length;
-    h+='<option value="t'+i+'">'+esc(t)+(withPractice?'':'（剩 '+left+'）')+'</option>'; });
+  function opt(g,label){ var ids=wordsIn(g); var left=ids.filter(function(id){return !db.prog[id];}).length;
+    return '<option value="'+g+'">'+esc(label)+(withPractice?'（'+ids.length+'）':'（剩 '+left+'）')+'</option>'; }
+  h+='<optgroup label="分级词库">';
+  if(!withPractice) h+='<option value="all">全部，按顺序（内置→话题核心→AWL）</option>';
+  h+=opt("k:core","话题核心词")+opt("k:awl","学术词 AWL（全部）");
+  for(var n=1;n<=10;n++) h+=opt("k:awl"+n,"AWL 第 "+n+" 级"+(n===1?"（最常见）":""));
+  h+='</optgroup>';
+  h+='<optgroup label="话题词（内置+核心）">';
+  TOPICS.forEach(function(t,i){ h+=opt("t"+i,t); });
   h+='</optgroup>';
   var old=sel.value; sel.innerHTML=h;
   if(old && sel.querySelector('option[value="'+old.replace(/"/g,'\\"')+'"]')) sel.value=old;
@@ -611,8 +693,24 @@ function renderHome(){
   sourceOptions($("prSrc"), true);
   if(db.set.pr && $("prSrc").querySelector('option[value="'+db.set.pr.replace(/"/g,'\\"')+'"]')) $("prSrc").value=db.set.pr;
   $("newSize").innerHTML=[5,10,20,30].map(function(n){ return '<button data-n="'+n+'" class="'+(n===db.set.batch?"on":"")+'">'+n+' 个</button>'; }).join("");
+  renderVocab();
   checkBackup();
   renderQuizHome();
+}
+function renderVocab(){
+  var learned=0, easy=0;
+  Object.keys(db.prog).forEach(function(id){ if(!WORDS[id]) return; if(db.prog[id].skip) easy++; else learned++; });
+  var goal=db.set.goal||7000, total=libTotal(), left=Math.max(0,goal-learned);
+  $("vocabGoal").textContent="目标 "+goal+" 词";
+  $("vocabBar").style.width=Math.min(100,learned/goal*100)+"%";
+  var h='已学 <b>'+learned+'</b> 个 / 词库 <b>'+total+'</b> 个。';
+  h+= left>0 ? '<br>离目标还差 <b>'+left+'</b> 个' : '<br>已达到目标词汇量 🎉';
+  if(left>0 && db.set.exam){ var dl=dayNum(new Date(db.set.exam+"T00:00:00"))-dayNum(); if(dl>0) h+='；离考试 '+dl+' 天，平均每天约 '+Math.ceil(left/dl)+' 个'; }
+  h+='。';
+  if(packState.failed) h+='<br><span class="sub">扩充词库没加载上，联网后重新打开 App。</span>';
+  else if(packState.loaded && total<goal) h+='<br><span class="sub">词库现有 '+total+' 个，离目标还有空缺，后面会继续扩充。</span>';
+  if(easy>0) h+='<br><span class="sub">另有 '+easy+' 个标为「太简单」，没算在内。</span>';
+  $("vocabText").innerHTML=h;
 }
 $("newSize").addEventListener("click",function(e){ var b=e.target.closest("button"); if(!b) return; db.set.batch=+b.dataset.n; persist(); renderHome(); });
 $("newSrc").addEventListener("change",function(){ db.set.src=this.value; persist(); });
@@ -629,6 +727,7 @@ function practiceIds(src){
   if(src==="p:today") return Object.keys(db.prog).filter(function(id){ var p=db.prog[id]; return WORDS[id] && (p.last===today||p.first===today); });
   if(src==="p:hard") return Object.keys(db.prog).filter(function(id){ return WORDS[id] && status(id)==="x"; });
   if(src==="p:week") return Object.keys(db.prog).filter(function(id){ var p=db.prog[id]; return WORDS[id] && (p.last>=today-6); });
+  if(src==="p:prod") return Object.keys(db.prog).filter(function(id){ return WORDS[id] && !db.prog[id].skip && WORDS[id].use==="productive"; });
   if(src==="p:learned") return Object.keys(db.prog).filter(function(id){ return !!WORDS[id]; });
   return wordsIn(src);
 }
@@ -670,7 +769,13 @@ function showCard(){
   if(S.mode==="card") renderFront(w);
   else renderSpell(w);
 }
-function tagFor(w){ return '<span class="tag">'+esc(groupName(w.g))+'</span>'; }
+function tagFor(w){
+  var h='<span class="tag">'+esc(groupName(w.g))+'</span>';
+  if(w.awl && w.g[0]!=="k") h+='<span class="tag awl">AWL 第'+w.awl+'级</span>';
+  if(w.use==="productive") h+='<span class="tag use">✍️ 会用</span>';
+  return h;
+}
+function synHtml(w){ return (w.syns && w.syns.length) ? '<div class="syn">同义替换：'+w.syns.map(esc).join(" · ")+'</div>' : ''; }
 function exHtml(w){ return w.ex ? '<div class="ex">'+esc(w.ex)+' <button data-say-ex="1">🔊</button></div>' : ''; }
 function renderFront(w){
   var isNew = !db.prog[w.id];
@@ -685,7 +790,7 @@ function renderBack(w){
   S.step="back";
   $("sBody").innerHTML='<div class="word" style="margin-top:14px">'+esc(w.w)+'</div>'+(w.ipa?'<div class="ipa">/'+esc(w.ipa)+'/</div>':'')+
     '<button class="say" data-say="1">🔊 发音</button>'+
-    '<div class="ans">'+tagFor(w)+'<div class="cn">'+esc(w.cn)+'</div>'+exHtml(w)+'</div>';
+    '<div class="ans">'+tagFor(w)+'<div class="cn">'+esc(w.cn)+'</div>'+exHtml(w)+synHtml(w)+'</div>';
   var p=db.prog[w.id], n0 = !p || p.n===0;
   function nxt(q){ var iv; if(q===0) return "再来"; if(q===3) return "不再出现";
     if(!p||p.n===0) iv=1; else if(q===1) iv=Math.max(1,Math.round(p.iv*1.2)); else iv=(p.n===1?3:Math.round(p.iv*p.ef));
@@ -788,6 +893,10 @@ function renderLib(){
   if(libGroup){ renderLibWords(); return; }
   $("libGroups").hidden=false; $("libWords").hidden=true;
   $("myGroups").innerHTML = db.groups.map(function(g){ return grpRow("m:"+g); }).join("") || '<p class="sub">还没有分组。</p>';
+  var tiers=["k:core","k:awl"]; for(var n=1;n<=10;n++) tiers.push("k:awl"+n);
+  $("tierGroups").innerHTML = tiers.map(grpRow).join("");
+  $("tierSub").textContent = packState.failed ? "扩充词库没加载上，联网后重新打开 App。" : "话题核心词 "+CORE_IDS.length+" 个，按 13 个话题扩充（也在下面的话题里）；学术词 AWL 是学术文章最常见的 570 个词族，分 10 级。";
+  $("topicSub").textContent = "内置 "+BUILT_IDS.length+" 个 + 话题核心扩充 "+CORE_IDS.length+" 个，带音标、例句。";
   $("topicGroups").innerHTML = TOPICS.map(function(t,i){ return grpRow("t"+i); }).join("");
 }
 function grpRow(g){
@@ -824,7 +933,7 @@ function openWord(id){
   if(p && (p.lap||p.sw)) st+="（忘记 "+(p.lap||0)+" 次，拼错 "+(p.sw||0)+" 次）";
   sheet('<div class="word" style="margin-top:4px;font-size:32px">'+esc(w.w)+'</div>'+(w.ipa?'<div class="ipa">/'+esc(w.ipa)+'/</div>':'')+
     '<button class="say" data-say="1" data-id="'+id+'">🔊 发音</button>'+
-    '<div class="ans" style="background:var(--bg)">'+tagFor(w)+'<div class="cn">'+esc(w.cn)+'</div>'+(w.ex?'<div class="ex">'+esc(w.ex)+' <button data-say-ex="1" data-id="'+id+'">🔊</button></div>':'')+'</div>'+
+    '<div class="ans" style="background:var(--bg)">'+tagFor(w)+'<div class="cn">'+esc(w.cn)+'</div>'+(w.ex?'<div class="ex">'+esc(w.ex)+' <button data-say-ex="1" data-id="'+id+'">🔊</button></div>':'')+synHtml(w)+'</div>'+
     '<p class="sub" style="margin-top:12px">'+st+'</p>'+
     '<div class="row" style="flex-wrap:wrap">'+
       (!p||p.skip ? '<button class="ghost" data-act="learn" style="flex:1">'+(p?'恢复复习':'加入今天复习')+'</button>' : '<button class="ghost" data-act="skip" style="flex:1">标为太简单</button>')+
@@ -1240,6 +1349,7 @@ function renderSet(){
   chipSet($("setRate"),[["0.75","慢"],["0.9","正常"],["1","稍快"]],db.set.rate,function(v){ db.set.rate=+v; speak("environment"); });
   chipSet($("setAuto"),[["1","开"],["0","关"]],db.set.auto?"1":"0",function(v){ db.set.auto=v==="1"; });
   chipSet($("setCap"),[["30","30 个"],["50","50 个"],["100","100 个"],["9999","不限"]],db.set.cap,function(v){ db.set.cap=+v; });
+  chipSet($("setGoal"),[["5000","5000"],["6000","6000"],["7000","7000"],["8000","8000"]],db.set.goal,function(v){ db.set.goal=+v; });
   $("setExam").value=db.set.exam||"";
   var n=Object.keys(db.prog).length;
   $("countInfo").textContent="已学 "+n+" 个词，自己加了 "+db.custom.length+" 个。"+(db.lastBackup?"上次备份："+new Date(db.lastBackup).toLocaleDateString("zh-CN")+"。":"还没有备份过。");
@@ -1290,6 +1400,12 @@ $("bkLater").onclick=function(){ db.bkSnooze=Date.now()+3*DAY; persist(); checkB
 if(!db.name){ $("welcome").classList.add("on"); }
 $("wGo").onclick=function(){ var n=$("wName").value.trim(); if(!n){ $("wName").focus(); return; } db.name=n; persist(); $("welcome").classList.remove("on"); renderHome(); };
 renderHome();
+loadPacks().then(function(){
+  rebuildCustom();
+  if(!$("study").classList.contains("on") && !$("sheet").classList.contains("on")) refresh();
+}).catch(function(){
+  packState.failed=true; renderHome(); toast("扩充词库没加载上，联网后重新打开 App",3500);
+});
 if("serviceWorker" in navigator){
   navigator.serviceWorker.register("sw.js").then(function(reg){ try{ reg.update(); }catch(e){} }).catch(function(){});
   var swRefreshing=false;
