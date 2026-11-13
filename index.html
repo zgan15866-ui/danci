@@ -606,7 +606,7 @@ function load(){
   if(!db.fun) db.fun={xp:0,best:0,rank:null};
 }
 function persist(){
-  try{ localStorage.setItem(KEY, JSON.stringify(db)); return true; }
+  try{ localStorage.setItem(KEY, JSON.stringify(db)); try{ syncDirty(); }catch(e2){} return true; }
   catch(e){ toast("保存失败：手机空间不足？",3000); return false; }
 }
 load();
@@ -716,6 +716,7 @@ function grade(id,q){
   else if(q===2){ p.iv = p.n===0?1:(p.n===1?3:Math.round(p.iv*p.ef)); p.n++; p.due=today+p.iv; }
   else if(q===3){ p.skip=1; p.iv=Math.max(p.iv,30); p.n++; p.due=today+p.iv; }
   p.last=today;
+  syncTouch();
   var L=logDay();
   if(isNew) L.nw++; else L.rv++;
   if(q===0) L.ng++; else L.ok++;
@@ -1079,7 +1080,7 @@ function checkSpell(w,val){
   var ok = norm(val)===norm(w.w);
   S.step="checked";
   funAnswer(ok, !ok, ok?8:0);
-  var L=logDay(); L.sp++; if(ok) L.spok++;
+  syncTouch(); var L=logDay(); L.sp++; if(ok) L.spok++;
   var p=db.prog[w.id];
   if(ok){ S.right++; }
   else {
@@ -1556,7 +1557,7 @@ function renderQuiz(){
   $("qSkip").onclick=function(){ if(q.t==="mc") answerMC(q,-1); else answerFill(q,""); };
 }
 function quizResult(ok,q){
-  var L=logDay(); L.sp++; if(ok){ L.spok++; S.right++; } else { S.wrong++; S.wrongList.push(q); }
+  syncTouch(); var L=logDay(); L.sp++; if(ok){ L.spok++; S.right++; } else { S.wrong++; S.wrongList.push(q); }
   persist();
   $("sFoot").innerHTML='<button class="btn full" id="qNext" style="padding:15px">下一题</button>';
   $("qNext").onclick=function(){ S.queue.shift(); S.done++; showCard(); };
@@ -1633,7 +1634,7 @@ function renderSet(){
   else chipSet($("setGoal"),[["5000","5000"],["6000","6000"],["7000","7000"],["8000","8000"]],db.set.goal,function(v){ db.set.goal=+v; });
   $("setExam").value=db.set.exam||"";
   var n=Object.keys(db.prog).length;
-  $("countInfo").textContent="已学 "+n+" 个词，自己加了 "+db.custom.length+" 个。"+(db.lastBackup?"上次备份："+new Date(db.lastBackup).toLocaleDateString("zh-CN")+"。":"还没有备份过。");
+  $("countInfo").textContent="已学 "+n+" 个词，自己加了 "+db.custom.length+" 个。"+(db.lastBackup?"上次备份："+new Date(db.lastBackup).toLocaleDateString("zh-CN")+"。":"还没有备份过。")+syncInfo();
 }
 $("setName").addEventListener("change",function(){ db.name=this.value.trim()||db.name; persist(); });
 $("setExam").addEventListener("change",function(){ db.set.exam=this.value; persist(); });
@@ -1676,6 +1677,140 @@ function checkBackup(){
 }
 $("bkGo").onclick=function(){ goView("set"); };
 $("bkLater").onclick=function(){ db.bkSnooze=Date.now()+3*DAY; persist(); checkBackup(); };
+
+// ---------- 学习数据同步（默认关闭：没配置端点时什么都不做）----------
+// 配置来源（优先级从高到低）：
+//   1. 手机上的 danci.sync（打开带 ?sync=同步码 的链接一次就存进去；?sync=off 关闭）
+//   2. 下面的 SYNC_DEFAULT（留 null = 不同步）
+// 端点类型：
+//   {t:"w3f", k:"Web3Forms 访问密钥", f:"家庭码"}  → 摘要以邮件形式发到赵干的邮箱（访问密钥本来就是公开的，不是机密）
+//   {t:"sb", u:"https://xxx.supabase.co", k:"anon 公钥", f:"家庭码", s:1}  → 写入 Supabase 表 sync（只能写不能读；s:1 同时传完整快照）
+// 不放任何机密：写入密钥天生是公开的；读取用的密钥只在赵干的电脑/Grok Bot 一侧。
+// 只上传：姓名、学习统计、近 35 天按天记录、最难的词。不上传：自建词、建议文字、备份文件。
+// 同步用独立的 localStorage 键 danci.sync，不碰 danci.v1。
+var SYNC_DEFAULT = null;
+var SYNC_APPV = "v13";
+var SYNC_KEY = "danci.sync";
+var syncSt = null, syncTimer = null, syncBusy = false;
+function syncLoad(){
+  if(syncSt) return syncSt;
+  try{ syncSt = JSON.parse(localStorage.getItem(SYNC_KEY)||"null"); }catch(e){ syncSt=null; }
+  if(!syncSt || typeof syncSt!=="object") syncSt={};
+  if(!syncSt.dev){ syncSt.dev=Math.random().toString(36).slice(2,8)+Date.now().toString(36).slice(-3); }
+  if(!syncSt.ses) syncSt.ses=[];
+  if(!syncSt.sent) syncSt.sent=[];
+  return syncSt;
+}
+function syncSave(){ try{ localStorage.setItem(SYNC_KEY, JSON.stringify(syncSt)); }catch(e){} }
+function syncCfg(){
+  var st=syncLoad(), c=st.cfg||SYNC_DEFAULT;
+  if(!c || c.off) return null;
+  if(c.t==="w3f" && c.k) return c;
+  if(c.t==="sb" && c.u && c.k) return c;
+  return null;
+}
+function syncParseUrl(){
+  try{
+    var q=new URLSearchParams(location.search), v=q.get("sync"); if(!v) return;
+    var st=syncLoad();
+    if(v==="off"){ st.cfg={off:1}; }
+    else{
+      var b=v.replace(/-/g,"+").replace(/_/g,"/"); while(b.length%4) b+="=";
+      var c=JSON.parse(decodeURIComponent(escape(atob(b))));
+      if(c && (c.t==="w3f"||c.t==="sb")){ st.cfg=c; st.hash=null; st.last=0; }
+    }
+    syncSave();
+    q.delete("sync"); var rest=q.toString();
+    history.replaceState(null,"",location.pathname+(rest?"?"+rest:"")+location.hash);
+    if(syncCfg()) setTimeout(function(){ toast("已开启学习数据同步",2200); },800);
+  }catch(e){}
+}
+// 一次「学习时段」：两次作答间隔不超过 10 分钟算同一段
+function syncTouch(){
+  try{
+    if(!syncCfg()) return;
+    var st=syncLoad(), now=Date.now(), l=st.ses[st.ses.length-1];
+    if(l && now-l[1]<600000){ l[1]=now; l[2]++; }
+    else{ st.ses.push([now,now,1]); if(st.ses.length>60) st.ses.shift(); }
+    syncSave();
+  }catch(e){}
+}
+function syncSummary(){
+  var st=syncLoad(), today=dayNum(), ws=weekStartOf(today);
+  var cnt={l:0,m:0,x:0,e:0}, weakTopic={}, weak=[], mlearned=0;
+  Object.keys(db.prog).forEach(function(id){
+    var w=WORDS[id]; if(!w) return;
+    var p=db.prog[id], s=status(id); cnt[s]=(cnt[s]||0)+1;
+    if(s==="x"){ var gn=groupName(w.g); weakTopic[gn]=(weakTopic[gn]||0)+1; }
+    var bad=(p.lap||0)+(p.sw||0); if(bad>=2) weak.push([id,w.w,p.lap||0,p.sw||0,p.iv||0,bad]);
+  });
+  weak.sort(function(a,b){ return b[5]-a[5]; });
+  var wt=Object.keys(weakTopic).map(function(k){ return [k,weakTopic[k]]; }).sort(function(a,b){ return b[1]-a[1]; }).slice(0,6);
+  var log={};
+  for(var i=0;i<35;i++){ var k=dayStr(today-i), L=db.log[k]; if(L && (L.nw+L.rv+L.sp+(L.ng||0))>0) log[k]=[L.nw||0,L.rv||0,L.ok||0,L.ng||0,L.sp||0,L.spok||0]; }
+  var ses=st.ses.slice(-40).map(function(x){ return [Math.round(x[0]/1000),Math.round((x[1]-x[0])/1000),x[2]]; });
+  var weekNew=0; Object.keys(db.prog).forEach(function(id){ if(WORDS[id] && db.prog[id].first>=ws) weekNew++; });
+  return {
+    app:"danci-sync", v:1, appv:SYNC_APPV,
+    fam:(syncCfg()||{}).f||"", dev:st.dev, name:db.name||"", track:isBeginner()?"beginner":"exam",
+    at:Date.now(), tz:-new Date().getTimezoneOffset(), day:dayStr(today),
+    exam:db.set.exam||"", goal:trackGoal(), weekGoal:trackWeekGoal(), cap:db.set.cap, batch:db.set.batch,
+    tot:{learned:Object.keys(db.prog).filter(function(id){return !!WORDS[id];}).length, learning:cnt.l, mastered:cnt.m, hard:cnt.x, easy:cnt.e, custom:db.custom.length, lib:libTotal(), due:dueList().length, weekNew:weekNew},
+    rank:db.fun?db.fun.rank:null, xp:db.fun?db.fun.xp:0, weekStreak:weekStreak(),
+    log:log, ses:ses, weak:weak.slice(0,15).map(function(x){return x.slice(0,5);}), weakTopics:wt,
+    firstUse:db.created||0, lastBackup:db.lastBackup||0
+  };
+}
+function syncHash(o){ var c={}; for(var k in o) if(k!=="at") c[k]=o[k]; var s=JSON.stringify(c), h=5381; for(var i=0;i<s.length;i++) h=((h<<5)+h+s.charCodeAt(i))|0; return String(h); }
+function syncDirty(){
+  if(!syncCfg()) return;
+  clearTimeout(syncTimer); syncTimer=setTimeout(function(){ syncSend(false); },30000);
+}
+function syncSend(urgent){
+  var cfg=syncCfg(); if(!cfg || syncBusy) return;
+  if(typeof navigator!=="undefined" && navigator.onLine===false) return;
+  var st=syncLoad(), now=Date.now();
+  var minGap = cfg.t==="w3f" ? (urgent?120000:300000) : 60000;
+  if(st.last && now-st.last<minGap) return;
+  if(cfg.t==="w3f"){ st.sent=st.sent.filter(function(t){ return now-t<30*DAY; }); if(st.sent.length>=60) return; } // 免费额度 250 封/月，三台设备各最多 60 封
+  var sum; try{ sum=syncSummary(); }catch(e){ return; }
+  var h=syncHash(sum);
+  var stale = !st.last || now-st.last>3*DAY; // 3 天没发过就补一条「心跳」，让每周汇总知道这台设备还活着
+  if(h===st.hash && !stale) return;
+  syncBusy=true;
+  var req;
+  try{
+    if(cfg.t==="w3f"){
+      req=fetch("https://api.web3forms.com/submit",{method:"POST",keepalive:true,headers:{"Content-Type":"application/json","Accept":"application/json"},
+        body:JSON.stringify({access_key:cfg.k,subject:"雅思修行同步 · "+(sum.name||"未命名")+" · "+sum.dev,from_name:"雅思修行",botcheck:"",message:"DANCI-SYNC/1\n"+JSON.stringify(sum)})
+      }).then(function(r){ return r.json().then(function(j){ return !!(r.ok && j && j.success); }); });
+    }else{
+      var row={fam:cfg.f||"",dev:sum.dev,name:sum.name,summary:sum,snap:null};
+      if(cfg.s) row.snap={db:db,at:now};
+      var body=JSON.stringify(row);
+      req=fetch(cfg.u.replace(/\/+$/,"")+"/rest/v1/sync",{method:"POST",keepalive:body.length<60000,headers:{"Content-Type":"application/json","apikey":cfg.k,"Authorization":"Bearer "+cfg.k,"Prefer":"return=minimal"},body:body})
+        .then(function(r){ return r.ok; });
+    }
+  }catch(e){ syncBusy=false; return; }
+  req.then(function(ok){
+    syncBusy=false;
+    if(ok){ st.hash=h; st.last=Date.now(); st.fail=0; if(cfg.t==="w3f") st.sent.push(st.last); }
+    else st.fail=(st.fail||0)+1;
+    syncSave();
+  }).catch(function(){ syncBusy=false; st.fail=(st.fail||0)+1; syncSave(); });
+}
+function syncInfo(){
+  try{
+    if(!syncCfg()) return "";
+    var st=syncLoad();
+    return " 学习数据同步：已开启"+(st.last?"，上次 "+new Date(st.last).toLocaleString("zh-CN",{month:"numeric",day:"numeric",hour:"2-digit",minute:"2-digit"}):"，还没有成功上传过")+(st.fail>2?"（最近连不上网络，会自动重试）":"")+"。";
+  }catch(e){ return ""; }
+}
+document.addEventListener("visibilitychange",function(){ if(document.visibilityState==="hidden") syncSend(true); else syncSend(false); });
+window.addEventListener("pagehide",function(){ syncSend(true); });
+window.addEventListener("online",function(){ syncSend(false); });
+syncParseUrl();
+setTimeout(function(){ syncSend(false); },5000);
 
 // ---------- 启动 ----------
 if(!db.name){ $("welcome").classList.add("on"); }
