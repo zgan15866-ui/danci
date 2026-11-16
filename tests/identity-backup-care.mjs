@@ -121,10 +121,10 @@ function prog(page) {
 }
 
 const html = await (await fetch(BASE + "/index.html")).text();
-check(html.includes('var APPV="danci-v16"') && html.includes('var SYNC_APPV = "v16"'), "page is app v16");
+check(html.includes('var APPV="danci-v17"') && html.includes('var SYNC_APPV = "v17"'), "page is app v17");
 check(html.includes('var KEY = "danci.v1"'), "learning key unchanged");
 const sw = await (await fetch(BASE + "/sw.js")).text();
-check(sw.includes('const CACHE = "danci-v16"'), "service worker cache is danci-v16");
+check(sw.includes('const CACHE = "danci-v17"'), "service worker cache is danci-v17");
 
 // 根因对照：旧公式把任意 lastBackup 直接换成天数。1700001000000 是 2023-11-14 的毫秒时间，
 // 上一版预览截图用了它，所以会出现大约 1097 天。这不是新安装被写成 1097。
@@ -413,6 +413,54 @@ async function backupText(over, sync) {
   check(page.__hits.every((u) => u.includes("api.web3forms.com")), "dental test did not leak to other hosts: " + page.__hits.join(","));
   const raw = JSON.parse(await page.evaluate(() => localStorage.getItem("danci.v1")));
   check(raw.prog.b0.extra === "keep" && raw.name === "弟弟", "sync does not rewrite study data");
+  await close(page);
+}
+
+// 打开页面就在主界面提示新版本。稍后只藏这一次；已经是当前版本则不再提示。
+{
+  const raw = JSON.stringify(db({ name: "小红" }));
+  const page = await openPage({ storage: [["danci.v1", raw], ["danci.appv", "danci-v16"]] });
+  const ui = await page.evaluate(() => ({
+    home: !document.getElementById("updHome").hidden,
+    title: document.querySelector("#updHome h2").textContent,
+    btn: document.getElementById("updHomeGo").textContent,
+    bar: document.getElementById("updBar").classList.contains("on"),
+    appv: localStorage.getItem("danci.appv"),
+    extra: JSON.parse(localStorage.getItem("danci.v1")).prog.b0.extra
+  }));
+  check(ui.home && ui.title === "发现新版本" && ui.btn === "立即更新" && ui.bar, "opening an old version shows the home update card");
+  check(ui.appv === "danci-v17" && ui.extra === "keep", "version key advances without touching study data");
+  await shot(page, "home_update_prompt.png");
+  await page.click("#updLater");
+  const hidden = await page.evaluate(() => document.getElementById("updHome").hidden && !document.getElementById("updBar").classList.contains("on"));
+  check(hidden, "稍后 hides the prompt for this open");
+  check((await prog(page)).extra === "keep", "dismiss does not change study data");
+  await page.goto(BASE + "/?sync=off", { waitUntil: "domcontentloaded" });
+  await page.waitForFunction(() => document.getElementById("heroT").textContent.length > 0);
+  const again = await page.evaluate(() => document.getElementById("updHome").hidden);
+  check(again, "after the version key matches, reopen does not nag");
+  check(page.__hits.length === 0, "update prompt with sync=off sends nothing");
+  await close(page);
+}
+{
+  const page = await openPage({ storage: [["danci.v1", JSON.stringify(db({ name: "小红" }))], ["danci.appv", "danci-v17"]] });
+  const hidden = await page.evaluate(() => document.getElementById("updHome").hidden);
+  check(hidden, "current version does not show the update card");
+  await close(page);
+}
+{
+  const raw = JSON.stringify(db({ name: "小红" }));
+  const page = await openPage({ storage: [["danci.v1", raw], ["danci.appv", "danci-v16"]] });
+  await page.click("#updHomeGo");
+  await page.waitForNavigation({ waitUntil: "domcontentloaded", timeout: 8000 }).catch(() => {});
+  await page.waitForFunction(() => document.getElementById("heroT") && document.getElementById("heroT").textContent.length > 0);
+  const after = await page.evaluate(() => ({
+    hidden: document.getElementById("updHome").hidden,
+    extra: JSON.parse(localStorage.getItem("danci.v1")).prog.b0.extra,
+    name: JSON.parse(localStorage.getItem("danci.v1")).name
+  }));
+  check(after.hidden && after.extra === "keep" && after.name === "小红", "立即更新 reloads without wiping records");
+  check(page.__hits.length === 0, "tapping update with sync=off sends nothing");
   await close(page);
 }
 
