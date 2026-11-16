@@ -192,6 +192,11 @@
   .tip{background:var(--soft);border-radius:10px;padding:10px 12px;font-size:14px;line-height:1.6;margin-top:8px}
   .welcome{position:fixed;inset:0;background:rgba(17,21,29,.46);z-index:60;display:none;align-items:center;justify-content:center;padding:24px}
   .welcome.on{display:flex}
+  .care .line{padding:8px 0;border-bottom:1px solid var(--line)}
+  .care .line:last-child{border-bottom:0}
+  .care .en{font-weight:700;line-height:1.45}
+  .care .cn{color:var(--muted);font-size:14px;margin-top:2px}
+  .care .say{display:inline-block;margin:0 0 0 6px;padding:2px 8px;font-size:14px;vertical-align:baseline}
   /* 深色模式可读性：只在深色下生效，浅色不受影响 */
   @media (prefers-color-scheme: dark){
     .card{box-shadow:inset 0 0 0 1px var(--line)}
@@ -229,6 +234,13 @@
       <div class="s" id="heroS">今天也来背几个吧</div>
       <div class="m" id="heroM"></div>
       <div class="syncat" id="heroSync">上次同步时间：尚未同步</div>
+    </div>
+    <div class="card care" id="careCard" hidden>
+      <div class="row sp"><h2 style="margin:0">候诊的话</h2><button type="button" class="ghost" id="careHide" style="padding:6px 10px">收起</button></div>
+      <p class="sub" id="careLead" style="margin-top:8px"></p>
+      <p class="sub" id="careRest"></p>
+      <button type="button" class="ghost full" id="careToggle">想看几句英文（可以不看）</button>
+      <div id="careLines" hidden></div>
     </div>
     <div class="card battle" id="battleCard">
       <div class="bt" id="battleT">本周 · 周末模式</div>
@@ -351,6 +363,7 @@
     <div class="card">
       <label class="f" style="margin-top:0">称呼</label>
       <input id="setName" placeholder="请输入名字" autocomplete="nickname">
+      <p class="sub" id="whoNote" hidden></p>
       <label class="f">发音</label>
       <div class="chips" id="setAccent"></div>
       <label class="f">语速</label>
@@ -501,7 +514,7 @@
     <div class="card">
       <h2>📦 备份和换手机</h2>
       <ul>
-        <li>「设置」→「导出备份」：保存到「文件」或用微信发给自己。建议每月一次，超过 30 天没备份首页会提醒。</li>
+        <li>「设置」→「导出备份」：保存到「文件」或用微信发给自己。建议每月一次，超过 30 天没导出首页会提醒。学习同步只是把进度摘要发给家里，不能代替这个备份文件。</li>
         <li>换手机：在新手机上装好雅思修行 →「设置」→「从备份恢复」→ 选备份文件。</li>
         <li>不要删除桌面图标，删掉会连带删除学习记录。</li>
       </ul>
@@ -565,6 +578,15 @@
     <p class="sub">家庭周报靠这个名字区分设备。已有的学习记录会保留，之后也可以在「设置」里修改。</p>
     <input id="wName" placeholder="请输入名字" autocomplete="nickname" enterkeyhint="done">
     <button class="btn full" id="wGo" style="margin-top:14px">开始</button>
+  </div>
+</div>
+
+<div class="welcome" id="whoAsk">
+  <div class="card" style="width:100%;max-width:420px">
+    <h2>是彦神吗？</h2>
+    <p class="sub" id="whoText"></p>
+    <button type="button" class="btn full" id="whoYes">是，就用现在的名字</button>
+    <button type="button" class="ghost full" id="whoNo" style="margin-top:10px">不是我</button>
   </div>
 </div>
 
@@ -848,6 +870,7 @@ function renderHome(){
   $("newSize").innerHTML=[5,10,20,30].map(function(n){ return '<button data-n="'+n+'" class="'+(n===db.set.batch?"on":"")+'">'+n+' 个</button>'; }).join("");
   renderVocab();
   checkBackup();
+  renderCare();
   renderQuizHome();
 }
 function newOrder(){
@@ -938,7 +961,7 @@ $("goDict").onclick=function(){
 // ---------- 学习过程 ----------
 var S=null;
 function startSession(kind,mode,ids,newSet){
-  if(askName()) return;
+  if(askName()||askWho()) return;
   S={kind:kind,mode:mode,queue:ids.slice(),total:ids.length,done:0,seen:{},again:{},right:0,wrong:0,wrongList:[],step:"front",combo:0,maxCombo:0,xp:0,newSet:newSet||{},nNew:0,nRev:0};
   $("comboFx").className=""; $("sBody").onclick=null; funInit();
   $("study").classList.add("on");
@@ -1396,7 +1419,8 @@ $("mkReport").onclick=function(){
     var ww=x.measureText(wd.w).width; x.fillStyle="#555e70"; x.font='400 34px '+F; var cn=wd.cn; if(cn.length>16) cn=cn.slice(0,16)+"…"; x.fillText(cn,Math.max(380,100+ww+30),yy); });
   x.fillStyle="#a0a8b8"; x.font='400 28px '+F; x.textAlign="center"; x.fillText("雅思修行 · "+dayStr(today),W/2,H-90);
   reportText=name+"的单词周报（"+range+"）\n学习 "+w.days+"/7 天，新学 "+w.nw+" 个，复习 "+w.rv+" 次，拼写听写 "+w.sp+" 次，正确率 "+(acc==null?"—":acc+"%")+"\n累计已学 "+t.learned+"，已掌握 "+t.mastered+"，易错 "+t.hard.length+(exam?"\n"+exam:"")+
-    (hard.length?"\n易错词："+hard.map(function(id){return WORDS[id].w;}).join("、"):"");
+    (hard.length?"\n易错词："+hard.map(function(id){return WORDS[id].w;}).join("、"):"")+
+    ((db.learner==="彦神" && name!=="彦神") ? "\n身份：彦神（称呼仍是"+name+"）" : "");
   $("reportImg").src=cv.toDataURL("image/png");
   $("reportBox").hidden=false;
   cv.toBlob(function(b){ reportBlob=b; },"image/png");
@@ -1542,7 +1566,7 @@ function quizMenu(id){
     });
 }
 function startQuiz(id){
-  if(askName()) return;
+  if(askName()||askWho()) return;
   var q=db.quizzes.filter(function(x){return x.id===id;})[0]; if(!q) return;
   S={kind:"quiz",mode:"quiz",quiz:q,queue:shuffle(q.qs.map(function(_,i){return i;})),total:q.qs.length,done:0,seen:{},again:{},right:0,wrong:0,wrongList:[],step:"front"};
   $("study").classList.add("on"); document.body.style.overflow="hidden";
@@ -1638,6 +1662,9 @@ if(!$("setTrack")._ok){ $("setTrack")._ok=1; $("setTrack").addEventListener("cli
 }); }
 function renderSet(){
   $("setName").value=db.name||"";
+  var wn=$("whoNote");
+  if(db.learner==="彦神"){ wn.hidden=false; wn.textContent="已确认是彦神。称呼可以照旧，改称呼也不会取消这个确认。"; }
+  else { wn.hidden=true; wn.textContent=""; }
   renderTrack();
   chipSet($("setAccent"),[["en-GB","英音"],["en-US","美音"]],db.set.accent,function(v){ db.set.accent=v; speak("environment"); });
   chipSet($("setRate"),[["0.75","慢"],["0.9","正常"],["1","稍快"]],db.set.rate,function(v){ db.set.rate=+v; speak("environment"); });
@@ -1647,9 +1674,9 @@ function renderSet(){
   else chipSet($("setGoal"),[["5000","5000"],["6000","6000"],["7000","7000"],["8000","8000"]],db.set.goal,function(v){ db.set.goal=+v; });
   $("setExam").value=db.set.exam||"";
   var n=Object.keys(db.prog).length;
-  $("countInfo").textContent="已学 "+n+" 个词，自己加了 "+db.custom.length+" 个。"+(db.lastBackup?"上次备份："+new Date(db.lastBackup).toLocaleDateString("zh-CN")+"。":"还没有备份过。")+syncInfo();
+  $("countInfo").textContent="已学 "+n+" 个词，自己加了 "+db.custom.length+" 个。"+backupWhenText()+syncInfo();
 }
-$("setName").addEventListener("change",function(){ db.name=this.value.trim()||db.name; persist(); });
+$("setName").addEventListener("change",function(){ var n=this.value.trim(); if(!n){ this.value=db.name||""; return; } db.name=n; persist(); askWho(); });
 $("setExam").addEventListener("change",function(){ db.set.exam=this.value; persist(); });
 $("testVoice").onclick=function(){ speak("Practice makes perfect."); };
 
@@ -1682,11 +1709,47 @@ $("importFile").onchange=function(){
   r.readAsText(f); this.value="";
 };
 function load2(){ persist(); load(); rebuildCustom(); }
+// 只认毫秒时间戳。秒、天数、空值、未来太远的值，都不拿来编「过了多少天」。
+var MS_OK = 1000000000000;
+function msStamp(v){
+  if(typeof v==="string" && /^[0-9]+$/.test(v)) v=+v;
+  if(typeof v!=="number" || !isFinite(v)) return null;
+  return v;
+}
+function backupHasStamp(){ var raw=db.lastBackup; return !(raw==null || raw==="" || raw===false); }
+function backupView(now){
+  now=now||Date.now();
+  var learned=Object.keys(db.prog).length>0;
+  var snooze=msStamp(db.bkSnooze);
+  if(!learned || (snooze && snooze>now && snooze-now<14*DAY)) return {show:false, text:""};
+  var t=msStamp(db.lastBackup), created=msStamp(db.created);
+  function daysOf(x){ return Math.floor((now-x)/DAY); }
+  if(backupHasStamp()){
+    if(t==null || t<MS_OK) return {show:true, text:"📦 导出备份的时间对不上，没有把它算成已备份。学习同步不是备份。建议现在重新导出一次。"};
+    if(t>now+DAY) return {show:true, text:"📦 导出备份的时间在未来，可能是手机日期不准。没有把它算成已备份。建议核对时间后再导出一次。"};
+    var days=daysOf(t);
+    if(days<30) return {show:false, text:""};
+    return {show:true, text:"📦 上次导出备份是 "+days+" 天前。这是导出文件的时间，和学习同步不是一回事。"};
+  }
+  if(created!=null && created>=MS_OK && created<=now+DAY){
+    var used=daysOf(created);
+    if(used<30) return {show:false, text:""};
+    return {show:true, text:"📦 还没有导出过备份。学习记录在这台手机上已经 "+used+" 天。学习同步不能代替导出备份。"};
+  }
+  return {show:true, text:"📦 还没有导出过备份，也看不清开始日期。建议现在导出一次。学习同步不能代替备份。"};
+}
+function backupWhenText(){
+  if(!backupHasStamp()) return "还没有导出过备份。";
+  var t=msStamp(db.lastBackup), now=Date.now();
+  if(t==null || t<MS_OK || t>now+DAY) return "导出备份的时间对不上，建议重新导出。";
+  if(t>now) return "上次导出备份：刚刚。";
+  var d=new Date(t), p=function(n){ return (n<10?"0":"")+n; };
+  return "上次导出备份："+d.getFullYear()+"年"+p(d.getMonth()+1)+"月"+p(d.getDate())+"日。";
+}
 function checkBackup(){
-  var now=Date.now(), since=db.lastBackup||db.created, days=Math.floor((now-since)/DAY);
-  var show = Object.keys(db.prog).length>0 && days>=30 && !(db.bkSnooze && now<db.bkSnooze);
-  $("bkCard").hidden=!show;
-  if(show) $("bkText").textContent = db.lastBackup ? "📦 已经 "+days+" 天没有备份了，花 10 秒备份一下吧。" : "📦 用了一个月啦，记得备份一次，换手机时能恢复学习记录。";
+  var v=backupView();
+  $("bkCard").hidden=!v.show;
+  if(v.show) $("bkText").textContent=v.text;
 }
 $("bkGo").onclick=function(){ goView("set"); };
 $("bkLater").onclick=function(){ db.bkSnooze=Date.now()+3*DAY; persist(); checkBackup(); };
@@ -1765,7 +1828,9 @@ function syncSummary(){
   var weekNew=0; Object.keys(db.prog).forEach(function(id){ if(WORDS[id] && db.prog[id].first>=ws) weekNew++; });
   return {
     app:"danci-sync", v:1, appv:SYNC_APPV,
-    fam:(syncCfg()||{}).f||"", dev:st.dev, name:db.name||"", track:isBeginner()?"beginner":"exam",
+    fam:(syncCfg()||{}).f||"", dev:st.dev, name:db.name||"",
+    learner:(db.learner==="彦神" || String(db.name||"").trim()==="彦神") ? "彦神" : "",
+    track:isBeginner()?"beginner":"exam",
     at:Date.now(), tz:-new Date().getTimezoneOffset(), day:dayStr(today),
     exam:db.set.exam||"", goal:trackGoal(), weekGoal:trackWeekGoal(), cap:db.set.cap, batch:db.set.batch,
     tot:{learned:Object.keys(db.prog).filter(function(id){return !!WORDS[id];}).length, learning:cnt.l, mastered:cnt.m, hard:cnt.x, easy:cnt.e, custom:db.custom.length, lib:libTotal(), due:dueList().length, weekNew:weekNew},
@@ -1851,8 +1916,91 @@ function saveWelcomeName(){
   $("setName").value=n;
   $("welcome").classList.remove("on");
   renderHome();
+  askWho();
 }
+// 只有称呼正好是「弟弟」或「小明」、并且还没回答过，才问一次是不是彦神。回答后不再问，也不改称呼。
+function askWho(){
+  if(nameMissing()){ $("whoAsk").classList.remove("on"); return false; }
+  var n=String(db.name||"").trim();
+  if((n!=="弟弟" && n!=="小明") || db.learner==="彦神" || db.learner==="other"){
+    $("whoAsk").classList.remove("on");
+    return false;
+  }
+  $("whoText").textContent="首页现在显示「"+n+"」。如果是彦神，就继续用这个称呼，不用改名。";
+  $("whoYes").textContent="是，就叫"+n;
+  $("whoAsk").classList.add("on");
+  return true;
+}
+function saveWho(yes){
+  db.learner=yes?"彦神":"other";
+  persist();
+  $("whoAsk").classList.remove("on");
+  var wn=$("whoNote");
+  if(yes){ wn.hidden=false; wn.textContent="已确认是彦神。称呼可以照旧，改称呼也不会取消这个确认。"; }
+  else { wn.hidden=true; wn.textContent=""; }
+  renderHome();
+}
+function isYanshen(){
+  if(db.learner==="彦神") return true;
+  return String(db.name||"").trim()==="彦神";
+}
+// 北京时间：11月17日 0 点到 11月20日 0 点。过了就不再出现，也不写「明天」。
+var CARE_FROM=Date.UTC(2026,10,16,16,0,0);
+var CARE_NOON=Date.UTC(2026,10,18,4,0,0);
+var CARE_UNTIL=Date.UTC(2026,10,19,16,0,0);
+var CARE_KEY="tooth-20261118";
+var CARE_LINES=[
+  ["Hello, I have a dental appointment around noon.","你好，我大约中午有个牙科预约。"],
+  ["I'm here to check in for my appointment.","我是来报到的，已经约过了。"],
+  ["This tooth hurts when I bite.","这颗牙一咬就疼。"],
+  ["The pain is on the lower right side.","疼在右下边。"],
+  ["Could you say that more slowly, please?","能说慢一点吗？"],
+  ["Sorry, could you explain that again?","不好意思，能再说一遍吗？"],
+  ["I'm a bit nervous.","我有点紧张。"],
+  ["Could you tell me what you are going to do before you start?","开始之前，能先告诉我你要做什么吗？"],
+  ["What should I do after this?","做完之后我该注意什么？"],
+  ["When can I eat or drink?","我什么时候可以吃东西、喝水？"]
+];
+function carePhase(now){
+  now=now||Date.now();
+  if(now<CARE_FROM || now>=CARE_UNTIL) return "";
+  return now<CARE_NOON ? "wait" : "rest";
+}
+function renderCare(){
+  var card=$("careCard");
+  if(!card) return;
+  var phase=carePhase(Date.now());
+  var show=isYanshen() && !!phase && db.careOff!==CARE_KEY;
+  card.hidden=!show;
+  if(!show){ $("careLead").textContent=""; $("careRest").textContent=""; $("careLines").hidden=true; return; }
+  $("careLead").textContent = phase==="wait"
+    ? "11月18日中午有个牙科预约。候诊时有精神，可以学两句；想休息就休息。"
+    : "看牙之后以休息为先，听牙医的嘱咐。想学再学，不学也没关系。";
+  $("careRest").textContent="下面的英文只是候诊时可以听一听，不是作业，也不是医疗建议。";
+}
+function fillCareLines(){
+  var box=$("careLines");
+  if(box.dataset.ready) return;
+  box.innerHTML=CARE_LINES.map(function(l,i){
+    return '<div class="line"><div class="en">'+esc(l[0])+' <button type="button" class="say" data-say="'+i+'">🔊</button></div><div class="cn">'+esc(l[1])+'</div></div>';
+  }).join("");
+  box.dataset.ready="1";
+}
+$("careLines").addEventListener("click",function(e){
+  var b=e.target.closest("[data-say]"); if(!b) return;
+  speak(CARE_LINES[+b.dataset.say][0]);
+});
+$("careToggle").onclick=function(){
+  fillCareLines();
+  var open=$("careLines").hidden;
+  $("careLines").hidden=!open;
+  this.textContent=open?"先把英文收起":"想看几句英文（可以不看）";
+};
+$("careHide").onclick=function(){ db.careOff=CARE_KEY; persist(); renderCare(); };
+$("whoYes").onclick=function(){ saveWho(true); };
+$("whoNo").onclick=function(){ saveWho(false); };
 askName();
+askWho();
 $("wGo").onclick=saveWelcomeName;
 $("wName").addEventListener("keydown",function(e){ if(e.key==="Enter"){ e.preventDefault(); saveWelcomeName(); } });
 renderHome();
