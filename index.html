@@ -35,6 +35,7 @@
   .hero .s{opacity:.9;margin-top:4px;font-size:15px;padding-right:120px}
   .hero .m{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap}
   .hero .m span{background:rgba(255,255,255,.2);padding:5px 11px;border-radius:999px;font-size:13px}
+  .hero .syncat{margin-top:10px;font-size:13px;line-height:1.45;opacity:.95}
   .hero .deco{position:absolute;right:-6px;top:-10px;font-size:84px;font-weight:900;opacity:.13;font-family:Georgia,serif}
   .card{background:var(--card);border-radius:16px;padding:16px;margin-bottom:14px}
   .card.bk{border:1.5px dashed var(--accent)}
@@ -189,7 +190,7 @@
   .track button b{display:block;font-size:16px}
   .track button span{display:block;font-size:13px;color:var(--muted);margin-top:4px;font-weight:400;line-height:1.5}
   .tip{background:var(--soft);border-radius:10px;padding:10px 12px;font-size:14px;line-height:1.6;margin-top:8px}
-  .welcome{position:fixed;inset:0;background:var(--bg);z-index:60;display:none;align-items:center;justify-content:center;padding:24px}
+  .welcome{position:fixed;inset:0;background:rgba(17,21,29,.46);z-index:60;display:none;align-items:center;justify-content:center;padding:24px}
   .welcome.on{display:flex}
   /* 深色模式可读性：只在深色下生效，浅色不受影响 */
   @media (prefers-color-scheme: dark){
@@ -201,7 +202,7 @@
     .vbar i{background:linear-gradient(90deg,#5b8cff,#35c4d8)}
     .cal i.a1{background:#4f6fb8}.cal i.a2{background:#7ba0f0}.cal i.a3{background:#b5ccff}
     .g0{background:#c23b34}.g1{background:#9a5a00}.g2{background:#1f7a50}.g3{background:#6a4cc4}
-    .hero .s{opacity:1}
+    .hero .s,.hero .syncat{opacity:1}
     .hero .m span,.hero .help{background:rgba(0,0,0,.28)}
     .battle{border-color:rgba(255,255,255,.18)}
     .battle .bt{opacity:.85}
@@ -227,6 +228,7 @@
       <div class="t" id="heroT">雅思修行</div>
       <div class="s" id="heroS">今天也来背几个吧</div>
       <div class="m" id="heroM"></div>
+      <div class="syncat" id="heroSync">上次同步时间：尚未同步</div>
     </div>
     <div class="card battle" id="battleCard">
       <div class="bt" id="battleT">本周 · 周末模式</div>
@@ -348,7 +350,7 @@
     </div>
     <div class="card">
       <label class="f" style="margin-top:0">称呼</label>
-      <input id="setName">
+      <input id="setName" placeholder="请输入名字" autocomplete="nickname">
       <label class="f">发音</label>
       <div class="chips" id="setAccent"></div>
       <label class="f">语速</label>
@@ -559,9 +561,9 @@
 
 <div class="welcome" id="welcome">
   <div class="card" style="width:100%;max-width:420px">
-    <h2>👋 欢迎使用雅思修行</h2>
-    <p class="sub">先告诉我怎么称呼你，首页和学习报告上会显示。</p>
-    <input id="wName" placeholder="比如：小明">
+    <h2>请输入名字</h2>
+    <p class="sub">家庭周报靠这个名字区分设备。已有的学习记录会保留，之后也可以在「设置」里修改。</p>
+    <input id="wName" placeholder="请输入名字" autocomplete="nickname" enterkeyhint="done">
     <button class="btn full" id="wGo" style="margin-top:14px">开始</button>
   </div>
 </div>
@@ -821,12 +823,14 @@ function sourceOptions(sel, withPractice){
   var old=sel.value; sel.innerHTML=h;
   if(old && sel.querySelector('option[value="'+old.replace(/"/g,'\\"')+'"]')) sel.value=old;
 }
+function shownName(){ var n=String(db.name||"").trim(); return n||"我"; }
 function renderHome(){
-  var name=db.name||"我";
+  var name=shownName();
   $("heroT").textContent=name+"的雅思修行";
   var today=dayNum(), L=db.log[dayStr(today)];
   var learned=0, mastered=0; Object.keys(db.prog).forEach(function(id){ if(!WORDS[id]) return; learned++; var s=status(id); if(s==="m"||s==="e") mastered++; });
   $("heroS").textContent = L && (L.nw+L.rv) ? "今天已经学了 "+(L.nw+L.rv)+" 次，真棒 👏" : "有空就背几个，一点一点积累";
+  $("heroSync").textContent=syncLastText();
   var m='<span>已学 '+learned+'</span><span>已掌握 '+mastered+'</span>';
   if(db.set.exam){ var ed=dayNum(new Date(db.set.exam+"T00:00:00")); var left=ed-today; if(left>=0) m+='<span>距考试 '+left+' 天</span>'; }
   $("heroM").innerHTML=m;
@@ -934,6 +938,7 @@ $("goDict").onclick=function(){
 // ---------- 学习过程 ----------
 var S=null;
 function startSession(kind,mode,ids,newSet){
+  if(askName()) return;
   S={kind:kind,mode:mode,queue:ids.slice(),total:ids.length,done:0,seen:{},again:{},right:0,wrong:0,wrongList:[],step:"front",combo:0,maxCombo:0,xp:0,newSet:newSet||{},nNew:0,nRev:0};
   $("comboFx").className=""; $("sBody").onclick=null; funInit();
   $("study").classList.add("on");
@@ -1354,7 +1359,7 @@ function renderStat(){
 function openPrintView(){
   var ws=weekStartOf(dayNum()), ids=Object.keys(db.prog).filter(function(id){ return WORDS[id] && db.prog[id].first>=ws; });
   ids.sort(function(a,b){ return db.prog[a].first-db.prog[b].first; });
-  $("pvTitle").textContent=(db.name||"我")+"的本周词表";
+  $("pvTitle").textContent=shownName()+"的本周词表";
   $("pvSub").textContent=dayStr(ws).slice(5).replace("-","/")+" 起 · 本周新学 "+ids.length+" 个词"+(ids.length?"（遮住中文自己默写，再对答案）":"");
   $("pvTable").innerHTML = ids.length ? ids.map(function(id,i){ var w=WORDS[id];
     return '<tr><td class="n">'+(i+1)+'</td><td class="w">'+esc(w.w)+'</td><td class="p">'+(w.ipa?'/'+esc(w.ipa)+'/':'')+'</td><td>'+esc(w.cn)+'</td></tr>'; }).join("")
@@ -1369,7 +1374,7 @@ $("pvPrint").onclick=function(){ try{ window.print(); }catch(e){ toast("请直�
 var reportBlob=null, reportText="";
 $("mkReport").onclick=function(){
   var t=totals(), w=weekStats(), tot=w.ok+w.ng+w.sp, acc=tot?Math.round((w.ok+w.spok)/tot*100):null;
-  var name=db.name||"我", today=dayNum();
+  var name=shownName(), today=dayNum();
   var range=dayStr(today-6).slice(5).replace("-","/")+" – "+dayStr(today).slice(5).replace("-","/");
   var exam=""; if(db.set.exam){ var left=dayNum(new Date(db.set.exam+"T00:00:00"))-today; if(left>=0) exam="距雅思考试还有 "+left+" 天"; }
   var W=1080,H=1500, cv=document.createElement("canvas"); cv.width=W; cv.height=H; var x=cv.getContext("2d");
@@ -1537,6 +1542,7 @@ function quizMenu(id){
     });
 }
 function startQuiz(id){
+  if(askName()) return;
   var q=db.quizzes.filter(function(x){return x.id===id;})[0]; if(!q) return;
   S={kind:"quiz",mode:"quiz",quiz:q,queue:shuffle(q.qs.map(function(_,i){return i;})),total:q.qs.length,done:0,seen:{},again:{},right:0,wrong:0,wrongList:[],step:"front"};
   $("study").classList.add("on"); document.body.style.overflow="hidden";
@@ -1603,7 +1609,7 @@ $("sugBtn").onclick=function(){
       var t=$("sugT").value.trim(); if(!t){ toast("先写几句吧"); $("sugT").focus(); return; }
       var k=document.querySelector("#sugK button.on").textContent;
       var to=$("sugTo").value.trim()||"爸爸"; db.set.sugTo=to;
-      var msg="【雅思修行建议 · 请转交 Claude】"+k+"\n来自："+(db.name||"我")+"，"+new Date().toLocaleDateString("zh-CN")+"\n\n"+t+"\n\n（"+to+"：请把这条消息转给 Claude，说「请按雅思修行里的建议优化」就行）";
+      var msg="【雅思修行建议 · 请转交 Claude】"+k+"\n来自："+shownName()+"，"+new Date().toLocaleDateString("zh-CN")+"\n\n"+t+"\n\n（"+to+"：请把这条消息转给 Claude，说「请按雅思修行里的建议优化」就行）";
       db.sugs=db.sugs||[]; db.sugs.push({at:Date.now(),k:k,t:t}); persist();
       closeSheet();
       if(navigator.share){ navigator.share({text:msg}).catch(function(){}); }
@@ -1696,7 +1702,7 @@ $("bkLater").onclick=function(){ db.bkSnooze=Date.now()+3*DAY; persist(); checkB
 // 只上传：姓名、学习统计、近 35 天按天记录、最难的词。不上传：自建词、建议文字、备份文件。
 // 同步用独立的 localStorage 键 danci.sync，不碰 danci.v1。
 var SYNC_DEFAULT = {t:"w3f", k:"778b50de-d990-4df5-a20b-156e8a6fbfaf", f:"zganyasi"}; // Web3Forms 访问密钥是公开的（只能发信到赵干邮箱），不是机密
-var SYNC_APPV = "v14";
+var SYNC_APPV = "v15";
 var SYNC_KEY = "danci.sync";
 var syncSt = null, syncTimer = null, syncBusy = false;
 function syncLoad(){
@@ -1801,10 +1807,20 @@ function syncSend(urgent){
   }catch(e){ syncBusy=false; return; }
   req.then(function(ok){
     syncBusy=false;
-    if(ok){ st.hash=h; st.last=Date.now(); st.fail=0; if(cfg.t==="w3f") st.sent.push(st.last); }
+    if(ok){ st.hash=h; st.last=Date.now(); st.fail=0; if(cfg.t==="w3f") st.sent.push(st.last); try{ $("heroSync").textContent=syncLastText(); }catch(e3){} }
     else st.fail=(st.fail||0)+1;
     syncSave();
   }).catch(function(){ syncBusy=false; st.fail=(st.fail||0)+1; syncSave(); });
+}
+function syncLastText(){
+  try{
+    var st=syncLoad(), t=st && Number(st.last);
+    if(!t) return "上次同步时间：尚未同步";
+    var d=new Date(t);
+    if(isNaN(d.getTime())) return "上次同步时间：尚未同步";
+    var p=function(n){ return (n<10?"0":"")+n; };
+    return "上次同步时间："+d.getFullYear()+"年"+p(d.getMonth()+1)+"月"+p(d.getDate())+"日 "+p(d.getHours())+":"+p(d.getMinutes());
+  }catch(e){ return "上次同步时间：尚未同步"; }
 }
 function syncInfo(){
   try{
@@ -1820,8 +1836,25 @@ syncParseUrl();
 setTimeout(function(){ syncSend(false); },5000);
 
 // ---------- 启动 ----------
-if(!db.name){ $("welcome").classList.add("on"); }
-$("wGo").onclick=function(){ var n=$("wName").value.trim(); if(!n){ $("wName").focus(); return; } db.name=n; persist(); $("welcome").classList.remove("on"); renderHome(); };
+// 名字为空就不开始学：第一次打开，以及已经在用但没填名字的设备，都轻轻问一次。已有名字的不打断。名字仍写在原来的 db.name（设置里的称呼）。
+function nameMissing(){ return !String(db.name||"").trim(); }
+function askName(){
+  if(!nameMissing()){ $("welcome").classList.remove("on"); return false; }
+  $("welcome").classList.add("on");
+  return true;
+}
+function saveWelcomeName(){
+  var n=$("wName").value.trim();
+  if(!n){ $("wName").focus(); return; }
+  db.name=n;
+  persist();
+  $("setName").value=n;
+  $("welcome").classList.remove("on");
+  renderHome();
+}
+askName();
+$("wGo").onclick=saveWelcomeName;
+$("wName").addEventListener("keydown",function(e){ if(e.key==="Enter"){ e.preventDefault(); saveWelcomeName(); } });
 renderHome();
 loadPacks().then(function(){
   rebuildCustom();
@@ -1829,7 +1862,7 @@ loadPacks().then(function(){
 }).catch(function(){
   packState.failed=true; renderHome(); toast("扩充词库没加载上，联网后重新打开 App",3500);
 });
-var APPV="danci-v14", APPV_KEY="danci.appv";
+var APPV="danci-v15", APPV_KEY="danci.appv";
 var updWaiting=null, updClicked=false, updReloading=false, updJustUpdated=false;
 try{
   var _hadSw=!("serviceWorker" in navigator) ? false : !!navigator.serviceWorker.controller;
