@@ -1765,7 +1765,7 @@ $("bkLater").onclick=function(){ db.bkSnooze=Date.now()+3*DAY; persist(); checkB
 // 只上传：姓名、学习统计、近 35 天按天记录、最难的词。不上传：自建词、建议文字、备份文件。
 // 同步用独立的 localStorage 键 danci.sync，不碰 danci.v1。
 var SYNC_DEFAULT = {t:"w3f", k:"778b50de-d990-4df5-a20b-156e8a6fbfaf", f:"zganyasi"}; // Web3Forms 访问密钥是公开的（只能发信到赵干邮箱），不是机密
-var SYNC_APPV = "v15";
+var SYNC_APPV = "v16";
 var SYNC_KEY = "danci.sync";
 var syncSt = null, syncTimer = null, syncBusy = false;
 function syncLoad(){
@@ -1944,13 +1944,14 @@ function isYanshen(){
   if(db.learner==="彦神") return true;
   return String(db.name||"").trim()==="彦神";
 }
-// 北京时间：11月17日 0 点到 11月20日 0 点。过了就不再出现，也不写「明天」。
+// 北京时间。17日 0 点起只提醒预约；18日 11:00–13:00 才建议候诊时学两句；13:00 到 20日 0 点改为休息优先。
 var CARE_FROM=Date.UTC(2026,10,16,16,0,0);
-var CARE_NOON=Date.UTC(2026,10,18,4,0,0);
+var CARE_STUDY=Date.UTC(2026,10,18,3,0,0);
+var CARE_REST=Date.UTC(2026,10,18,5,0,0);
 var CARE_UNTIL=Date.UTC(2026,10,19,16,0,0);
 var CARE_KEY="tooth-20261118";
 var CARE_LINES=[
-  ["Hello, I have a dental appointment around noon.","你好，我大约中午有个牙科预约。"],
+  ["Hello, I have a dental appointment around eleven.","你好，我大约11点有个牙科预约。"],
   ["I'm here to check in for my appointment.","我是来报到的，已经约过了。"],
   ["This tooth hurts when I bite.","这颗牙一咬就疼。"],
   ["The pain is on the lower right side.","疼在右下边。"],
@@ -1964,7 +1965,9 @@ var CARE_LINES=[
 function carePhase(now){
   now=now||Date.now();
   if(now<CARE_FROM || now>=CARE_UNTIL) return "";
-  return now<CARE_NOON ? "wait" : "rest";
+  if(now<CARE_STUDY) return "remind";
+  if(now<CARE_REST) return "study";
+  return "rest";
 }
 function renderCare(){
   var card=$("careCard");
@@ -1972,11 +1975,20 @@ function renderCare(){
   var phase=carePhase(Date.now());
   var show=isYanshen() && !!phase && db.careOff!==CARE_KEY;
   card.hidden=!show;
-  if(!show){ $("careLead").textContent=""; $("careRest").textContent=""; $("careLines").hidden=true; return; }
-  $("careLead").textContent = phase==="wait"
-    ? "11月18日中午有个牙科预约。候诊时有精神，可以学两句；想休息就休息。"
-    : "看牙之后以休息为先，听牙医的嘱咐。想学再学，不学也没关系。";
-  $("careRest").textContent="下面的英文只是候诊时可以听一听，不是作业，也不是医疗建议。";
+  if(!show){ $("careLead").textContent=""; $("careRest").textContent=""; $("careLines").hidden=true; $("careToggle").hidden=true; return; }
+  var study=phase==="study";
+  $("careToggle").hidden=!study;
+  if(!study){ $("careLines").hidden=true; $("careToggle").textContent="想看几句英文（可以不看）"; }
+  if(phase==="remind"){
+    $("careLead").textContent="11月18日11点左右有个牙科预约。想休息就休息。";
+    $("careRest").textContent="";
+  } else if(study){
+    $("careLead").textContent="候诊时有精神，可以学两句；想休息就休息。";
+    $("careRest").textContent="下面的英文只是候诊时可以听一听，不是作业，也不是医疗建议。";
+  } else {
+    $("careLead").textContent="看牙之后以休息为先，听牙医的嘱咐。想学再学，不学也没关系。";
+    $("careRest").textContent="";
+  }
 }
 function fillCareLines(){
   var box=$("careLines");
@@ -2010,7 +2022,7 @@ loadPacks().then(function(){
 }).catch(function(){
   packState.failed=true; renderHome(); toast("扩充词库没加载上，联网后重新打开 App",3500);
 });
-var APPV="danci-v15", APPV_KEY="danci.appv";
+var APPV="danci-v16", APPV_KEY="danci.appv";
 var updWaiting=null, updClicked=false, updReloading=false, updJustUpdated=false;
 try{
   var _hadSw=!("serviceWorker" in navigator) ? false : !!navigator.serviceWorker.controller;
