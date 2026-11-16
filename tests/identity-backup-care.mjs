@@ -121,10 +121,10 @@ function prog(page) {
 }
 
 const html = await (await fetch(BASE + "/index.html")).text();
-check(html.includes('var APPV="danci-v15"') && html.includes('var SYNC_APPV = "v15"'), "page stays on app v15");
+check(html.includes('var APPV="danci-v16"') && html.includes('var SYNC_APPV = "v16"'), "page is app v16");
 check(html.includes('var KEY = "danci.v1"'), "learning key unchanged");
 const sw = await (await fetch(BASE + "/sw.js")).text();
-check(sw.includes('const CACHE = "danci-v15"'), "service worker stays danci-v15");
+check(sw.includes('const CACHE = "danci-v16"'), "service worker cache is danci-v16");
 
 // 根因对照：旧公式把任意 lastBackup 直接换成天数。1700001000000 是 2023-11-14 的毫秒时间，
 // 上一版预览截图用了它，所以会出现大约 1097 天。这不是新安装被写成 1097。
@@ -140,7 +140,8 @@ check(sw.includes('const CACHE = "danci-v15"'), "service worker stays danci-v15"
 // 弟弟：是彦神，称呼保留；再打开不再问；能看见关怀卡；学习记录不动。
 {
   const raw = JSON.stringify(db({ name: "弟弟" }));
-  const page = await openPage({ storage: [["danci.v1", raw]] });
+  const morning = Date.UTC(2026, 10, 17, 1, 0, 0); // 11月17日 09:00 北京时间
+  const page = await openPage({ fixedNow: morning, storage: [["danci.v1", raw]] });
   await page.waitForFunction(() => document.getElementById("whoAsk").classList.contains("on"));
   const asked = await page.evaluate(() => ({
     h: document.querySelector("#whoAsk h2").textContent,
@@ -164,20 +165,12 @@ check(sw.includes('const CACHE = "danci-v15"'), "service worker stays danci-v15"
   const care = await page.evaluate(() => ({
     hidden: document.getElementById("careCard").hidden,
     lead: document.getElementById("careLead").textContent,
+    toggle: document.getElementById("careToggle").hidden,
     text: document.body.innerText
   }));
-  check(care.hidden === false && care.lead.includes("11月18日中午") && care.lead.includes("想休息就休息"), "confirmed 彦神 sees the dated care card: " + care.lead);
-  check(!care.text.includes("明天"), "care card does not say 明天");
-  await shot(page, "care_waiting_didi.png");
-  await page.click("#careToggle");
-  await page.waitForFunction(() => !document.getElementById("careLines").hidden);
-  const lines = await page.evaluate(() => document.getElementById("careLines").innerText);
-  check(lines.includes("Could you say that more slowly, please?") && lines.includes("能说慢一点吗？"), "optional English lines have Chinese meanings");
-  check(lines.includes("What should I do after this?") && lines.includes("我有点紧张"), "lines cover nervousness and aftercare questions");
-  await page.evaluate(() => document.querySelector("#careLines [data-say='4']").click());
-  const still = await prog(page);
-  check(still.extra === "keep" && still.learner === "彦神", "listening to a line does not score or rename");
-  await shot(page, "care_phrases.png");
+  check(care.hidden === false && care.lead.includes("11点左右") && !care.lead.includes("学两句") && care.toggle, "before 11:00 only a light reminder, no study nudge: " + care.lead);
+  check(!care.text.includes("明天") && !care.text.includes("12点") && !care.text.includes("中午"), "reminder does not say tomorrow or 12:00");
+  await shot(page, "care_light_before_eleven.png");
   await page.evaluate(() => document.getElementById("battleBtn").click());
   await page.waitForFunction(() => document.getElementById("study").classList.contains("on"));
   await page.click("#sQuit");
@@ -303,21 +296,47 @@ check(sw.includes('const CACHE = "danci-v15"'), "service worker stays danci-v15"
   await close(page);
 }
 
-// 日期：候诊、中午之后休息、窗口外不出现。
+// 日期：11点前只提醒；11:00–13:00 才建议学两句；之后休息优先。
 {
-  const noon = Date.UTC(2026, 10, 18, 4, 0, 0);
-  const before = noon - 60 * 1000;
-  const after = noon + 60 * 1000;
+  const eleven = Date.UTC(2026, 10, 18, 3, 0, 0);
+  const before = eleven - 60 * 1000;
+  const atStudy = eleven + 5 * 60 * 1000;
+  const after = Date.UTC(2026, 10, 18, 5, 5, 0);
   const early = Date.UTC(2026, 10, 16, 4, 0, 0);
   const late = Date.UTC(2026, 10, 19, 16, 1, 0);
   const pageW = await openPage({ fixedNow: before, storage: [["danci.v1", JSON.stringify(db({ name: "彦神", created: before - DAY }))]] });
-  const w = await pageW.$eval("#careLead", (el) => el.textContent);
-  check(w.includes("11月18日中午") && w.includes("想休息就休息") && !w.includes("明天"), "before noon uses the date, not 明天: " + w);
+  const w = await pageW.evaluate(() => ({
+    lead: document.getElementById("careLead").textContent,
+    toggle: document.getElementById("careToggle").hidden
+  }));
+  check(w.lead.includes("11点左右") && !w.lead.includes("学两句") && w.toggle, "10:59 is still only a reminder: " + w.lead);
   await close(pageW);
+  const pageS = await openPage({ fixedNow: atStudy, storage: [["danci.v1", JSON.stringify(db({ name: "彦神", created: atStudy - DAY }))]] });
+  const s = await pageS.evaluate(() => ({
+    lead: document.getElementById("careLead").textContent,
+    toggle: document.getElementById("careToggle").hidden,
+    text: document.body.innerText
+  }));
+  check(!s.toggle && s.lead.includes("可以学两句") && s.lead.includes("想休息就休息"), "around 11:00 the study nudge appears: " + s.lead);
+  check(!s.text.includes("明天") && !s.text.includes("12点") && !s.text.includes("中午"), "study nudge does not say 12:00 or tomorrow");
+  await shot(pageS, "care_study_around_eleven.png");
+  await pageS.click("#careToggle");
+  await pageS.waitForFunction(() => !document.getElementById("careLines").hidden);
+  const lines = await pageS.evaluate(() => document.getElementById("careLines").innerText);
+  check(lines.includes("around eleven") && lines.includes("大约11点"), "English line says around eleven");
+  check(lines.includes("Could you say that more slowly, please?") && lines.includes("能说慢一点吗？"), "optional English lines have Chinese meanings");
+  check(lines.includes("What should I do after this?") && lines.includes("我有点紧张"), "lines cover nervousness and aftercare questions");
+  await pageS.evaluate(() => document.querySelector("#careLines [data-say='4']").click());
+  check((await prog(pageS)).extra === "keep", "listening to a line does not score or rename");
+  await shot(pageS, "care_phrases.png");
+  await close(pageS);
   const pageR = await openPage({ fixedNow: after, storage: [["danci.v1", JSON.stringify(db({ name: "彦神", created: after - DAY }))]] });
-  const r = await pageR.$eval("#careLead", (el) => el.textContent);
-  check(r.includes("休息为先") && r.includes("听牙医的嘱咐") && !r.includes("明天") && !r.includes("11月18日"), "after noon, rest comes first: " + r);
-  await shot(pageR, "care_rest_after_noon.png");
+  const r = await pageR.evaluate(() => ({
+    lead: document.getElementById("careLead").textContent,
+    toggle: document.getElementById("careToggle").hidden
+  }));
+  check(r.lead.includes("休息为先") && r.lead.includes("听牙医的嘱咐") && !r.lead.includes("学两句") && r.toggle, "after 13:00 rest comes first: " + r.lead);
+  await shot(pageR, "care_rest_after_window.png");
   await close(pageR);
   const pageE = await openPage({ fixedNow: early, storage: [["danci.v1", JSON.stringify(db({ name: "彦神", created: early }))]] });
   check(await pageE.evaluate(() => document.getElementById("careCard").hidden), "before 17 Nov Shanghai the card is absent");
