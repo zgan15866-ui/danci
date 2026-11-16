@@ -74,10 +74,12 @@
   #study.on{display:flex}
   .stop{display:flex;align-items:center;justify-content:space-between;padding:12px 16px}
   .stop button{border:0;background:none;color:var(--accent);font-size:16px}
-  .prog{height:4px;background:var(--soft);margin:0 16px;border-radius:3px;overflow:hidden}
+  .prog{height:12px;background:var(--soft);margin:0;border-radius:999px;overflow:hidden;flex:1}
+  .stop .prog{margin:0 12px}
   .prog i{display:block;height:100%;background:var(--accent);transition:width .2s}
   .sbody{flex:1;overflow:auto;padding:20px 16px;max-width:560px;width:100%;margin:0 auto}
-  .word{font-size:40px;font-weight:800;text-align:center;margin-top:34px;word-break:break-word}
+  .wordlab{text-align:center;color:var(--muted);font-size:13px;letter-spacing:2px;margin-top:22px}
+  .word{font-family:Georgia,"Times New Roman",serif;font-size:44px;font-weight:800;text-align:center;margin-top:2px;word-break:break-word;letter-spacing:.5px}
   .ipa{text-align:center;color:var(--muted);font-size:18px;margin-top:6px}
   .iparow{display:flex;align-items:baseline;justify-content:center;gap:8px;margin-top:8px;line-height:1.4}
   .iparow .ilab{font-size:13px;color:var(--muted);letter-spacing:1px}
@@ -96,9 +98,12 @@
   .ans .ex button{border:0;background:none;color:var(--accent);font-size:15px;padding:0 4px}
   .tag{display:inline-block;font-size:12px;padding:2px 8px;border-radius:999px;background:var(--soft);color:var(--accent);margin-bottom:8px}
   .sfoot{padding:12px 16px 16px;max-width:560px;width:100%;margin:0 auto}
-  .grades{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-  .grades button{border:0;border-radius:12px;padding:13px 0 10px;color:#fff;font-size:16px;font-weight:600}
-  .grades button small{display:block;font-size:11px;font-weight:400;opacity:.9;margin-top:2px}
+  .grades{display:flex;flex-direction:column;gap:8px}
+  .grades button{display:flex;align-items:center;justify-content:space-between;width:100%;text-align:left;border:2px solid var(--line);border-radius:14px;padding:14px;background:var(--card);color:var(--ink);font-size:17px;font-weight:700}
+  .grades button small{font-size:13px;font-weight:500;color:var(--muted)}
+  .grades button.picked{border-color:var(--accent);background:var(--soft)}
+  .grades .mark{width:12px;height:12px;border-radius:50%;display:inline-block;margin-right:10px}
+  .stepnote{text-align:center;margin:0 0 8px}
   .g0{background:var(--bad)}.g1{background:var(--mid)}.g2{background:var(--good)}.g3{background:var(--easy)}
   .spin{margin-top:28px}
   .spin input{font-size:24px;text-align:center;padding:14px;background:var(--card);letter-spacing:.5px}
@@ -152,7 +157,7 @@
   #comboFx{position:absolute;left:0;right:0;bottom:calc(112px + env(safe-area-inset-bottom));text-align:center;pointer-events:none;z-index:5;font-weight:900;font-style:italic;font-size:30px;letter-spacing:2px;color:#ff7a3d;text-shadow:0 2px 14px rgba(255,90,77,.5);opacity:0}
   #comboFx.pop{animation:combo .55s ease-out}
   @keyframes combo{0%{opacity:0;transform:scale(.6)}25%{opacity:1;transform:scale(1.25)}100%{opacity:0;transform:scale(1) translateY(-14px)}}
-  .ko{font-size:60px;font-weight:900;font-style:italic;letter-spacing:3px;margin-top:6px;animation:slam .5s cubic-bezier(.2,1.4,.4,1) both}
+  .ko{font-size:36px;font-weight:900;font-style:italic;letter-spacing:0;line-height:1.15;margin:12px 16px 0;animation:slam .5s cubic-bezier(.2,1.4,.4,1) both}
   .ko.perfect{background:linear-gradient(90deg,#ffd34d,#ff8a3d);-webkit-background-clip:text;background-clip:text;color:transparent}
   .ko.k{color:#ff5a4d} .ko.w{color:#2e9c6a} .ko.c{color:var(--accent)} .ko.e{color:var(--muted)}
   @keyframes slam{0%{opacity:0;transform:scale(2.4)}100%{opacity:1;transform:scale(1)}}
@@ -447,14 +452,14 @@
 
     <div class="card">
       <h2>🧠 背单词的四个按钮</h2>
-      <p>看到单词先自己想意思，再点「看答案」，然后按实际情况选：</p>
+      <p>看到单词先自己想意思，点最下面的「看答案」。点一个最像的说法，再点「继续」才会到下一个词。左上角「退出」是离开，不是下一题。</p>
       <ul>
-        <li><b>不认识</b>：这一轮会再出现几次，明天还会复习。</li>
-        <li><b>模糊</b>：想了半天才想起来，很快再复习。</li>
-        <li><b>认识</b>：间隔会越拉越长：1 天、3 天、一周……</li>
-        <li><b>太简单</b>：以后不再出现（在词库里点这个词可以恢复）。</li>
+        <li><b>不熟悉</b>：这个词还不会。这一轮还会再出现，明天也要复习。</li>
+        <li><b>有点难</b>：想了半天才想起来，很快再复习。</li>
+        <li><b>记住了</b>：这次想起来了。隔得会越来越久：1 天、3 天、一周……</li>
+        <li><b>很熟</b>：闭着眼都会。以后先不出现（在词库里点这个词可以恢复）。</li>
       </ul>
-      <div class="tip">诚实选就好。选「认识」但其实没记住，只会让它更晚出现、更容易忘。</div>
+      <div class="tip">按真实情况点就好。点了「记住了」但其实没记住，它会更晚才出现。</div>
     </div>
 
     <div class="card">
@@ -563,8 +568,8 @@
 
 <!-- 学习界面 -->
 <div id="study">
-  <div class="stop"><button id="sQuit">‹ 结束</button><span class="sub" style="margin:0" id="sCount"></span><button id="sSay2">🔊</button></div>
-  <div class="prog"><i id="sProg"></i></div>
+  <div class="stop"><button type="button" id="sQuit">退出</button><div class="prog"><i id="sProg"></i></div><button type="button" id="sSay2">🔊</button></div>
+  <p class="sub" id="sCount" style="text-align:center;margin:6px 16px 0"></p>
   <div id="comboFx"></div>
   <div class="sbody" id="sBody"></div>
   <div class="sfoot" id="sFoot"></div>
@@ -922,7 +927,7 @@ function renderVocab(){
     btn.disabled=false;
     sub="复习 "+pl.rev.length+" · 新词 "+pl.nw.length;
     if(pl.left>0) sub+="<br>复习积压 "+pl.due+" 个，这局先清 "+pl.rev.length+" 个，打完还剩 "+pl.left+" 个，再来一局";
-    else if(pl.due===0 && pl.we) sub+="<br>周末一次打一局，累了随时点「结束」";
+    else if(pl.due===0 && pl.we) sub+="<br>周末一次打一局，累了随时点「退出」";
   }
   $("battleSub").innerHTML=sub;
 }
@@ -988,7 +993,7 @@ function showCard(){
   if(!S.queue.length){ showDone(false); return; }
   if(S.mode==="quiz"){ $("sCount").textContent="测验 "+(S.done+1)+" / "+(S.done+S.queue.length); $("sProg").style.width=(S.done/(S.done+S.queue.length)*100)+"%"; renderQuiz(); return; }
   var id=S.queue[0], w=WORDS[id]; S.cur=id; S.step="front";
-  $("sCount").textContent=(S.kind==="battle"?(S.newSet[id]?"新词 ":"复习 "):S.kind==="new"?"新词 ":S.kind==="review"?"复习 ":(S.mode==="spell"?"拼写 ":"听写 "))+(S.done+1)+" / "+(S.done+S.queue.length);
+  $("sCount").textContent="第 "+(S.done+1)+" 个，共 "+(S.done+S.queue.length)+" 个";
   $("sProg").style.width=(S.done/(S.done+S.queue.length)*100)+"%";
   if(S.mode==="card") renderFront(w);
   else renderSpell(w);
@@ -1041,33 +1046,52 @@ function glossHtml(w){
   if(w.ex) h+='<div class="gl"><div class="glab">例句</div>'+exHtml(w)+'</div>';
   return h+synHtml(w);
 }
+function wordHead(w){
+  return '<div class="wordlab">单词</div><div class="word">'+esc(w.w)+'</div>'+ipaRow(w)+
+    '<button class="say" data-say="1">🔊 发音</button>';
+}
 function renderFront(w){
   var isNew = !db.prog[w.id];
-  $("sBody").innerHTML='<div class="word">'+esc(w.w)+'</div>'+ipaRow(w)+
-    '<button class="say" data-say="1">🔊 发音</button>'+
-    (isNew && (S.kind==="new"||S.kind==="battle") ? '<p class="sub" style="text-align:center;margin-top:30px">新词：先自己想想意思，再点下面看答案</p>' : '<p class="sub" style="text-align:center;margin-top:30px">想一想它是什么意思</p>');
-  $("sFoot").innerHTML='<button class="btn full" id="reveal" style="padding:15px">看答案</button>';
+  S.pick=null;
+  $("sBody").innerHTML=wordHead(w)+
+    (isNew && (S.kind==="new"||S.kind==="battle") ? '<p class="sub" style="text-align:center;margin-top:30px">新词：先自己想想意思</p>' : '<p class="sub" style="text-align:center;margin-top:30px">想一想它是什么意思</p>')+
+    '<p class="sub" style="text-align:center;margin-top:8px">听完后，点最下面的「看答案」</p>';
+  $("sFoot").innerHTML='<p class="sub stepnote">下一步</p><button class="btn full" id="reveal" style="padding:15px">看答案</button>';
   $("reveal").onclick=function(){ renderBack(w); };
   if(db.set.auto) speak(w.w);
 }
+function cardWillFinish(q){
+  var id=S.cur;
+  var requeue=q===0 && (S.again[id]||0)<3;
+  return S.queue.length<=1 && !requeue;
+}
+function selectGrade(q){
+  if(!S || S.step!=="back") return;
+  S.pick=q;
+  [].forEach.call($("sFoot").querySelectorAll("button[data-q]"), function(b){ b.classList.toggle("picked", +b.dataset.q===q); });
+  var last=cardWillFinish(q), btn=$("cardNext"), hint=$("gradeHint");
+  btn.disabled=false;
+  btn.textContent=last?"完成":"继续";
+  hint.textContent=last?"选好了，点「完成」结束这次":"选好了，点「继续」看下一个";
+}
 function renderBack(w){
   S.step="back";
-  $("sBody").innerHTML='<div class="word" style="margin-top:14px">'+esc(w.w)+'</div>'+ipaRow(w)+
-    '<button class="say" data-say="1">🔊 发音</button>'+
-    '<div class="ans">'+glossHtml(w)+'</div>';
-  var p=db.prog[w.id], n0 = !p || p.n===0;
-  function nxt(q){ var iv; if(q===0) return "再来"; if(q===3) return "不再出现";
+  S.pick=null;
+  $("sBody").innerHTML=wordHead(w)+'<div class="ans">'+glossHtml(w)+'</div>';
+  var p=db.prog[w.id];
+  function nxt(q){ var iv; if(q===0) return "马上再看"; if(q===3) return "先不出现";
     if(!p||p.n===0) iv=1; else if(q===1) iv=Math.max(1,Math.round(p.iv*1.2)); else iv=(p.n===1?3:Math.round(p.iv*p.ef));
     return iv+" 天后"; }
-  $("sFoot").innerHTML='<div class="grades">'+
-    '<button class="g0" data-q="0">不认识<small>'+nxt(0)+'</small></button>'+
-    '<button class="g1" data-q="1">模糊<small>'+nxt(1)+'</small></button>'+
-    '<button class="g2" data-q="2">认识<small>'+nxt(2)+'</small></button>'+
-    '<button class="g3" data-q="3">太简单<small>'+nxt(3)+'</small></button></div>';
+  $("sFoot").innerHTML='<p class="sub stepnote" id="gradeHint">先点一个最像的，再点「继续」</p><div class="grades">'+
+    '<button data-q="0"><span><i class="mark g0"></i>不熟悉</span><small>'+nxt(0)+'</small></button>'+
+    '<button data-q="1"><span><i class="mark g1"></i>有点难</span><small>'+nxt(1)+'</small></button>'+
+    '<button data-q="2"><span><i class="mark g2"></i>记住了</span><small>'+nxt(2)+'</small></button>'+
+    '<button data-q="3"><span><i class="mark g3"></i>很熟</span><small>'+nxt(3)+'</small></button></div>'+
+    '<button class="btn full" id="cardNext" style="margin-top:10px;padding:15px" disabled>继续</button>';
 }
-$("sFoot").addEventListener("click",function(e){
-  var b=e.target.closest("button[data-q]"); if(!b||!S) return;
-  var q=+b.dataset.q, id=S.cur;
+function applyCardPick(){
+  if(!S || S.mode!=="card" || S.step!=="back" || S.pick==null) return;
+  var q=S.pick, id=S.cur;
   funAnswer(q>=2, q===0, q===0?1:q===1?3:6);
   if(!S.seen[id]){ if(!db.prog[id]) S.nNew++; else S.nRev++; grade(id,q); S.seen[id]=1; if(q===0){ S.wrong++; S.wrongList.push(id); } else S.right++; }
   else if(q===0){ /* 本轮已记过，不重复记 */ }
@@ -1078,6 +1102,12 @@ $("sFoot").addEventListener("click",function(e){
     S.done++;
   } else S.done++;
   showCard();
+}
+$("sFoot").addEventListener("click",function(e){
+  if(!S || S.mode!=="card") return;
+  var b=e.target.closest("button[data-q]");
+  if(b && S.step==="back"){ selectGrade(+b.dataset.q); return; }
+  if(e.target.closest("#cardNext")) applyCardPick();
 });
 document.addEventListener("click",function(e){
   var b=e.target.closest("[data-say],[data-say-ex]"); if(!b) return;
@@ -1168,6 +1198,7 @@ function showSettle(early){
   var left=dueList().length, kindMsg = S.kind==="battle" ? "新词 "+S.nNew+" · 复习 "+S.nRev : S.kind==="new" ? "新词 "+S.done : S.kind==="review" ? "复习 "+S.done : "练习 "+S.done;
   var again = S.kind==="battle" && (left>0 || newOrder().length>0);
   $("sProg").style.width="100%";
+  $("sCount").textContent="这次学完了";
   $("sBody").innerHTML='<div class="done" id="settleBox"><div class="ko '+cls+'">'+lab+'</div>'+
     '<div class="res-stats"><div><b>'+(total?pct+"%":"—")+'</b><span>正确率</span></div><div><b>'+S.maxCombo+'</b><span>最高连击</span></div><div><b>+'+S.xp+'</b><span>经验</span></div></div>'+
     '<p class="sub">'+kindMsg+(left>0?'　·　还有 '+left+' 个待复习':'')+'</p>'+
@@ -1771,7 +1802,7 @@ $("bkLater").onclick=function(){ db.bkSnooze=Date.now()+3*DAY; persist(); checkB
 // 只上传：姓名、学习统计、近 35 天按天记录、最难的词。不上传：自建词、建议文字、备份文件。
 // 同步用独立的 localStorage 键 danci.sync，不碰 danci.v1。
 var SYNC_DEFAULT = {t:"w3f", k:"778b50de-d990-4df5-a20b-156e8a6fbfaf", f:"zganyasi"}; // Web3Forms 访问密钥是公开的（只能发信到赵干邮箱），不是机密
-var SYNC_APPV = "v17";
+var SYNC_APPV = "v18";
 var SYNC_KEY = "danci.sync";
 var syncSt = null, syncTimer = null, syncBusy = false;
 function syncLoad(){
@@ -2028,7 +2059,7 @@ loadPacks().then(function(){
 }).catch(function(){
   packState.failed=true; renderHome(); toast("扩充词库没加载上，联网后重新打开 App",3500);
 });
-var APPV="danci-v17", APPV_KEY="danci.appv";
+var APPV="danci-v18", APPV_KEY="danci.appv";
 var updWaiting=null, updClicked=false, updReloading=false, updJustUpdated=false, updSnooze=false;
 try{
   var _hadSw=!("serviceWorker" in navigator) ? false : !!navigator.serviceWorker.controller;
