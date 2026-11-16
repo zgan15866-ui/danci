@@ -54,6 +54,7 @@ async function openPage(opts = {}) {
   const ctx = await browser.createBrowserContext();
   const page = await ctx.newPage();
   await page.setViewport({ width: 390, height: 844, deviceScaleFactor: 2 });
+  if (opts.dark) await page.emulateMediaFeatures([{ name: "prefers-color-scheme", value: "dark" }]);
   const hits = [];
   const posts = [];
   await page.setRequestInterception(true);
@@ -121,10 +122,10 @@ function prog(page) {
 }
 
 const html = await (await fetch(BASE + "/index.html")).text();
-check(html.includes('var APPV="danci-v17"') && html.includes('var SYNC_APPV = "v17"'), "page is app v17");
+check(html.includes('var APPV="danci-v18"') && html.includes('var SYNC_APPV = "v18"'), "page is app v18");
 check(html.includes('var KEY = "danci.v1"'), "learning key unchanged");
 const sw = await (await fetch(BASE + "/sw.js")).text();
-check(sw.includes('const CACHE = "danci-v17"'), "service worker cache is danci-v17");
+check(sw.includes('const CACHE = "danci-v18"'), "service worker cache is danci-v18");
 
 // 根因对照：旧公式把任意 lastBackup 直接换成天数。1700001000000 是 2023-11-14 的毫秒时间，
 // 上一版预览截图用了它，所以会出现大约 1097 天。这不是新安装被写成 1097。
@@ -419,7 +420,7 @@ async function backupText(over, sync) {
 // 打开页面就在主界面提示新版本。稍后只藏这一次；已经是当前版本则不再提示。
 {
   const raw = JSON.stringify(db({ name: "小红" }));
-  const page = await openPage({ storage: [["danci.v1", raw], ["danci.appv", "danci-v16"]] });
+  const page = await openPage({ storage: [["danci.v1", raw], ["danci.appv", "danci-v17"]] });
   const ui = await page.evaluate(() => ({
     home: !document.getElementById("updHome").hidden,
     title: document.querySelector("#updHome h2").textContent,
@@ -429,7 +430,7 @@ async function backupText(over, sync) {
     extra: JSON.parse(localStorage.getItem("danci.v1")).prog.b0.extra
   }));
   check(ui.home && ui.title === "发现新版本" && ui.btn === "立即更新" && ui.bar, "opening an old version shows the home update card");
-  check(ui.appv === "danci-v17" && ui.extra === "keep", "version key advances without touching study data");
+  check(ui.appv === "danci-v18" && ui.extra === "keep", "version key advances without touching study data");
   await shot(page, "home_update_prompt.png");
   await page.click("#updLater");
   const hidden = await page.evaluate(() => document.getElementById("updHome").hidden && !document.getElementById("updBar").classList.contains("on"));
@@ -443,14 +444,14 @@ async function backupText(over, sync) {
   await close(page);
 }
 {
-  const page = await openPage({ storage: [["danci.v1", JSON.stringify(db({ name: "小红" }))], ["danci.appv", "danci-v17"]] });
+  const page = await openPage({ storage: [["danci.v1", JSON.stringify(db({ name: "小红" }))], ["danci.appv", "danci-v18"]] });
   const hidden = await page.evaluate(() => document.getElementById("updHome").hidden);
   check(hidden, "current version does not show the update card");
   await close(page);
 }
 {
   const raw = JSON.stringify(db({ name: "小红" }));
-  const page = await openPage({ storage: [["danci.v1", raw], ["danci.appv", "danci-v16"]] });
+  const page = await openPage({ storage: [["danci.v1", raw], ["danci.appv", "danci-v17"]] });
   await page.click("#updHomeGo");
   await page.waitForNavigation({ waitUntil: "domcontentloaded", timeout: 8000 }).catch(() => {});
   await page.waitForFunction(() => document.getElementById("heroT") && document.getElementById("heroT").textContent.length > 0);
@@ -461,6 +462,90 @@ async function backupText(over, sync) {
   }));
   check(after.hidden && after.extra === "keep" && after.name === "小红", "立即更新 reloads without wiping records");
   check(page.__hits.length === 0, "tapping update with sync=off sends nothing");
+  await close(page);
+}
+
+// 普通用户走一遍复习：听完 → 看答案 → 选白话按钮 → 继续 → 下一张 → 完成。
+{
+  const raw = JSON.stringify(db({
+    name: "小红",
+    created: Date.now() - 2 * DAY,
+    prog: {
+      "jh:i": { n: 1, iv: 1, ef: 2.5, due: 1, lap: 0, first: 1, last: 1, extra: "keep" },
+      "jh:and": { n: 1, iv: 1, ef: 2.5, due: 2, lap: 0, first: 1, last: 1, extra: "keep" }
+    }
+  }));
+  const page = await openPage({ dark: true, storage: [["danci.v1", raw], ["danci.appv", "danci-v18"]] });
+  await page.waitForFunction(() => document.getElementById("dueN").textContent !== "0", { timeout: 8000 });
+  await page.evaluate(() => {
+    document.getElementById("moreBox").open = true;
+    document.getElementById("goReview").scrollIntoView({ block: "center" });
+    document.getElementById("goReview").click();
+  });
+  await page.waitForFunction(() => document.getElementById("study").classList.contains("on") && document.getElementById("reveal"));
+  const front = await page.evaluate(() => ({
+    word: document.querySelector("#sBody .word").textContent,
+    lab: document.querySelector("#sBody .wordlab").textContent,
+    quit: document.getElementById("sQuit").textContent,
+    count: document.getElementById("sCount").textContent,
+    reveal: document.getElementById("reveal").textContent,
+    hint: document.body.innerText,
+    next: !!document.getElementById("cardNext")
+  }));
+  check(front.word === "I" && front.lab === "单词", "first card shows the word, not a stray bar: " + front.word);
+  check(front.reveal === "看答案" && front.hint.includes("看答案") && !front.next, "before the answer, the way forward is 看答案");
+  check(front.quit.includes("退出") && /第\s*1\s*个/.test(front.count), "quit is 退出 and progress is a count, not a button: " + front.quit + " / " + front.count);
+  await shot(page, "study_step_listen.png");
+  const before = JSON.parse(await page.evaluate(() => localStorage.getItem("danci.v1"))).prog["jh:i"].n;
+  await page.click("#reveal");
+  await page.waitForSelector("#cardNext");
+  const back = await page.evaluate(() => ({
+    labels: Array.from(document.querySelectorAll("#sFoot button[data-q]")).map((b) => b.textContent),
+    nextDisabled: document.getElementById("cardNext").disabled,
+    nextText: document.getElementById("cardNext").textContent,
+    hint: document.getElementById("gradeHint").textContent,
+    meaning: document.body.innerText
+  }));
+  check(back.labels.join("|").includes("不熟悉") && back.labels.join("|").includes("有点难") && back.labels.join("|").includes("记住了") && back.labels.join("|").includes("很熟"), "grade buttons are plain words: " + back.labels.join(" / "));
+  check(!back.labels.join("|").includes("模糊") && !back.hint.includes("认识程度"), "no vague 记得程度 wording");
+  check(back.nextDisabled && back.nextText === "继续" && back.meaning.includes("我"), "继续 stays disabled until a choice, answer is visible");
+  await shot(page, "study_step_answer.png");
+  await page.click('button[data-q="2"]');
+  const picked = await page.evaluate(() => ({
+    n: JSON.parse(localStorage.getItem("danci.v1")).prog["jh:i"].n,
+    on: document.querySelector("button[data-q='2']").classList.contains("picked"),
+    disabled: document.getElementById("cardNext").disabled,
+    text: document.getElementById("cardNext").textContent,
+    still: document.querySelector("#sBody .word").textContent
+  }));
+  check(picked.n === before && picked.on && !picked.disabled && picked.text === "继续" && picked.still === "I", "choosing 记住了 does not advance or reschedule yet");
+  await shot(page, "study_step_continue.png");
+  await page.click("#cardNext");
+  await page.waitForFunction(() => {
+    const w = document.querySelector("#sBody .word");
+    return w && w.textContent === "and" && document.getElementById("reveal");
+  });
+  const second = await page.evaluate(() => ({
+    word: document.querySelector("#sBody .word").textContent,
+    n: JSON.parse(localStorage.getItem("danci.v1")).prog["jh:i"].n,
+    count: document.getElementById("sCount").textContent
+  }));
+  check(second.word === "and" && second.n === before + 1, "继续 goes to the next word and records the grade once");
+  await shot(page, "study_step_next.png");
+  await page.click("#reveal");
+  await page.waitForSelector("#cardNext");
+  await page.click('button[data-q="2"]');
+  const fin = await page.$eval("#cardNext", (el) => ({ disabled: el.disabled, text: el.textContent }));
+  check(!fin.disabled && fin.text === "完成", "last card says 完成");
+  await page.click("#cardNext");
+  await page.waitForSelector("#sEnd");
+  const done = await page.evaluate(() => document.getElementById("sBody").innerText);
+  check(done.includes("复习") || done.includes("WIN") || done.includes("K.O.") || done.includes("PERFECT") || done.includes("ROUND"), "session finishes on a result screen: " + done.slice(0, 40));
+  await shot(page, "study_step_done.png");
+  const endProg = JSON.parse(await page.evaluate(() => localStorage.getItem("danci.v1"))).prog;
+  check(endProg["jh:i"].extra === "keep" && endProg["jh:and"].extra === "keep", "walk did not drop stored fields");
+  check(page.__hits.length === 0, "study walk with sync=off sends nothing: " + page.__hits.join(","));
+  check(page.__errors.length === 0, "no page errors in study walk: " + page.__errors.join(" | "));
   await close(page);
 }
 
