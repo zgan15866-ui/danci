@@ -123,10 +123,10 @@ function prog(page) {
 }
 
 const html = await (await fetch(BASE + "/index.html")).text();
-check(html.includes('var APPV="danci-v20"') && html.includes('var SYNC_APPV = "v20"'), "page is app v20");
+check(html.includes('var APPV="danci-v21"') && html.includes('var SYNC_APPV = "v21"'), "page is app v21");
 check(html.includes('var KEY = "danci.v1"'), "learning key unchanged");
 const sw = await (await fetch(BASE + "/sw.js")).text();
-check(sw.includes('const CACHE = "danci-v20"'), "service worker cache is danci-v20");
+check(sw.includes('const CACHE = "danci-v21"'), "service worker cache is danci-v21");
 
 // 根因对照：旧公式把任意 lastBackup 直接换成天数。1700001000000 是 2023-11-14 的毫秒时间，
 // 上一版预览截图用了它，所以会出现大约 1097 天。这不是新安装被写成 1097。
@@ -438,7 +438,7 @@ async function backupText(over, sync) {
     extra: JSON.parse(localStorage.getItem("danci.v1")).prog.b0.extra
   }));
   check(ui.home && ui.title === "发现新版本" && ui.btn === "立即更新" && ui.bar, "opening an old version shows the home update card");
-  check(ui.appv === "danci-v20" && ui.extra === "keep", "version key advances without touching study data");
+  check(ui.appv === "danci-v21" && ui.extra === "keep", "version key advances without touching study data");
   await shot(page, "home_update_prompt.png");
   await page.click("#updLater");
   const hidden = await page.evaluate(() => document.getElementById("updHome").hidden && !document.getElementById("updBar").classList.contains("on"));
@@ -452,7 +452,7 @@ async function backupText(over, sync) {
   await close(page);
 }
 {
-  const page = await openPage({ storage: [["danci.v1", JSON.stringify(db({ name: "小红" }))], ["danci.appv", "danci-v20"]] });
+  const page = await openPage({ storage: [["danci.v1", JSON.stringify(db({ name: "小红" }))], ["danci.appv", "danci-v21"]] });
   const hidden = await page.evaluate(() => document.getElementById("updHome").hidden);
   check(hidden, "current version does not show the update card");
   await close(page);
@@ -512,6 +512,35 @@ async function backupText(over, sync) {
   const before = JSON.parse(await page.evaluate(() => localStorage.getItem("danci.v1"))).prog["jh:i"].n;
   await page.click("#reveal");
   await page.waitForSelector("#cardNext");
+  await page.setViewport({ width: 375, height: 667, deviceScaleFactor: 2 });
+  const lay = await page.evaluate(() => {
+    const body = document.getElementById("sBody");
+    const foot = document.getElementById("sFoot");
+    const word = body.querySelector(".word");
+    const ans = body.querySelector(".ans");
+    body.scrollTop = 0;
+    const br = body.getBoundingClientRect();
+    const fr = foot.getBoundingClientRect();
+    const wr = word.getBoundingClientRect();
+    const ar = ans.getBoundingClientRect();
+    const cn = ans.querySelector(".gcn").getBoundingClientRect();
+    const btns = Array.from(document.querySelectorAll(".grades button"));
+    const tops = btns.map((b) => Math.round(b.getBoundingClientRect().top));
+    body.scrollTop = body.scrollHeight;
+    const ex = ans.querySelector(".ex").getBoundingClientRect();
+    const br2 = body.getBoundingClientRect();
+    body.scrollTop = 0;
+    return {
+      gap: Math.round(fr.top - br.bottom),
+      wordSeen: wr.bottom > br.top && wr.top < br.bottom,
+      glossSeen: cn.top >= br.top - 1 && cn.bottom <= br.bottom + 1,
+      exReach: ex.top < br2.bottom && ex.bottom > br2.top,
+      row: Math.max.apply(null, tops) - Math.min.apply(null, tops) < 12,
+      h: Math.round(btns[0].getBoundingClientRect().height),
+      word: word.textContent
+    };
+  });
+  check(lay.gap >= -1 && lay.wordSeen && lay.glossSeen && lay.exReach && lay.row && lay.h >= 44 && lay.word === "I", "375x667 shows the word and gloss, example scrolls clear of the footer: " + JSON.stringify(lay));
   const back = await page.evaluate(() => ({
     labels: Array.from(document.querySelectorAll("#sFoot button[data-q]")).map((b) => b.textContent),
     nextDisabled: document.getElementById("cardNext").disabled,
@@ -559,26 +588,34 @@ async function backupText(over, sync) {
   check(endProg["jh:i"].extra === "keep" && endProg["jh:and"].extra === "keep", "walk did not drop stored fields");
   const nBeforeQuiz = endProg["jh:i"].n;
   await page.click("#sQuiz");
-  await page.waitForSelector("#drillIn");
+  await page.waitForSelector("#drillOpts");
+  const gloss = await page.evaluate(() => ({
+    label: document.body.innerText.includes("词义"),
+    disabled: document.getElementById("drillOk").disabled,
+    opts: Array.from(document.querySelectorAll("#drillOpts button")).map((b) => b.textContent)
+  }));
+  check(gloss.label && gloss.disabled && gloss.opts.length >= 2 && new Set(gloss.opts).size === gloss.opts.length, "quiz is multiple choice with 词义 and no duplicate options: " + gloss.opts.join(","));
   await shot(page, "quiz_prompt.png");
-  await page.click("#drillOk");
-  const blockedEmpty = await page.$eval("#drillRes", (el) => el.textContent);
-  check(blockedEmpty.includes("先写"), "empty quiz answer does not pass: " + blockedEmpty);
-  await page.type("#drillIn", "zzz");
+  await page.evaluate(() => document.getElementById("drillOk").click());
+  check(gloss.disabled, "check stays disabled until an option is chosen");
+  await page.evaluate(() => {
+    var buttons = Array.from(document.querySelectorAll("#drillOpts button"));
+    var bad = buttons.filter((b) => b.textContent.trim().toLowerCase() !== "i")[0];
+    bad.click();
+  });
   await page.click("#drillOk");
   const wrong = await page.evaluate(() => ({ res: document.getElementById("drillRes").textContent, n: JSON.parse(localStorage.getItem("danci.v1")).prog["jh:i"].n }));
-  check(wrong.res.includes("不对") && wrong.res.toLowerCase().includes("i") && wrong.n === nBeforeQuiz, "wrong answer shows the right word and does not restudy");
+  check(wrong.res.includes("不对") && wrong.res.indexOf("I") >= 0 && wrong.n === nBeforeQuiz, "wrong choice shows the answer and does not restudy");
   await page.click("#drillNext");
-  await page.waitForSelector("#drillIn");
-  const ans = await page.evaluate(() => {
-    const q = document.querySelector("#sBody .qq").textContent;
-    if(q.indexOf("____")>=0) return q.toLowerCase().indexOf("tea")>=0 ? "and" : "I";
-    return "and";
+  await page.waitForSelector("#drillOpts");
+  await page.evaluate(() => {
+    var b = Array.from(document.querySelectorAll("#drillOpts button")).filter((x) => x.textContent.trim().toLowerCase() === "and")[0];
+    if (!b) throw new Error("missing and");
+    b.click();
   });
-  await page.type("#drillIn", "  "+ans+" ");
   await page.click("#drillOk");
   const right = await page.$eval("#drillRes", (el) => el.textContent);
-  check(right.includes("正确"), "spaced answer of the right word is accepted: " + right);
+  check(right.includes("正确"), "choosing the right word is accepted: " + right);
   await page.click("#drillNext");
   await page.waitForSelector("#sEnd");
   const summary = await page.$eval("#sBody", (el) => el.innerText);
