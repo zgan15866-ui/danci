@@ -1,5 +1,5 @@
 // 离线缓存：第一次打开后，没网也能用
-const CACHE = "danci-v20";
+const CACHE = "danci-v21";
 const FILES = ["./", "./index.html", "./manifest.json", "./icon-180.png", "./icon-512.png", "./packs/meta.json", "./packs/core.json", "./packs/awl.json", "./packs/junior.json"];
 self.addEventListener("install", e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES)));
