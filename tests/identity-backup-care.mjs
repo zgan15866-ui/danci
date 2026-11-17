@@ -122,10 +122,10 @@ function prog(page) {
 }
 
 const html = await (await fetch(BASE + "/index.html")).text();
-check(html.includes('var APPV="danci-v18"') && html.includes('var SYNC_APPV = "v18"'), "page is app v18");
+check(html.includes('var APPV="danci-v19"') && html.includes('var SYNC_APPV = "v19"'), "page is app v19");
 check(html.includes('var KEY = "danci.v1"'), "learning key unchanged");
 const sw = await (await fetch(BASE + "/sw.js")).text();
-check(sw.includes('const CACHE = "danci-v18"'), "service worker cache is danci-v18");
+check(sw.includes('const CACHE = "danci-v19"'), "service worker cache is danci-v19");
 
 // 根因对照：旧公式把任意 lastBackup 直接换成天数。1700001000000 是 2023-11-14 的毫秒时间，
 // 上一版预览截图用了它，所以会出现大约 1097 天。这不是新安装被写成 1097。
@@ -169,9 +169,7 @@ check(sw.includes('const CACHE = "danci-v18"'), "service worker cache is danci-v
     toggle: document.getElementById("careToggle").hidden,
     text: document.body.innerText
   }));
-  check(care.hidden === false && care.lead.includes("11点左右") && !care.lead.includes("学两句") && care.toggle, "before 11:00 only a light reminder, no study nudge: " + care.lead);
-  check(!care.text.includes("明天") && !care.text.includes("12点") && !care.text.includes("中午"), "reminder does not say tomorrow or 12:00");
-  await shot(page, "care_light_before_eleven.png");
+  check(care.hidden && care.lead === "" && !care.text.includes("学两句") && !care.text.includes("牙科"), "before 11:10 there is no waiting-room study card");
   await page.evaluate(() => document.getElementById("battleBtn").click());
   await page.waitForFunction(() => document.getElementById("study").classList.contains("on"));
   await page.click("#sQuit");
@@ -211,7 +209,7 @@ check(sw.includes('const CACHE = "danci-v18"'), "service worker cache is danci-v
 
 // 小明：是 / 不是，各问一次。其他名字不问。
 {
-  const page = await openPage({ storage: [["danci.v1", JSON.stringify(db({ name: "小明" }))]] });
+  const page = await openPage({ fixedNow: Date.UTC(2026, 10, 17, 3, 10, 0), storage: [["danci.v1", JSON.stringify(db({ name: "小明" }))]] });
   await page.waitForSelector("#whoAsk.on");
   const yes = await page.$eval("#whoYes", (el) => el.textContent);
   check(yes === "是，就叫小明", "小明 is asked the same way");
@@ -261,7 +259,7 @@ check(sw.includes('const CACHE = "danci-v18"'), "service worker cache is danci-v
 
 // 称呼本来就是彦神：不用再问，直接看见卡片。
 {
-  const page = await openPage({ storage: [["danci.v1", JSON.stringify(db({ name: "彦神" }))]] });
+  const page = await openPage({ fixedNow: Date.UTC(2026, 10, 17, 3, 10, 0), storage: [["danci.v1", JSON.stringify(db({ name: "彦神" }))]] });
   await sleep(200);
   const ui = await page.evaluate(() => ({
     who: document.getElementById("whoAsk").classList.contains("on"),
@@ -274,11 +272,11 @@ check(sw.includes('const CACHE = "danci-v18"'), "service worker cache is danci-v
 
 // 收起后不再出现。空名字仍先问名字，填了弟弟再问是不是彦神。
 {
-  const page = await openPage({ storage: [["danci.v1", JSON.stringify(db({ name: "彦神" }))]] });
+  const page = await openPage({ fixedNow: Date.UTC(2026, 10, 17, 3, 10, 0), storage: [["danci.v1", JSON.stringify(db({ name: "彦神" }))]] });
   await page.click("#careHide");
   await page.waitForFunction(() => document.getElementById("careCard").hidden);
   const mid = await prog(page);
-  check(mid.care === "tooth-20261118" && mid.name === "彦神" && mid.extra === "keep", "dismiss records only the care flag");
+  check(mid.care === "tooth-20261117" && mid.name === "彦神" && mid.extra === "keep", "dismiss records only the care flag");
   await page.goto(BASE + "/?sync=off", { waitUntil: "domcontentloaded" });
   await page.waitForFunction(() => document.getElementById("heroT").textContent === "彦神的雅思修行");
   const hidden = await page.evaluate(() => document.getElementById("careCard").hidden && document.getElementById("careLead").textContent === "");
@@ -297,53 +295,62 @@ check(sw.includes('const CACHE = "danci-v18"'), "service worker cache is danci-v
   await close(page);
 }
 
-// 日期：11点前只提醒；11:00–13:00 才建议学两句；之后休息优先。
+// 今天 11:09 不显示候诊学习；11:10 显示；13:00 休息。非彦神不显示。
 {
-  const eleven = Date.UTC(2026, 10, 18, 3, 0, 0);
-  const before = eleven - 60 * 1000;
-  const atStudy = eleven + 5 * 60 * 1000;
-  const after = Date.UTC(2026, 10, 18, 5, 5, 0);
+  const at1109 = Date.UTC(2026, 10, 17, 3, 9, 0);
+  const at1110 = Date.UTC(2026, 10, 17, 3, 10, 0);
+  const at1300 = Date.UTC(2026, 10, 17, 5, 0, 0);
   const early = Date.UTC(2026, 10, 16, 4, 0, 0);
-  const late = Date.UTC(2026, 10, 19, 16, 1, 0);
-  const pageW = await openPage({ fixedNow: before, storage: [["danci.v1", JSON.stringify(db({ name: "彦神", created: before - DAY }))]] });
+  const late = Date.UTC(2026, 10, 18, 16, 1, 0);
+  const yanshen = (created) => [["danci.v1", JSON.stringify(db({ name: "彦神", created }))]];
+  const pageW = await openPage({ dark: true, fixedNow: at1109, storage: yanshen(at1109 - DAY) });
   const w = await pageW.evaluate(() => ({
+    hidden: document.getElementById("careCard").hidden,
     lead: document.getElementById("careLead").textContent,
-    toggle: document.getElementById("careToggle").hidden
+    text: document.body.innerText
   }));
-  check(w.lead.includes("11点左右") && !w.lead.includes("学两句") && w.toggle, "10:59 is still only a reminder: " + w.lead);
+  check(w.hidden && w.lead === "" && !w.text.includes("学两句"), "11:09 does not show the waiting-room study card");
+  await shot(pageW, "care_1109_hidden.png");
   await close(pageW);
-  const pageS = await openPage({ fixedNow: atStudy, storage: [["danci.v1", JSON.stringify(db({ name: "彦神", created: atStudy - DAY }))]] });
+  const pageS = await openPage({ dark: true, fixedNow: at1110, storage: yanshen(at1110 - DAY) });
   const s = await pageS.evaluate(() => ({
+    hidden: document.getElementById("careCard").hidden,
     lead: document.getElementById("careLead").textContent,
     toggle: document.getElementById("careToggle").hidden,
     text: document.body.innerText
   }));
-  check(!s.toggle && s.lead.includes("可以学两句") && s.lead.includes("想休息就休息"), "around 11:00 the study nudge appears: " + s.lead);
-  check(!s.text.includes("明天") && !s.text.includes("12点") && !s.text.includes("中午"), "study nudge does not say 12:00 or tomorrow");
-  await shot(pageS, "care_study_around_eleven.png");
+  check(!s.hidden && !s.toggle && s.lead.includes("可以学两句") && s.lead.includes("想休息就休息"), "11:10 shows the waiting-room study card: " + s.lead);
+  check(!s.text.includes("明天") && !s.text.includes("11月18日"), "study card is for today, not tomorrow");
+  await shot(pageS, "care_1110_study.png");
   await pageS.click("#careToggle");
   await pageS.waitForFunction(() => !document.getElementById("careLines").hidden);
   const lines = await pageS.evaluate(() => document.getElementById("careLines").innerText);
-  check(lines.includes("around eleven") && lines.includes("大约11点"), "English line says around eleven");
-  check(lines.includes("Could you say that more slowly, please?") && lines.includes("能说慢一点吗？"), "optional English lines have Chinese meanings");
-  check(lines.includes("What should I do after this?") && lines.includes("我有点紧张"), "lines cover nervousness and aftercare questions");
-  await pageS.evaluate(() => document.querySelector("#careLines [data-say='4']").click());
+  check(lines.includes("11:10") && lines.includes("11点10分") && lines.includes("报到"), "check-in line matches 11:10");
+  check(lines.includes("I'm a bit nervous.") && lines.includes("我有点紧张"), "can say they are nervous");
+  check(lines.includes("This tooth hurts.") && lines.includes("这颗牙疼"), "can say the tooth hurts");
+  check(lines.includes("Could you use simpler words?") && lines.includes("能说简单一点吗？"), "can ask the dentist to use simpler words");
+  check(lines.includes("不是作业，也不是医疗建议") || s.text.includes("不是医疗建议"), "copy says this is not medical advice");
+  await pageS.evaluate(() => document.querySelector("#careLines [data-say='2']").click());
   check((await prog(pageS)).extra === "keep", "listening to a line does not score or rename");
-  await shot(pageS, "care_phrases.png");
+  await shot(pageS, "care_1110_phrases.png");
   await close(pageS);
-  const pageR = await openPage({ fixedNow: after, storage: [["danci.v1", JSON.stringify(db({ name: "彦神", created: after - DAY }))]] });
+  const pageO = await openPage({ dark: true, fixedNow: at1110, storage: [["danci.v1", JSON.stringify(db({ name: "小红", created: at1110 - DAY }))]] });
+  const other = await pageO.evaluate(() => document.getElementById("careCard").hidden && document.getElementById("careLead").textContent === "" && !document.body.innerText.includes("学两句"));
+  check(other, "a learner who is not 彦神 does not see the card at 11:10");
+  await close(pageO);
+  const pageR = await openPage({ dark: true, fixedNow: at1300, storage: yanshen(at1300 - DAY) });
   const r = await pageR.evaluate(() => ({
     lead: document.getElementById("careLead").textContent,
     toggle: document.getElementById("careToggle").hidden
   }));
-  check(r.lead.includes("休息为先") && r.lead.includes("听牙医的嘱咐") && !r.lead.includes("学两句") && r.toggle, "after 13:00 rest comes first: " + r.lead);
-  await shot(pageR, "care_rest_after_window.png");
+  check(r.lead.includes("休息为先") && r.lead.includes("听牙医的嘱咐") && !r.lead.includes("学两句") && r.toggle, "13:00 rest comes first: " + r.lead);
+  await shot(pageR, "care_1300_rest.png");
   await close(pageR);
   const pageE = await openPage({ fixedNow: early, storage: [["danci.v1", JSON.stringify(db({ name: "彦神", created: early }))]] });
   check(await pageE.evaluate(() => document.getElementById("careCard").hidden), "before 17 Nov Shanghai the card is absent");
   await close(pageE);
   const pageL = await openPage({ fixedNow: late, storage: [["danci.v1", JSON.stringify(db({ name: "彦神", created: late - 2 * DAY }))]] });
-  check(await pageL.evaluate(() => document.getElementById("careCard").hidden && document.getElementById("careLead").textContent === ""), "after 20 Nov Shanghai the card expires");
+  check(await pageL.evaluate(() => document.getElementById("careCard").hidden && document.getElementById("careLead").textContent === ""), "after 19 Nov Shanghai the card expires");
   await close(pageL);
 }
 
@@ -420,7 +427,7 @@ async function backupText(over, sync) {
 // 打开页面就在主界面提示新版本。稍后只藏这一次；已经是当前版本则不再提示。
 {
   const raw = JSON.stringify(db({ name: "小红" }));
-  const page = await openPage({ storage: [["danci.v1", raw], ["danci.appv", "danci-v17"]] });
+  const page = await openPage({ storage: [["danci.v1", raw], ["danci.appv", "danci-v18"]] });
   const ui = await page.evaluate(() => ({
     home: !document.getElementById("updHome").hidden,
     title: document.querySelector("#updHome h2").textContent,
@@ -430,7 +437,7 @@ async function backupText(over, sync) {
     extra: JSON.parse(localStorage.getItem("danci.v1")).prog.b0.extra
   }));
   check(ui.home && ui.title === "发现新版本" && ui.btn === "立即更新" && ui.bar, "opening an old version shows the home update card");
-  check(ui.appv === "danci-v18" && ui.extra === "keep", "version key advances without touching study data");
+  check(ui.appv === "danci-v19" && ui.extra === "keep", "version key advances without touching study data");
   await shot(page, "home_update_prompt.png");
   await page.click("#updLater");
   const hidden = await page.evaluate(() => document.getElementById("updHome").hidden && !document.getElementById("updBar").classList.contains("on"));
@@ -444,14 +451,14 @@ async function backupText(over, sync) {
   await close(page);
 }
 {
-  const page = await openPage({ storage: [["danci.v1", JSON.stringify(db({ name: "小红" }))], ["danci.appv", "danci-v18"]] });
+  const page = await openPage({ storage: [["danci.v1", JSON.stringify(db({ name: "小红" }))], ["danci.appv", "danci-v19"]] });
   const hidden = await page.evaluate(() => document.getElementById("updHome").hidden);
   check(hidden, "current version does not show the update card");
   await close(page);
 }
 {
   const raw = JSON.stringify(db({ name: "小红" }));
-  const page = await openPage({ storage: [["danci.v1", raw], ["danci.appv", "danci-v17"]] });
+  const page = await openPage({ storage: [["danci.v1", raw], ["danci.appv", "danci-v18"]] });
   await page.click("#updHomeGo");
   await page.waitForNavigation({ waitUntil: "domcontentloaded", timeout: 8000 }).catch(() => {});
   await page.waitForFunction(() => document.getElementById("heroT") && document.getElementById("heroT").textContent.length > 0);
