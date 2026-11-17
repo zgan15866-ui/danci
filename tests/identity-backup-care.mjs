@@ -55,6 +55,7 @@ async function openPage(opts = {}) {
   const page = await ctx.newPage();
   await page.setViewport({ width: 390, height: 844, deviceScaleFactor: 2 });
   if (opts.dark) await page.emulateMediaFeatures([{ name: "prefers-color-scheme", value: "dark" }]);
+  if (opts.noMic) await page.evaluateOnNewDocument(() => { window.MediaRecorder = undefined; });
   const hits = [];
   const posts = [];
   await page.setRequestInterception(true);
@@ -122,10 +123,10 @@ function prog(page) {
 }
 
 const html = await (await fetch(BASE + "/index.html")).text();
-check(html.includes('var APPV="danci-v19"') && html.includes('var SYNC_APPV = "v19"'), "page is app v19");
+check(html.includes('var APPV="danci-v20"') && html.includes('var SYNC_APPV = "v20"'), "page is app v20");
 check(html.includes('var KEY = "danci.v1"'), "learning key unchanged");
 const sw = await (await fetch(BASE + "/sw.js")).text();
-check(sw.includes('const CACHE = "danci-v19"'), "service worker cache is danci-v19");
+check(sw.includes('const CACHE = "danci-v20"'), "service worker cache is danci-v20");
 
 // 根因对照：旧公式把任意 lastBackup 直接换成天数。1700001000000 是 2023-11-14 的毫秒时间，
 // 上一版预览截图用了它，所以会出现大约 1097 天。这不是新安装被写成 1097。
@@ -437,7 +438,7 @@ async function backupText(over, sync) {
     extra: JSON.parse(localStorage.getItem("danci.v1")).prog.b0.extra
   }));
   check(ui.home && ui.title === "发现新版本" && ui.btn === "立即更新" && ui.bar, "opening an old version shows the home update card");
-  check(ui.appv === "danci-v19" && ui.extra === "keep", "version key advances without touching study data");
+  check(ui.appv === "danci-v20" && ui.extra === "keep", "version key advances without touching study data");
   await shot(page, "home_update_prompt.png");
   await page.click("#updLater");
   const hidden = await page.evaluate(() => document.getElementById("updHome").hidden && !document.getElementById("updBar").classList.contains("on"));
@@ -451,7 +452,7 @@ async function backupText(over, sync) {
   await close(page);
 }
 {
-  const page = await openPage({ storage: [["danci.v1", JSON.stringify(db({ name: "小红" }))], ["danci.appv", "danci-v19"]] });
+  const page = await openPage({ storage: [["danci.v1", JSON.stringify(db({ name: "小红" }))], ["danci.appv", "danci-v20"]] });
   const hidden = await page.evaluate(() => document.getElementById("updHome").hidden);
   check(hidden, "current version does not show the update card");
   await close(page);
@@ -502,6 +503,11 @@ async function backupText(over, sync) {
   check(front.word === "I" && front.lab === "单词", "first card shows the word, not a stray bar: " + front.word);
   check(front.reveal === "看答案" && front.hint.includes("看答案") && !front.next, "before the answer, the way forward is 看答案");
   check(front.quit.includes("退出") && /第\s*1\s*个/.test(front.count), "quit is 退出 and progress is a count, not a button: " + front.quit + " / " + front.count);
+  check((await page.$eval("#recGo", (el) => el.textContent)) === "开始录音", "record control is present before answering");
+  await page.click("#recGo");
+  await page.waitForFunction(() => /麦克风|不能录音|只听示范|不打分/.test(document.getElementById("recMsg").textContent), { timeout: 8000 });
+  const recText = await page.$eval("#recMsg", (el) => el.textContent);
+  check(/麦克风|不能录音|只听示范|不打分|可以拒绝/.test(recText) && !/\d+\s*%/.test(recText), "headless mic request is explained without a fake score: " + recText);
   await shot(page, "study_step_listen.png");
   const before = JSON.parse(await page.evaluate(() => localStorage.getItem("danci.v1"))).prog["jh:i"].n;
   await page.click("#reveal");
@@ -551,8 +557,51 @@ async function backupText(over, sync) {
   await shot(page, "study_step_done.png");
   const endProg = JSON.parse(await page.evaluate(() => localStorage.getItem("danci.v1"))).prog;
   check(endProg["jh:i"].extra === "keep" && endProg["jh:and"].extra === "keep", "walk did not drop stored fields");
+  const nBeforeQuiz = endProg["jh:i"].n;
+  await page.click("#sQuiz");
+  await page.waitForSelector("#drillIn");
+  await shot(page, "quiz_prompt.png");
+  await page.click("#drillOk");
+  const blockedEmpty = await page.$eval("#drillRes", (el) => el.textContent);
+  check(blockedEmpty.includes("先写"), "empty quiz answer does not pass: " + blockedEmpty);
+  await page.type("#drillIn", "zzz");
+  await page.click("#drillOk");
+  const wrong = await page.evaluate(() => ({ res: document.getElementById("drillRes").textContent, n: JSON.parse(localStorage.getItem("danci.v1")).prog["jh:i"].n }));
+  check(wrong.res.includes("不对") && wrong.res.toLowerCase().includes("i") && wrong.n === nBeforeQuiz, "wrong answer shows the right word and does not restudy");
+  await page.click("#drillNext");
+  await page.waitForSelector("#drillIn");
+  const ans = await page.evaluate(() => {
+    const q = document.querySelector("#sBody .qq").textContent;
+    if(q.indexOf("____")>=0) return q.toLowerCase().indexOf("tea")>=0 ? "and" : "I";
+    return "and";
+  });
+  await page.type("#drillIn", "  "+ans+" ");
+  await page.click("#drillOk");
+  const right = await page.$eval("#drillRes", (el) => el.textContent);
+  check(right.includes("正确"), "spaced answer of the right word is accepted: " + right);
+  await page.click("#drillNext");
+  await page.waitForSelector("#sEnd");
+  const summary = await page.$eval("#sBody", (el) => el.innerText);
+  check(summary.includes("对了") && summary.includes("不改变复习计划"), "quiz result is local and says the plan is unchanged");
+  await shot(page, "quiz_result.png");
+  const nAfter = JSON.parse(await page.evaluate(() => localStorage.getItem("danci.v1"))).prog["jh:i"].n;
+  check(nAfter === nBeforeQuiz, "quiz does not change the review count");
+  await page.click("#sEnd");
+  await page.waitForFunction(() => !document.getElementById("study").classList.contains("on"));
   check(page.__hits.length === 0, "study walk with sync=off sends nothing: " + page.__hits.join(","));
   check(page.__errors.length === 0, "no page errors in study walk: " + page.__errors.join(" | "));
+  await close(page);
+}
+{
+  const page = await openPage({
+    noMic: true,
+    storage: [["danci.v1", JSON.stringify(db({ name: "小红", prog: { b0: { n: 1, iv: 1, ef: 2.5, due: 1, lap: 0, first: 1, last: 1, extra: "keep" } } }))], ["danci.appv", "danci-v20"]]
+  });
+  await page.evaluate(() => document.getElementById("goReview").click());
+  await page.waitForSelector("#recMsg");
+  const t = await page.$eval("#recMsg", (el) => el.textContent);
+  check(t.includes("不能录音") && t.includes("不给发音打分"), "unsupported recorder explains itself: " + t);
+  check(JSON.parse(await page.evaluate(() => localStorage.getItem("danci.v1"))).prog.b0.n === 1, "unsupported recorder does not change progress");
   await close(page);
 }
 

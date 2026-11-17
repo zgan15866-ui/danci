@@ -104,6 +104,8 @@
   .grades button.picked{border-color:var(--accent);background:var(--soft)}
   .grades .mark{width:12px;height:12px;border-radius:50%;display:inline-block;margin-right:10px}
   .stepnote{text-align:center;margin:0 0 8px}
+  .recrow{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:12px}
+  .recrow button{width:auto;padding:8px 10px;font-size:14px}
   .g0{background:var(--bad)}.g1{background:var(--mid)}.g2{background:var(--good)}.g3{background:var(--easy)}
   .spin{margin-top:28px}
   .spin input{font-size:24px;text-align:center;padding:14px;background:var(--card);letter-spacing:.5px}
@@ -980,6 +982,7 @@ function startSession(kind,mode,ids,newSet){
   showCard();
 }
 function endSession(){
+  micClear();
   $("study").classList.remove("on"); document.body.style.overflow=""; S=null;
   try{ speechSynthesis.cancel(); }catch(e){}
   goView(curView);
@@ -990,6 +993,7 @@ $("sQuit").onclick=function(){
 };
 $("sSay2").onclick=function(){ if(S && S.cur) speak(WORDS[S.cur].w); };
 function showCard(){
+  micClear();
   if(!S.queue.length){ showDone(false); return; }
   if(S.mode==="quiz"){ $("sCount").textContent="测验 "+(S.done+1)+" / "+(S.done+S.queue.length); $("sProg").style.width=(S.done/(S.done+S.queue.length)*100)+"%"; renderQuiz(); return; }
   var id=S.queue[0], w=WORDS[id]; S.cur=id; S.step="front";
@@ -1046,9 +1050,74 @@ function glossHtml(w){
   if(w.ex) h+='<div class="gl"><div class="glab">例句</div>'+exHtml(w)+'</div>';
   return h+synHtml(w);
 }
+var mic={stream:null,rec:null,url:null,chunks:null};
+function micSupported(){ return !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia && window.MediaRecorder); }
+function micRelease(){
+  try{ if(mic.rec && mic.rec.state==="recording") mic.rec.stop(); }catch(e){}
+  try{ if(mic.stream) mic.stream.getTracks().forEach(function(t){ try{ t.stop(); }catch(e2){} }); }catch(e){}
+  mic.stream=null; mic.rec=null;
+}
+function micClear(){
+  micRelease();
+  if(mic.url){ try{ URL.revokeObjectURL(mic.url); }catch(e){} mic.url=null; }
+  mic.chunks=null;
+}
+function bindRec(sayText){
+  var go=$("recGo"), mine=$("recMine"), msg=$("recMsg");
+  if(!go) return;
+  if(!micSupported()){
+    go.disabled=true; mine.disabled=true;
+    msg.textContent="这台设备不能录音。请点上面「听示范」自己对照着读。录音不会上传，这里也不给发音打分。";
+    return;
+  }
+  function paint(){
+    var on=mic.rec && mic.rec.state==="recording";
+    go.textContent=on?"停止":(mic.url?"重录":"开始录音");
+    mine.disabled=!mic.url || !!on;
+  }
+  paint();
+  go.onclick=function(){
+    if(mic.rec && mic.rec.state==="recording"){ try{ mic.rec.stop(); }catch(e){} return; }
+    micClear();
+    msg.textContent="正在请求麦克风。可以拒绝，拒绝后仍能听示范。";
+    navigator.mediaDevices.getUserMedia({audio:true}).then(function(stream){
+      if(!S){ try{ stream.getTracks().forEach(function(t){ t.stop(); }); }catch(e){} return; }
+      var rec;
+      try{ rec=new MediaRecorder(stream); }catch(e){
+        try{ stream.getTracks().forEach(function(t){ t.stop(); }); }catch(e2){}
+        go.disabled=true;
+        msg.textContent="这台设备不能开始录音。请只听示范。这里不给发音打分。";
+        return;
+      }
+      mic.stream=stream; mic.rec=rec; mic.chunks=[];
+      rec.ondataavailable=function(ev){ if(ev.data && ev.data.size) mic.chunks.push(ev.data); };
+      rec.onstop=function(){
+        var chunks=mic.chunks||[];
+        micRelease();
+        if(mic.url){ try{ URL.revokeObjectURL(mic.url); }catch(e){} }
+        try{
+          mic.url=URL.createObjectURL(new Blob(chunks,{type:rec.mimeType||"audio/webm"}));
+          msg.textContent="录好了。分别点「听示范」和「听我的」自己比较。只留在这台设备，不上传，也不打分。";
+        }catch(e){ mic.url=null; msg.textContent="录音没有留住。可以重录，或只听示范。"; }
+        paint();
+      };
+      try{ rec.start(); msg.textContent="正在录音。说完点「停止」。"; paint(); }
+      catch(e){ micClear(); msg.textContent="录音没有开始。可以只听示范。"; }
+    }).catch(function(){
+      micClear();
+      msg.textContent="没有使用麦克风。可以只听示范，学习不受影响。";
+    });
+  };
+  mine.onclick=function(){
+    if(!mic.url) return;
+    var a=new Audio(mic.url);
+    a.play().catch(function(){ msg.textContent="这段录音播不出来。可以重录，或只听示范。"; });
+  };
+}
 function wordHead(w){
   return '<div class="wordlab">单词</div><div class="word">'+esc(w.w)+'</div>'+ipaRow(w)+
-    '<button class="say" data-say="1">🔊 发音</button>';
+    '<button class="say" data-say="1">🔊 听示范</button>'+
+    '<div class="recrow"><button type="button" class="ghost" id="recGo">开始录音</button><button type="button" class="ghost" id="recMine" disabled>听我的</button></div><p class="sub" id="recMsg" style="text-align:center;margin:6px 0 0"></p>';
 }
 function renderFront(w){
   var isNew = !db.prog[w.id];
@@ -1058,6 +1127,7 @@ function renderFront(w){
     '<p class="sub" style="text-align:center;margin-top:8px">听完后，点最下面的「看答案」</p>';
   $("sFoot").innerHTML='<p class="sub stepnote">下一步</p><button class="btn full" id="reveal" style="padding:15px">看答案</button>';
   $("reveal").onclick=function(){ renderBack(w); };
+  bindRec(w.w);
   if(db.set.auto) speak(w.w);
 }
 function cardWillFinish(q){
@@ -1078,6 +1148,7 @@ function renderBack(w){
   S.step="back";
   S.pick=null;
   $("sBody").innerHTML=wordHead(w)+'<div class="ans">'+glossHtml(w)+'</div>';
+  bindRec(w.w);
   var p=db.prog[w.id];
   function nxt(q){ var iv; if(q===0) return "马上再看"; if(q===3) return "先不出现";
     if(!p||p.n===0) iv=1; else if(q===1) iv=Math.max(1,Math.round(p.iv*1.2)); else iv=(p.n===1?3:Math.round(p.iv*p.ef));
@@ -1204,12 +1275,72 @@ function showSettle(early){
     '<p class="sub">'+kindMsg+(left>0?'　·　还有 '+left+' 个待复习':'')+'</p>'+
     (up?'<div class="rankup" style="color:'+up[2]+'">⬆ 段位提升<div style="font-size:26px;margin-top:2px">'+up[0]+'</div></div>':'')+
     (S.wrongList.length? '<div class="card" style="text-align:left;margin-top:20px"><h2>这次没记住的</h2><div class="list">'+uniq(S.wrongList).map(itemHtml).join("")+'</div></div>' : '')+'</div>';
-  $("sFoot").innerHTML= again ? '<div class="row"><button class="ghost" id="sEnd" style="flex:1;padding:15px">返回</button><button class="btn" id="sAgain" style="flex:2;padding:15px">⚡ 再来一局</button></div>' : '<button class="btn full" id="sEnd" style="padding:15px">返回</button>';
+  var quiz = roundWords().length ? '<button class="btn full" id="sQuiz" style="margin-bottom:10px;padding:15px">测一测</button>' : '';
+  $("sFoot").innerHTML= quiz + (again ? '<div class="row"><button class="ghost" id="sEnd" style="flex:1;padding:15px">返回</button><button class="btn" id="sAgain" style="flex:2;padding:15px">⚡ 再来一局</button></div>' : '<button class="btn full" id="sEnd" style="padding:15px">返回</button>');
   $("sEnd").onclick=endSession;
+  if(quiz) $("sQuiz").onclick=openDrill;
   if(again) $("sAgain").onclick=function(){ endSessionQuiet(); startBattle(); };
   $("sBody").onclick=function(e){ var bx=$("settleBox"); if(bx && !e.target.closest("button,.it")) bx.classList.add("skipfx"); };
 }
-function endSessionQuiet(){ $("study").classList.remove("on"); S=null; try{ speechSynthesis.cancel(); }catch(e){} }
+function endSessionQuiet(){ micClear(); $("study").classList.remove("on"); S=null; try{ speechSynthesis.cancel(); }catch(e){} }
+function roundWords(){
+  var ids=[], seen={};
+  if(!S) return ids;
+  Object.keys(S.seen||{}).forEach(function(id){ if(WORDS[id] && !seen[id]){ seen[id]=1; ids.push(id); } });
+  return ids;
+}
+function normAns(s){
+  return String(s||"").toLowerCase().replace(/[’']/g,"'").replace(/[^a-z' ]+/g," ").replace(/\s+/g," ").trim();
+}
+function makeDrills(ids){
+  var qs=[];
+  ids.forEach(function(id){
+    if(qs.length>=5) return;
+    var w=WORDS[id]; if(!w || !w.w) return;
+    var ex=String(w.ex||""), escW=w.w.replace(/[.*+?^${}()|[\]\\]/g,"\\$&");
+    var re=new RegExp("\\b"+escW+"\\b","i");
+    if(ex && re.test(ex)) qs.push({prompt:ex.replace(re,"____"), hint:w.cn||"", answer:w.w, blank:true});
+    else qs.push({prompt:w.cn||"写出这个英文单词", hint:"", answer:w.w, blank:false});
+  });
+  return qs;
+}
+var D=null;
+function openDrill(){
+  micClear();
+  var qs=makeDrills(roundWords());
+  if(!qs.length){ toast("这轮没有可测的词"); return; }
+  D={qs:qs, i:0, right:0, wrong:0};
+  renderDrill();
+}
+function renderDrill(){
+  var q=D.qs[D.i];
+  $("sCount").textContent="测一测 "+(D.i+1)+" / "+D.qs.length;
+  $("sBody").innerHTML='<p class="sub">'+(q.blank?"例句里缺了哪个词":"看中文，写出英文")+'</p><div class="qq">'+esc(q.prompt)+'</div>'+(q.blank&&q.hint?'<p class="sub">'+esc(q.hint)+'</p>':'')+'<div class="spin"><input id="drillIn" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="在这里输入"></div><div class="res" id="drillRes"></div>';
+  $("sFoot").innerHTML='<div class="row"><button type="button" class="ghost" id="drillQuit" style="flex:1">退出</button><button type="button" class="ghost" id="drillSkip" style="flex:1">跳过</button><button type="button" class="btn" id="drillOk" style="flex:2">检查</button></div>';
+  $("drillQuit").onclick=endSession;
+  $("drillSkip").onclick=function(){ D.i++; if(D.i>=D.qs.length) drillResult(); else renderDrill(); };
+  $("drillOk").onclick=drillCheck;
+  $("drillIn").addEventListener("keydown",function(e){ if(e.key==="Enter"){ e.preventDefault(); drillCheck(); } });
+}
+function drillCheck(){
+  var q=D.qs[D.i], el=$("drillIn"); if(!el || el.disabled) return;
+  if(!String(el.value||"").trim()){ $("drillRes").innerHTML='<div class="ng">先写一下再检查</div>'; return; }
+  var ok=normAns(el.value)===normAns(q.answer);
+  if(ok) D.right++; else D.wrong++;
+  el.disabled=true;
+  $("drillRes").innerHTML=(ok?'<div class="ok">正确</div>':'<div class="ng">不对</div>')+'<div class="right">'+esc(q.answer)+'</div>';
+  var last=D.i+1>=D.qs.length;
+  $("sFoot").innerHTML='<div class="row"><button type="button" class="ghost" id="drillQuit" style="flex:1">退出</button><button type="button" class="btn" id="drillNext" style="flex:2">'+(last?"看结果":"继续")+'</button></div>';
+  $("drillQuit").onclick=endSession;
+  $("drillNext").onclick=function(){ D.i++; if(D.i>=D.qs.length) drillResult(); else renderDrill(); };
+}
+function drillResult(){
+  $("sCount").textContent="测完了";
+  $("sProg").style.width="100%";
+  $("sBody").innerHTML='<div class="done"><h2>测一测</h2><p class="sub">对了 '+D.right+' 题，错了 '+D.wrong+' 题。<br>这只看本轮刚学的词，不改变复习计划。</p></div>';
+  $("sFoot").innerHTML='<button type="button" class="btn full" id="sEnd" style="padding:15px">返回</button>';
+  $("sEnd").onclick=endSession;
+}
 function uniq(a){ var s={}; return a.filter(function(x){ if(s[x]) return false; s[x]=1; return true; }); }
 function itemHtml(id){ var w=WORDS[id]; return '<div class="it" data-w="'+id+'"><span class="dot '+status(id)+'"></span><span class="w">'+esc(w.w)+'</span><span class="c">'+esc(w.cn)+'</span><button class="ghost" data-say="1" data-id="'+id+'" style="padding:4px 9px;border:0">🔊</button></div>'; }
 
@@ -1802,7 +1933,7 @@ $("bkLater").onclick=function(){ db.bkSnooze=Date.now()+3*DAY; persist(); checkB
 // 只上传：姓名、学习统计、近 35 天按天记录、最难的词。不上传：自建词、建议文字、备份文件。
 // 同步用独立的 localStorage 键 danci.sync，不碰 danci.v1。
 var SYNC_DEFAULT = {t:"w3f", k:"778b50de-d990-4df5-a20b-156e8a6fbfaf", f:"zganyasi"}; // Web3Forms 访问密钥是公开的（只能发信到赵干邮箱），不是机密
-var SYNC_APPV = "v19";
+var SYNC_APPV = "v20";
 var SYNC_KEY = "danci.sync";
 var syncSt = null, syncTimer = null, syncBusy = false;
 function syncLoad(){
@@ -1932,7 +2063,7 @@ function syncInfo(){
   }catch(e){ return ""; }
 }
 document.addEventListener("visibilitychange",function(){ if(document.visibilityState==="hidden") syncSend(true); else syncSend(false); });
-window.addEventListener("pagehide",function(){ syncSend(true); });
+window.addEventListener("pagehide",function(){ try{ micClear(); }catch(e){} syncSend(true); });
 window.addEventListener("online",function(){ syncSend(false); });
 syncParseUrl();
 setTimeout(function(){ syncSend(false); },5000);
@@ -2054,7 +2185,7 @@ loadPacks().then(function(){
 }).catch(function(){
   packState.failed=true; renderHome(); toast("扩充词库没加载上，联网后重新打开 App",3500);
 });
-var APPV="danci-v19", APPV_KEY="danci.appv";
+var APPV="danci-v20", APPV_KEY="danci.appv";
 var updWaiting=null, updClicked=false, updReloading=false, updJustUpdated=false, updSnooze=false;
 try{
   var _hadSw=!("serviceWorker" in navigator) ? false : !!navigator.serviceWorker.controller;
