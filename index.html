@@ -73,7 +73,7 @@
   #study{position:fixed;inset:0;background:var(--bg);z-index:20;display:none;flex-direction:column;padding:env(safe-area-inset-top) 0 calc(env(safe-area-inset-bottom) + var(--kb, 0px))}
   #study.on{display:flex}
   .stop{display:flex;align-items:center;justify-content:space-between;padding:12px 16px}
-  .stop button{border:0;background:none;color:var(--accent);font-size:16px}
+  .stop button{border:0;background:none;color:var(--accent);font-size:16px;min-height:44px;min-width:44px;touch-action:manipulation;cursor:pointer}
   .prog{height:12px;background:var(--soft);margin:0;border-radius:999px;overflow:hidden;flex:1}
   .stop .prog{margin:0 12px}
   .prog i{display:block;height:100%;background:var(--accent);transition:width .2s}
@@ -89,13 +89,14 @@
   .ans .gpos{font-size:16px;font-weight:600}
   .ans .gpos small{font-weight:400;color:var(--muted);font-size:12px;margin-left:6px}
   .ans .gcn{font-size:28px;font-weight:800;line-height:1.35;word-break:break-word}
-  .say{display:block;margin:8px auto 0;border:0;background:var(--soft);color:var(--accent);border-radius:999px;padding:8px 16px;font-size:16px}
+  .say{display:flex;align-items:center;justify-content:center;width:max-content;max-width:100%;min-height:44px;min-width:44px;margin:10px auto 0;padding:10px 18px;border:0;background:var(--soft);color:var(--accent);border-radius:999px;font-size:17px;font-weight:700;touch-action:manipulation;cursor:pointer}
   .say-lg{display:inline-block;margin:0;font-size:22px;padding:16px 40px;border-radius:16px;font-weight:700}
   .dict-play{text-align:center;margin-top:36px}
   .ans{margin-top:10px;background:var(--card);border-radius:16px;padding:12px;line-height:1.45}
   .ans .cn{font-size:20px;font-weight:600}
   .ans .ex{margin-top:10px;color:var(--ink)}
-  .ans .ex button{border:0;background:none;color:var(--accent);font-size:15px;padding:0 4px}
+  .ans .ex button{border:0;background:var(--soft);color:var(--accent);font-size:18px;min-width:44px;min-height:44px;padding:8px 12px;border-radius:12px;touch-action:manipulation;cursor:pointer}
+  .say:active,.say.speaking,.ans .ex button:active,.ans .ex button.speaking,#sSay2:active,#sSay2.speaking,#testVoice:active,#testVoice.speaking{background:var(--accent);color:#fff}
   .tag{display:inline-block;font-size:12px;padding:2px 8px;border-radius:999px;background:var(--soft);color:var(--accent);margin-bottom:8px}
   .sfoot{padding:8px 12px calc(10px + env(safe-area-inset-bottom));max-width:560px;width:100%;margin:0 auto;flex:none}
   .grades{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
@@ -106,7 +107,7 @@
   .qopt.on{border-color:var(--accent);background:var(--soft)}
   .stepnote{text-align:center;margin:0 0 8px}
   .recrow{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:6px}
-  .recrow button{width:auto;padding:8px 10px;font-size:14px}
+  .recrow button{width:auto;min-height:44px;padding:10px 14px;font-size:15px;touch-action:manipulation;cursor:pointer}
   .g0{background:var(--bad)}.g1{background:var(--mid)}.g2{background:var(--good)}.g3{background:var(--easy)}
   .spin{margin-top:28px}
   .spin input{font-size:24px;text-align:center;padding:14px;background:var(--card);letter-spacing:.5px}
@@ -795,29 +796,74 @@ function pickVoice(){
   var pref = lang.indexOf("en-gb")===0 ? /Daniel|Arthur|Kate|Serena|Martha|Moira/ : /Samantha|Alex|Ava|Allison|Nicky|Aaron/;
   return same.filter(function(v){ return pref.test(v.name); })[0] || same[0] || voices.filter(function(v){ return /^en/i.test(v.lang||""); })[0] || null;
 }
-// iOS Safari / 主屏幕 PWA：speak() 必须在点击调用栈里同步执行，cancel() 后 setTimeout 再 speak 会被静音。
-// 系统还常把 speechSynthesis 置于 paused，需要 resume()。不要把无效的 voice 对象赋上去。
-function speak(text,slow){
-  if(!window.speechSynthesis){ toast("这台设备不支持朗读"); return; }
-  if(!text) return;
+// iOS Safari / 主屏幕 PWA：speak() 必须在点击调用栈里同步执行。cancel() 后 setTimeout 再 speak 会被静音。
+// cancel() 后同一轮里的第一次 speak 也会被丢掉，所以先塞一句无声的，再读真正的词。paused 时要 resume()。
+// iPhone 上指定 voice 常常整段没声，只设语言，交给系统音色。
+function speakMark(el){
+  var old=document.querySelectorAll(".speaking");
+  for(var i=0;i<old.length;i++) old[i].classList.remove("speaking");
+  speak._btn=el||null;
+  if(el) el.classList.add("speaking");
+}
+function speakFail(fromUser,msg){
+  if(speak._btn){ speak._btn.classList.remove("speaking"); speak._btn=null; }
+  if(!fromUser) return;
+  toast(msg||"没有播出声音。请再点一次喇叭，并确认手机没有静音。");
+}
+function playbackUnlock(){
+  if(!speak._afterMic) return;
+  speak._afterMic=false;
   try{
-    if(speak._t){ clearTimeout(speak._t); speak._t=null; }
+    var Ctx=window.AudioContext||window.webkitAudioContext;
+    if(!Ctx) return;
+    if(!speak._ctx) speak._ctx=new Ctx();
+    if(speak._ctx.state==="suspended") speak._ctx.resume();
+    var buf=speak._ctx.createBuffer(1,1,22050);
+    var src=speak._ctx.createBufferSource();
+    src.buffer=buf; src.connect(speak._ctx.destination); src.start(0);
+  }catch(e){}
+}
+function speak(text,slow,fromUser){
+  if(!window.speechSynthesis){ speakFail(!!fromUser,"这台设备不支持朗读"); return; }
+  if(!text) return;
+  var el=speak._btn;
+  try{
+    playbackUnlock();
     var u=new SpeechSynthesisUtterance(String(text));
-    var v=pickVoice();
+    var ios=/iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
+    var v=ios?null:pickVoice();
     if(v){
       try{ u.voice=v; }catch(e){}
       u.lang=v.lang||db.set.accent||"en-GB";
-    } else { u.lang=db.set.accent||"en-GB"; }
-    u.rate = slow ? 0.6 : (Number(db.set.rate)||0.9);
-    try{ speechSynthesis.resume(); }catch(e){}
-    if(speechSynthesis.speaking || speechSynthesis.pending){
-      try{ speechSynthesis.cancel(); }catch(e){}
-      try{ speechSynthesis.resume(); }catch(e){}
+    } else u.lang=db.set.accent||"en-GB";
+    u.rate=slow?0.6:(Number(db.set.rate)||0.9);
+    u.onend=function(){ if(speak._u!==u) return; speak._u=null; if(el) el.classList.remove("speaking"); };
+    u.onerror=function(ev){
+      if(speak._u!==u) return;
+      if(el) el.classList.remove("speaking");
+      var err=ev&&ev.error;
+      if(err==="interrupted"||err==="canceled"||err==="cancelled") return;
+      speakFail(!!fromUser, err==="not-allowed"?"浏览器拦住了朗读。请再点一次喇叭。":"朗读没有播出来。请再点一次喇叭，并确认没有静音。");
+    };
+    var ss=speechSynthesis;
+    try{ if(ss.paused) ss.resume(); }catch(e){}
+    var busy=false;
+    try{ busy=!!(ss.speaking||ss.pending); }catch(e){}
+    if(busy){
+      try{ ss.cancel(); }catch(e){ speakFail(!!fromUser,"朗读停不下来。请再点一次喇叭。"); return; }
+      var bump=new SpeechSynthesisUtterance(" ");
+      bump.volume=0; bump.rate=2;
+      ss.speak(bump);
     }
     speak._u=u;
-    speechSynthesis.speak(u);
-    try{ speechSynthesis.resume(); }catch(e){}
-  }catch(e){}
+    ss.speak(u);
+    if(el) el.classList.add("speaking");
+    try{ if(ss.paused) ss.resume(); }catch(e){}
+    if(speak._t) clearTimeout(speak._t);
+    speak._t=setTimeout(function(){ if(el) el.classList.remove("speaking"); },8000);
+  }catch(e){
+    speakFail(!!fromUser,"朗读没有开始。请再点一次喇叭。");
+  }
 }
 
 // ---------- 导航 ----------
@@ -992,7 +1038,12 @@ $("sQuit").onclick=function(){
   if(S && S.queue.length && S.done>0){ showDone(true); return; }
   endSession();
 };
-$("sSay2").onclick=function(){ if(S && S.cur) speak(WORDS[S.cur].w); };
+$("sSay2").onclick=function(){
+  if(!(S&&S.cur&&WORDS[S.cur])) return;
+  if(mic.stream||(mic.rec&&mic.rec.state==="recording")) micRelease();
+  speakMark(this);
+  speak(WORDS[S.cur].w,false,true);
+};
 function showCard(){
   micClear();
   if(!S.queue.length){ showDone(false); return; }
@@ -1017,7 +1068,7 @@ function tagFor(w){
   return h;
 }
 function synHtml(w){ return (w.syns && w.syns.length) ? '<div class="syn">同义替换：'+w.syns.map(esc).join(" · ")+'</div>' : ''; }
-function exHtml(w){ return w.ex ? '<div class="ex">'+esc(w.ex)+' <button data-say-ex="1">🔊</button></div>' : ''; }
+function exHtml(w){ return w.ex ? '<div class="ex">'+esc(w.ex)+' <button type="button" data-say-ex="1">🔊</button></div>' : ''; }
 var POS_CN={n:"名词",v:"动词",vi:"不及物动词",vt:"及物动词",adj:"形容词",adv:"副词",prep:"介词",conj:"连词",pron:"代词",art:"冠词",det:"限定词",aux:"助动词",interj:"感叹词",int:"感叹词",num:"数词",phr:"短语",modal:"情态动词"};
 function parseCn(cn){
   var s=String(cn||"").trim();
@@ -1054,8 +1105,10 @@ function glossHtml(w){
 var mic={stream:null,rec:null,url:null,chunks:null};
 function micSupported(){ return !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia && window.MediaRecorder); }
 function micRelease(){
-  try{ if(mic.rec && mic.rec.state==="recording") mic.rec.stop(); }catch(e){}
-  try{ if(mic.stream) mic.stream.getTracks().forEach(function(t){ try{ t.stop(); }catch(e2){} }); }catch(e){}
+  var had=false;
+  try{ if(mic.rec && mic.rec.state==="recording"){ mic.rec.stop(); had=true; } }catch(e){}
+  try{ if(mic.stream) mic.stream.getTracks().forEach(function(t){ try{ t.stop(); had=true; }catch(e2){} }); }catch(e){}
+  if(had) speak._afterMic=true;
   mic.stream=null; mic.rec=null;
 }
 function micClear(){
@@ -1110,14 +1163,21 @@ function bindRec(sayText){
     });
   };
   mine.onclick=function(){
-    if(!mic.url) return;
+    if(!mic.url){ msg.textContent="还没有录音。可以先录音，或只听示范。"; return; }
+    if(mic.stream||(mic.rec&&mic.rec.state==="recording")) micRelease();
+    playbackUnlock();
     var a=new Audio(mic.url);
-    a.play().catch(function(){ msg.textContent="这段录音播不出来。可以重录，或只听示范。"; });
+    speakMark(mine);
+    a.onended=function(){ mine.classList.remove("speaking"); };
+    a.play().then(function(){ msg.textContent="正在播放刚才的录音。只在这台设备，不上传。"; }).catch(function(){
+      mine.classList.remove("speaking");
+      msg.textContent="这段录音播不出来。可以重录，或只听示范。";
+    });
   };
 }
 function wordHead(w){
   return '<div class="wordlab">单词</div><div class="word">'+esc(w.w)+'</div>'+ipaRow(w)+
-    '<button class="say" data-say="1">🔊 听示范</button>'+
+    '<button type="button" class="say" data-say="1">🔊 听示范</button>'+
     '<div class="recrow"><button type="button" class="ghost" id="recGo">开始录音</button><button type="button" class="ghost" id="recMine" disabled>听我的</button></div><p class="sub" id="recMsg" style="text-align:center;margin:6px 0 0"></p>';
 }
 function renderFront(w){
@@ -1129,7 +1189,7 @@ function renderFront(w){
   $("sFoot").innerHTML='<p class="sub stepnote">下一步</p><button class="btn full" id="reveal" style="padding:15px">看答案</button>';
   $("reveal").onclick=function(){ renderBack(w); };
   bindRec(w.w);
-  if(db.set.auto) speak(w.w);
+  if(db.set.auto){ speakMark($("sBody").querySelector(".say")); speak(w.w,false,false); }
 }
 function cardWillFinish(q){
   var id=S.cur;
@@ -1182,9 +1242,11 @@ $("sFoot").addEventListener("click",function(e){
   if(e.target.closest("#cardNext")) applyCardPick();
 });
 document.addEventListener("click",function(e){
-  var b=e.target.closest("[data-say],[data-say-ex]"); if(!b) return;
+  var b=e.target.closest("[data-say],[data-say-ex]"); if(!b || b.closest("#careLines")) return;
   var id=b.dataset.id || (S&&S.cur); if(!id||!WORDS[id]) return;
-  if(b.dataset.sayEx) speak(WORDS[id].ex); else speak(WORDS[id].w, b.dataset.slow==="1");
+  if(mic.stream||(mic.rec&&mic.rec.state==="recording")) micRelease();
+  speakMark(b);
+  if(b.dataset.sayEx) speak(WORDS[id].ex,false,true); else speak(WORDS[id].w, b.dataset.slow==="1", true);
 });
 
 function norm(s){ return String(s).toLowerCase().replace(/[’']/g,"'").replace(/[^a-z' -]/g,"").replace(/\s+/g," ").trim(); }
@@ -1207,9 +1269,9 @@ function renderSpell(w){
   $("sFoot").innerHTML='<div class="row"><button class="ghost" id="spSkip" style="flex:1">不会</button><button class="btn" id="spOk" style="flex:2">确定</button></div>';
   var inp=$("spIn");
   if(dict){
-    $("dictPlay").onclick=function(){ speak(w.w); };
-    $("dictSlow").onclick=function(){ speak(w.w, true); };
-    speak(w.w);
+    $("dictPlay").onclick=function(){ speakMark(this); speak(w.w,false,true); };
+    $("dictSlow").onclick=function(){ speakMark(this); speak(w.w,true,true); };
+    speak(w.w,false,false);
     focusAfterSpeak(inp);
   } else {
     setTimeout(function(){ try{ inp.focus(); }catch(e){} },60);
@@ -1235,7 +1297,7 @@ function checkSpell(w,val){
   $("spRes").innerHTML = (ok ? '<div class="ok">✓ 正确</div>' : '<div class="ng">✗ '+(val?'写成了 '+esc(val):'没关系，记一下')+'</div>')+
     '<div class="right">'+esc(w.w)+'</div>'+(w.ipa?'<div class="sub" style="margin:0">/'+esc(w.ipa)+'/</div>':'')+'<div>'+esc(w.cn)+'</div>';
   $("spIn").disabled=true;
-  speak(w.w);
+  speak(w.w,false,true);
   $("sFoot").innerHTML='<button class="btn full" id="spNext" style="padding:15px">下一个</button>';
   $("spNext").onclick=next;
   function next(){ S.queue.shift(); S.done++; showCard(); }
@@ -1803,7 +1865,7 @@ function answerFill(q,val){
   $("spIn").disabled=true;
   var sent=esc(q.q).replace("___",'<b style="color:var(--good)">'+esc(q.a)+'</b>');
   $("qRes").innerHTML=(ok?'<div class="ok">✓ 正确</div>':'<div class="ng">✗ '+(val?'写成了 '+esc(val):'没关系，记一下')+'</div>')+'<div style="margin-top:8px;font-size:17px">'+sent+'</div>';
-  var id=findWordId(q.a); if(id){ S.cur=id; speak(WORDS[id].w);
+  var id=findWordId(q.a); if(id){ S.cur=id; speak(WORDS[id].w,false,true);
     if(!ok){ var p=db.prog[id]; if(!p) p=db.prog[id]={n:0,iv:0,ef:2.5,due:dayNum(),lap:0,first:dayNum()}; p.sw=(p.sw||0)+1; if(!p.skip) p.due=Math.min(p.due,dayNum()); p.last=dayNum(); } }
   quizResult(ok,q);
 }
@@ -1857,8 +1919,8 @@ function renderSet(){
   if(db.learner==="彦神"){ wn.hidden=false; wn.textContent="已确认是彦神。称呼可以照旧，改称呼也不会取消这个确认。"; }
   else { wn.hidden=true; wn.textContent=""; }
   renderTrack();
-  chipSet($("setAccent"),[["en-GB","英音"],["en-US","美音"]],db.set.accent,function(v){ db.set.accent=v; speak("environment"); });
-  chipSet($("setRate"),[["0.75","慢"],["0.9","正常"],["1","稍快"]],db.set.rate,function(v){ db.set.rate=+v; speak("environment"); });
+  chipSet($("setAccent"),[["en-GB","英音"],["en-US","美音"]],db.set.accent,function(v){ db.set.accent=v; speak("environment",false,true); });
+  chipSet($("setRate"),[["0.75","慢"],["0.9","正常"],["1","稍快"]],db.set.rate,function(v){ db.set.rate=+v; speak("environment",false,true); });
   chipSet($("setAuto"),[["1","开"],["0","关"]],db.set.auto?"1":"0",function(v){ db.set.auto=v==="1"; });
   chipSet($("setCap"),[["30","30 个"],["50","50 个"],["100","100 个"],["9999","不限"]],db.set.cap,function(v){ db.set.cap=+v; });
   if(isBeginner()) chipSet($("setGoal"),[["1000","1000"],["1500","1500"],["2000","2000"],["3000","3000"]],db.set.goalBeginner||2000,function(v){ db.set.goalBeginner=+v; });
@@ -1869,7 +1931,7 @@ function renderSet(){
 }
 $("setName").addEventListener("change",function(){ var n=this.value.trim(); if(!n){ this.value=db.name||""; return; } db.name=n; persist(); askWho(); });
 $("setExam").addEventListener("change",function(){ db.set.exam=this.value; persist(); });
-$("testVoice").onclick=function(){ speak("Practice makes perfect."); };
+$("testVoice").onclick=function(){ speakMark(this); speak("Practice makes perfect.",false,true); };
 
 // 备份
 function shareOrDownload(name,text,type,onDone){
@@ -1956,7 +2018,7 @@ $("bkLater").onclick=function(){ db.bkSnooze=Date.now()+3*DAY; persist(); checkB
 // 只上传：姓名、学习统计、近 35 天按天记录、最难的词。不上传：自建词、建议文字、备份文件。
 // 同步用独立的 localStorage 键 danci.sync，不碰 danci.v1。
 var SYNC_DEFAULT = {t:"w3f", k:"778b50de-d990-4df5-a20b-156e8a6fbfaf", f:"zganyasi"}; // Web3Forms 访问密钥是公开的（只能发信到赵干邮箱），不是机密
-var SYNC_APPV = "v21";
+var SYNC_APPV = "v22";
 var SYNC_KEY = "danci.sync";
 var syncSt = null, syncTimer = null, syncBusy = false;
 function syncLoad(){
@@ -2180,13 +2242,14 @@ function fillCareLines(){
   var box=$("careLines");
   if(box.dataset.ready) return;
   box.innerHTML=CARE_LINES.map(function(l,i){
-    return '<div class="line"><div class="en">'+esc(l[0])+' <button type="button" class="say" data-say="'+i+'">🔊</button></div><div class="cn">'+esc(l[1])+'</div></div>';
+    return '<div class="line"><div class="en">'+esc(l[0])+' <button type="button" class="say" data-care="'+i+'" data-say="'+i+'">🔊</button></div><div class="cn">'+esc(l[1])+'</div></div>';
   }).join("");
   box.dataset.ready="1";
 }
 $("careLines").addEventListener("click",function(e){
-  var b=e.target.closest("[data-say]"); if(!b) return;
-  speak(CARE_LINES[+b.dataset.say][0]);
+  var b=e.target.closest("[data-care]"); if(!b) return;
+  speakMark(b);
+  speak(CARE_LINES[+b.dataset.care][0],false,true);
 });
 $("careToggle").onclick=function(){
   fillCareLines();
@@ -2208,7 +2271,7 @@ loadPacks().then(function(){
 }).catch(function(){
   packState.failed=true; renderHome(); toast("扩充词库没加载上，联网后重新打开 App",3500);
 });
-var APPV="danci-v21", APPV_KEY="danci.appv";
+var APPV="danci-v22", APPV_KEY="danci.appv";
 var updWaiting=null, updClicked=false, updReloading=false, updJustUpdated=false, updSnooze=false;
 try{
   var _hadSw=!("serviceWorker" in navigator) ? false : !!navigator.serviceWorker.controller;
