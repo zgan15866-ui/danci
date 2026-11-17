@@ -123,10 +123,10 @@ function prog(page) {
 }
 
 const html = await (await fetch(BASE + "/index.html")).text();
-check(html.includes('var APPV="danci-v21"') && html.includes('var SYNC_APPV = "v21"'), "page is app v21");
+check(html.includes('var APPV="danci-v22"') && html.includes('var SYNC_APPV = "v22"'), "page is app v22");
 check(html.includes('var KEY = "danci.v1"'), "learning key unchanged");
 const sw = await (await fetch(BASE + "/sw.js")).text();
-check(sw.includes('const CACHE = "danci-v21"'), "service worker cache is danci-v21");
+check(sw.includes('const CACHE = "danci-v22"'), "service worker cache is danci-v22");
 
 // 根因对照：旧公式把任意 lastBackup 直接换成天数。1700001000000 是 2023-11-14 的毫秒时间，
 // 上一版预览截图用了它，所以会出现大约 1097 天。这不是新安装被写成 1097。
@@ -438,7 +438,7 @@ async function backupText(over, sync) {
     extra: JSON.parse(localStorage.getItem("danci.v1")).prog.b0.extra
   }));
   check(ui.home && ui.title === "发现新版本" && ui.btn === "立即更新" && ui.bar, "opening an old version shows the home update card");
-  check(ui.appv === "danci-v21" && ui.extra === "keep", "version key advances without touching study data");
+  check(ui.appv === "danci-v22" && ui.extra === "keep", "version key advances without touching study data");
   await shot(page, "home_update_prompt.png");
   await page.click("#updLater");
   const hidden = await page.evaluate(() => document.getElementById("updHome").hidden && !document.getElementById("updBar").classList.contains("on"));
@@ -452,7 +452,7 @@ async function backupText(over, sync) {
   await close(page);
 }
 {
-  const page = await openPage({ storage: [["danci.v1", JSON.stringify(db({ name: "小红" }))], ["danci.appv", "danci-v21"]] });
+  const page = await openPage({ storage: [["danci.v1", JSON.stringify(db({ name: "小红" }))], ["danci.appv", "danci-v22"]] });
   const hidden = await page.evaluate(() => document.getElementById("updHome").hidden);
   check(hidden, "current version does not show the update card");
   await close(page);
@@ -639,6 +639,170 @@ async function backupText(over, sync) {
   const t = await page.$eval("#recMsg", (el) => el.textContent);
   check(t.includes("不能录音") && t.includes("不给发音打分"), "unsupported recorder explains itself: " + t);
   check(JSON.parse(await page.evaluate(() => localStorage.getItem("danci.v1"))).prog.b0.n === 1, "unsupported recorder does not change progress");
+  await close(page);
+}
+
+// 喇叭：自动朗读后再点、打断后仍会读、失败有提示、录音后还能听示范和听我的。
+{
+  const raw = JSON.stringify(db({
+    name: "小红",
+    created: Date.now() - 2 * DAY,
+    prog: {
+      "jh:i": { n: 1, iv: 1, ef: 2.5, due: 1, lap: 0, first: 1, last: 1, extra: "keep" },
+      "jh:and": { n: 1, iv: 1, ef: 2.5, due: 2, lap: 0, first: 1, last: 1, extra: "keep" }
+    }
+  }));
+  const page = await openPage({ storage: [["danci.v1", raw], ["danci.appv", "danci-v22"]] });
+  await page.waitForFunction(() => document.getElementById("dueN").textContent !== "0", { timeout: 8000 });
+  const hooked = await page.evaluate(() => {
+    const log = [];
+    window.__speakLog = log;
+    const synth = window.speechSynthesis;
+    let speaking = false;
+    try {
+      synth.speak = function (u) {
+        log.push("speak:" + String(u.text) + ":" + (u.volume == null ? 1 : u.volume));
+        speaking = true;
+        window.__lastUtter = u;
+        if (u.onstart) u.onstart();
+      };
+      synth.cancel = function () { log.push("cancel"); speaking = false; };
+      Object.defineProperty(synth, "speaking", { configurable: true, get() { return speaking; } });
+      Object.defineProperty(synth, "pending", { configurable: true, get() { return false; } });
+      Object.defineProperty(synth, "paused", { configurable: true, get() { return false; } });
+    } catch (e) { return String(e); }
+    return "ok";
+  });
+  check(hooked === "ok", "speech hook installed: " + hooked);
+  await page.evaluate(() => document.getElementById("goReview").click());
+  await page.waitForSelector("#sBody .say");
+  const auto = await page.evaluate(() => {
+    const say = document.querySelector("#sBody .say");
+    const top = document.getElementById("sSay2");
+    const sr = say.getBoundingClientRect();
+    const tr = top.getBoundingClientRect();
+    return {
+      log: window.__speakLog.slice(),
+      on: say.classList.contains("speaking"),
+      sayH: Math.round(sr.height),
+      sayW: Math.round(sr.width),
+      topH: Math.round(tr.height),
+      topW: Math.round(tr.width),
+      text: say.textContent
+    };
+  });
+  check(auto.log.some((x) => x.startsWith("speak:I:")), "auto read speaks the word in the open gesture: " + auto.log.join(","));
+  check(auto.on && auto.text.includes("听示范"), "听示范 shows it is speaking");
+  check(auto.sayH >= 44 && auto.sayW >= 44 && auto.topH >= 44 && auto.topW >= 44, "speaker targets are at least 44px: " + auto.sayH + "x" + auto.sayW + " / " + auto.topH + "x" + auto.topW);
+  const again = await page.evaluate(() => {
+    window.__speakLog.length = 0;
+    const say = document.querySelector("#sBody .say");
+    say.click();
+    say.click();
+    return window.__speakLog.slice();
+  });
+  check(again.filter((x) => x === "speak:I:1").length >= 2 && again.includes("cancel") && again.includes("speak: :0"), "second tap still speaks after cancel: " + again.join(","));
+  await page.click("#reveal");
+  await page.waitForSelector(".ans .ex button");
+  const ex = await page.evaluate(() => {
+    const b = document.querySelector(".ans .ex button");
+    const r = b.getBoundingClientRect();
+    window.__speakLog.length = 0;
+    b.click();
+    return { h: Math.round(r.height), w: Math.round(r.width), log: window.__speakLog.slice(), on: b.classList.contains("speaking") };
+  });
+  check(ex.h >= 44 && ex.w >= 44 && ex.on && ex.log.some((x) => x.startsWith("speak:I am")), "example speaker is tappable and speaks the sentence: " + ex.h + "x" + ex.w + " " + ex.log.join(","));
+  const failed = await page.evaluate(() => {
+    speechSynthesis.speak = function () { throw new Error("blocked"); };
+    document.querySelector("#sBody .say").click();
+    return document.getElementById("toast").textContent;
+  });
+  check(failed.includes("朗读没有开始"), "a failed speak is not silent: " + failed);
+  const nBefore = JSON.parse(await page.evaluate(() => localStorage.getItem("danci.v1"))).prog["jh:i"].n;
+  const mic = await page.evaluate(async () => {
+    window.__tracks = [];
+    navigator.mediaDevices.getUserMedia = () => {
+      const track = { stop() { track.stopped = true; } };
+      window.__tracks.push(track);
+      return Promise.resolve({ getTracks() { return [track]; } });
+    };
+    window.MediaRecorder = class {
+      constructor() { this.state = "inactive"; this.mimeType = "audio/webm"; }
+      start() { this.state = "recording"; }
+      stop() { this.state = "inactive"; const rec = this; setTimeout(() => rec.onstop && rec.onstop(), 0); }
+    };
+    window.Audio = class {
+      constructor(url) { this.src = url; }
+      play() { window.__played = this.src; return Promise.resolve(); }
+    };
+    document.getElementById("recGo").click();
+    await new Promise((r) => setTimeout(r, 30));
+    const recording = document.getElementById("recMsg").textContent;
+    window.__speakLog = [];
+    speechSynthesis.speak = function (u) { window.__speakLog.push("speak:" + String(u.text)); if (u.onstart) u.onstart(); };
+    speechSynthesis.cancel = function () { window.__speakLog.push("cancel"); };
+    document.querySelector("#sBody .say").click();
+    await new Promise((r) => setTimeout(r, 30));
+    const after = {
+      recording,
+      stopped: window.__tracks[0] && window.__tracks[0].stopped,
+      said: window.__speakLog.filter((x) => x.startsWith("speak:I")).length,
+      msg: document.getElementById("recMsg").textContent
+    };
+    document.getElementById("recMine").click();
+    await new Promise((r) => setTimeout(r, 20));
+    after.played = window.__played || "";
+    after.playMsg = document.getElementById("recMsg").textContent;
+    return after;
+  });
+  check(mic.recording.includes("正在录音") && mic.stopped && mic.said > 0, "after the mic starts, 听示范 stops the track and still speaks: " + JSON.stringify(mic));
+  check(mic.played.startsWith("blob:") && mic.playMsg.includes("正在播放刚才的录音") && mic.playMsg.includes("不上传"), "听我的 plays the local clip only: " + mic.playMsg);
+  const nAfter = JSON.parse(await page.evaluate(() => localStorage.getItem("danci.v1"))).prog["jh:i"].n;
+  check(nAfter === nBefore, "listening does not change the review count");
+  await page.evaluate(() => { document.getElementById("sQuit").click(); });
+  await page.waitForFunction(() => !document.getElementById("study").classList.contains("on"));
+  await page.evaluate(() => document.querySelector('.tabs button[data-v="set"]').click());
+  await page.waitForSelector("#testVoice");
+  const voice = await page.evaluate(() => {
+    window.__speakLog.length = 0;
+    const b = document.getElementById("testVoice");
+    const r = b.getBoundingClientRect();
+    b.click();
+    return { h: Math.round(r.height), on: b.classList.contains("speaking"), log: window.__speakLog.slice() };
+  });
+  check(voice.h >= 44 && voice.on && voice.log.some((x) => x.startsWith("speak:Practice makes perfect")), "settings preview speaks and shows it: " + voice.log.join(","));
+  await shot(page, "speak_settings.png");
+  check(page.__hits.length === 0, "speak walk sends nothing: " + page.__hits.join(","));
+  check(page.__errors.length === 0, "no page errors in speak walk: " + page.__errors.join(" | "));
+  await close(page);
+}
+{
+  const page = await openPage({
+    storage: [["danci.v1", JSON.stringify(db({
+      name: "小红",
+      prog: { "jh:i": { n: 1, iv: 1, ef: 2.5, due: 1, lap: 0, first: 1, last: 1, extra: "keep" } }
+    }))], ["danci.appv", "danci-v22"]]
+  });
+  await page.evaluate(() => {
+    const log = [];
+    window.__speakLog = log;
+    speechSynthesis.speak = function (u) { log.push(String(u.text)); };
+    speechSynthesis.cancel = function () {};
+    navigator.mediaDevices.getUserMedia = () => Promise.reject(new Error("denied"));
+  });
+  await page.waitForFunction(() => document.getElementById("dueN").textContent !== "0", { timeout: 8000 });
+  await page.setViewport({ width: 375, height: 667, deviceScaleFactor: 2 });
+  await page.evaluate(() => document.getElementById("goReview").click());
+  await page.waitForSelector("#recGo");
+  await page.click("#recGo");
+  await page.waitForFunction(() => document.getElementById("recMsg").textContent.includes("没有使用麦克风"));
+  const denied = await page.evaluate(() => {
+    window.__speakLog.length = 0;
+    document.querySelector("#sBody .say").click();
+    return { msg: document.getElementById("recMsg").textContent, said: window.__speakLog.slice(), n: JSON.parse(localStorage.getItem("danci.v1")).prog["jh:i"].n };
+  });
+  check(denied.msg.includes("可以只听示范") && denied.said.includes("I") && denied.n === 1, "denied mic still speaks the demo: " + denied.said.join(","));
+  await shot(page, "speak_demo.png");
   await close(page);
 }
 
