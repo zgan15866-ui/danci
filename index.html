@@ -381,6 +381,7 @@
       <p class="sub" id="whoNote" hidden></p>
       <label class="f">发音</label>
       <div class="chips" id="setAccent"></div>
+      <p class="sub">示范音在这台设备上生成，不上传单词。英音是内置的英式 RP，美音是内置的美式，语速跟着上面的选择。声音偏机械。第一次打开并缓存后，没网也能听。</p>
       <label class="f">语速</label>
       <div class="chips" id="setRate"></div>
       <label class="f">出现单词时自动朗读</label>
@@ -556,6 +557,7 @@
         <li><b>入门词</b>：选词参考 New Dolch List 1.1（Browne &amp; Culligan）和 New General Service List 1.2（Browne, Culligan &amp; Phillips），二者均为 <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>。本应用只使用其词目和频率排序（数字、星期、月份来自 NGSL 补充表），英式拼写为自行调整，释义和例句为自编。</li>
         <li><b>释义、例句、同义替换、话题分类</b>：全部为自编整理，没有抄录任何教材或商业词典，可能有疏漏，发现不准的词请在「设置」里提建议。</li>
         <li><b>音标</b>：由开源语音引擎 eSpeak NG 自动生成（英式），再做了格式整理，个别词可能与词典略有出入，请以词典和发音为准。</li>
+        <li><b>听示范</b>：喇叭、例句、听写和「试听发音」用应用内置的 eSpeak 读出来（GPL，在手机里生成，不把单词发到网上）。设置里的英音是英式 RP，美音是美式，语速会一起变。自己加的英文也能读；词里没有英文字母或数字时，会提示没有示范音。点了没声音会提示，请同时看音量和侧边静音键。</li>
         <li>本应用不包含《雅思词汇真经》或其他受版权保护的书籍内容。</li>
       </ul>
     </div>
@@ -605,6 +607,7 @@
   </div>
 </div>
 
+<script src="voice/mespeak.js"></script>
 <script>
 (function(){
 "use strict";
@@ -777,92 +780,133 @@ function dueList(){
 }
 
 // ---------- 发音 ----------
-var voices=[];
-function loadVoices(){
-  try{ voices=(window.speechSynthesis && speechSynthesis.getVoices())||[]; }catch(e){ voices=[]; }
+// 不走系统 speechSynthesis。v22 在点击里同步朗读，慧姐的 iPhone 仍然没声音。
+// 这里用内置 eSpeak（meSpeak，GPL-3.0，见 voice/LICENSE.txt）在设备上合成 WAV，
+// 再在同一次点击里用 AudioContext 播出。decodeAudioData 是异步的，iOS 会把异步开播丢掉，所以自己解析 PCM 并 start()。
+// 英音 = 音色 en/en-rp（英式 RP），美音 = en/en-us。两套都是共振峰合成，不是真人录音，但任意英文（含自己加的词和例句）都能读。
+// 语速：eSpeak 的 speed 是每分钟词数，1 倍 = 175。设置 0.75 / 0.9 / 1 按比例换算；慢速按钮用 0.6。
+// 词里没有英文字母或数字时不装成功，提示「这个词没有示范音」。合成或开播失败会提示，不会只留下 speaking 样式。
+function speakEngineReady(){
+  try{
+    return !!(window.meSpeak && meSpeak.isConfigLoaded() && meSpeak.isVoiceLoaded("en/en-rp") && meSpeak.isVoiceLoaded("en/en-us"));
+  }catch(e){ return false; }
 }
-if(window.speechSynthesis){
-  loadVoices();
-  try{ speechSynthesis.addEventListener("voiceschanged", loadVoices); }catch(e){}
-  speechSynthesis.onvoiceschanged=loadVoices;
+function speakVoice(){
+  var a=String(db.set.accent||"en-GB").toLowerCase();
+  return a.indexOf("us")>=0 ? "en/en-us" : "en/en-rp";
 }
-function normLang(l){ return String(l||"").replace("_","-").toLowerCase(); }
-function pickVoice(){
-  loadVoices();
-  if(!voices.length) return null; // iOS: getVoices() 可能仍为空，交给系统默认音色
-  var lang=normLang(db.set.accent||"en-GB");
-  var same=voices.filter(function(v){ return normLang(v.lang)===lang; });
-  if(!same.length) same=voices.filter(function(v){ return normLang(v.lang).indexOf(lang)===0; });
-  var pref = lang.indexOf("en-gb")===0 ? /Daniel|Arthur|Kate|Serena|Martha|Moira/ : /Samantha|Alex|Ava|Allison|Nicky|Aaron/;
-  return same.filter(function(v){ return pref.test(v.name); })[0] || same[0] || voices.filter(function(v){ return /^en/i.test(v.lang||""); })[0] || null;
+function speakSpeed(slow){
+  var rate=slow ? 0.6 : (Number(db.set.rate)||0.9);
+  if(!(rate>0)) rate=0.9;
+  return Math.max(80, Math.min(260, Math.round(175*rate)));
 }
-// iOS Safari / 主屏幕 PWA：speak() 必须在点击调用栈里同步执行。cancel() 后 setTimeout 再 speak 会被静音。
-// cancel() 后同一轮里的第一次 speak 也会被丢掉，所以先塞一句无声的，再读真正的词。paused 时要 resume()。
-// iPhone 上指定 voice 常常整段没声，只设语言，交给系统音色。
 function speakMark(el){
   var old=document.querySelectorAll(".speaking");
   for(var i=0;i<old.length;i++) old[i].classList.remove("speaking");
   speak._btn=el||null;
   if(el) el.classList.add("speaking");
 }
-function speakFail(fromUser,msg){
+function speakClearFace(){
+  if(speak._t){ clearTimeout(speak._t); speak._t=null; }
   if(speak._btn){ speak._btn.classList.remove("speaking"); speak._btn=null; }
-  if(!fromUser) return;
-  toast(msg||"没有播出声音。请再点一次喇叭，并确认手机没有静音。");
 }
+function speakStop(){
+  var src=speak._src; speak._src=null;
+  if(!src) return;
+  try{ src.onended=null; }catch(e){}
+  try{ src.stop(0); }catch(e){}
+  try{ src.disconnect(); }catch(e){}
+}
+function speakHalt(){ speakStop(); speakClearFace(); }
+function speakFail(fromUser,msg){
+  speakHalt();
+  if(!fromUser) return;
+  toast(msg||"没有播出声音。请再点一次喇叭，并确认音量开着、侧边静音键没有拨下。",3400);
+}
+function audioCtx(){
+  var Ctx=window.AudioContext||window.webkitAudioContext;
+  if(!Ctx) return null;
+  if(!speak._ctx) speak._ctx=new Ctx();
+  if(speak._ctx.state==="suspended"){ try{ speak._ctx.resume(); }catch(e){} }
+  return speak._ctx;
+}
+document.addEventListener("pointerdown", function(){ audioCtx(); }, true);
 function playbackUnlock(){
   if(!speak._afterMic) return;
   speak._afterMic=false;
   try{
-    var Ctx=window.AudioContext||window.webkitAudioContext;
-    if(!Ctx) return;
-    if(!speak._ctx) speak._ctx=new Ctx();
-    if(speak._ctx.state==="suspended") speak._ctx.resume();
-    var buf=speak._ctx.createBuffer(1,1,22050);
-    var src=speak._ctx.createBufferSource();
-    src.buffer=buf; src.connect(speak._ctx.destination); src.start(0);
+    var ctx=audioCtx(); if(!ctx) return;
+    var buf=ctx.createBuffer(1,1,22050);
+    var src=ctx.createBufferSource();
+    src.buffer=buf; src.connect(ctx.destination); src.start(0);
   }catch(e){}
 }
+function playSynthWav(bytes){
+  var u8=bytes instanceof Uint8Array ? bytes : Uint8Array.from(bytes);
+  if(u8.length<44) throw new Error("short");
+  var view=new DataView(u8.buffer, u8.byteOffset, u8.byteLength);
+  if(view.getUint32(0,false)!==0x52494646) throw new Error("wav");
+  var off=12, format=0, ch=1, rate=22050, bits=16, dataOff=0, dataLen=0;
+  while(off+8<=u8.length){
+    var id=String.fromCharCode(u8[off],u8[off+1],u8[off+2],u8[off+3]);
+    var size=view.getUint32(off+4,true);
+    if(id==="fmt "){
+      format=view.getUint16(off+8,true);
+      ch=view.getUint16(off+10,true)||1;
+      rate=view.getUint32(off+12,true)||22050;
+      bits=view.getUint16(off+22,true)||16;
+    } else if(id==="data"){ dataOff=off+8; dataLen=size; break; }
+    off+=8+size+(size&1);
+  }
+  if(format!==1 || (bits!==16 && bits!==8) || !dataLen || !rate) throw new Error("pcm");
+  var samples=Math.floor(dataLen/(ch*(bits/8)));
+  var duration=samples/rate;
+  var ctx=audioCtx();
+  if(!ctx) throw new Error("noctx");
+  var buf=ctx.createBuffer(1, samples, rate);
+  var arr=buf.getChannelData(0);
+  var peak=0;
+  if(bits===16){
+    for(var i=0;i<samples;i++){
+      var s=view.getInt16(dataOff+i*ch*2, true)/32768;
+      arr[i]=s; if(s<0) s=-s; if(s>peak) peak=s;
+    }
+  } else {
+    for(var j=0;j<samples;j++){
+      var s8=(u8[dataOff+j*ch]-128)/128;
+      arr[j]=s8; if(s8<0) s8=-s8; if(s8>peak) peak=s8;
+    }
+  }
+  if(!(duration>=0.2) || !(peak>=0.02)) return null;
+  speakStop();
+  var src=ctx.createBufferSource();
+  src.buffer=buf;
+  src.connect(ctx.destination);
+  src.onended=function(){
+    if(speak._src!==src) return;
+    speak._src=null;
+    speakClearFace();
+  };
+  speak._src=src;
+  if(ctx.state==="suspended"){ try{ ctx.resume(); }catch(e){} }
+  src.start(0);
+  if(speak._t) clearTimeout(speak._t);
+  var ms=Math.min(20000, Math.max(2500, Math.ceil(duration*1000)+800));
+  speak._t=setTimeout(function(){ if(speak._src!==src) return; speak._src=null; speakClearFace(); }, ms);
+  return buf;
+}
 function speak(text,slow,fromUser){
-  if(!window.speechSynthesis){ speakFail(!!fromUser,"这台设备不支持朗读"); return; }
-  if(!text) return;
-  var el=speak._btn;
+  var raw=String(text==null?"":text).trim();
+  if(!raw || !/[A-Za-z0-9]/.test(raw)){ speakFail(!!fromUser,"这个词没有示范音。"); return; }
+  if(!speakEngineReady()){ speakFail(!!fromUser,"示范音还没准备好。请再点一次喇叭。"); return; }
   try{
     playbackUnlock();
-    var u=new SpeechSynthesisUtterance(String(text));
-    var ios=/iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
-    var v=ios?null:pickVoice();
-    if(v){
-      try{ u.voice=v; }catch(e){}
-      u.lang=v.lang||db.set.accent||"en-GB";
-    } else u.lang=db.set.accent||"en-GB";
-    u.rate=slow?0.6:(Number(db.set.rate)||0.9);
-    u.onend=function(){ if(speak._u!==u) return; speak._u=null; if(el) el.classList.remove("speaking"); };
-    u.onerror=function(ev){
-      if(speak._u!==u) return;
-      if(el) el.classList.remove("speaking");
-      var err=ev&&ev.error;
-      if(err==="interrupted"||err==="canceled"||err==="cancelled") return;
-      speakFail(!!fromUser, err==="not-allowed"?"浏览器拦住了朗读。请再点一次喇叭。":"朗读没有播出来。请再点一次喇叭，并确认没有静音。");
-    };
-    var ss=speechSynthesis;
-    try{ if(ss.paused) ss.resume(); }catch(e){}
-    var busy=false;
-    try{ busy=!!(ss.speaking||ss.pending); }catch(e){}
-    if(busy){
-      try{ ss.cancel(); }catch(e){ speakFail(!!fromUser,"朗读停不下来。请再点一次喇叭。"); return; }
-      var bump=new SpeechSynthesisUtterance(" ");
-      bump.volume=0; bump.rate=2;
-      ss.speak(bump);
-    }
-    speak._u=u;
-    ss.speak(u);
-    if(el) el.classList.add("speaking");
-    try{ if(ss.paused) ss.resume(); }catch(e){}
-    if(speak._t) clearTimeout(speak._t);
-    speak._t=setTimeout(function(){ if(el) el.classList.remove("speaking"); },8000);
+    var wav=meSpeak.speak(raw, { voice:speakVoice(), speed:speakSpeed(slow), rawdata:"array" });
+    if(!wav || !wav.length){ speakFail(!!fromUser,"这个词没有示范音。"); return; }
+    if(!playSynthWav(wav)){ speakFail(!!fromUser,"这个词没有示范音。"); return; }
+    if(speak._btn) speak._btn.classList.add("speaking");
   }catch(e){
-    speakFail(!!fromUser,"朗读没有开始。请再点一次喇叭。");
+    speakFail(!!fromUser,"朗读没有开始。请再点一次喇叭，并确认音量开着、侧边静音键没有拨下。");
   }
 }
 
@@ -981,7 +1025,7 @@ function renderVocab(){
   $("battleSub").innerHTML=sub;
 }
 function startBattle(){
-  try{ if(window.speechSynthesis) speechSynthesis.resume(); }catch(e){}
+  audioCtx();
   var pl=battlePlan();
   if(!pl.rev.length && !pl.nw.length){ toast("词库都学完了 🎉"); return; }
   var ns={}; pl.nw.forEach(function(id){ ns[id]=1; });
@@ -1014,7 +1058,7 @@ function goPractice(mode){
 }
 $("goSpell").onclick=function(){ goPractice("spell"); };
 $("goDict").onclick=function(){
-  try{ if(window.speechSynthesis) speechSynthesis.resume(); }catch(e){}
+  audioCtx();
   goPractice("dict");
 };
 
@@ -1030,8 +1074,8 @@ function startSession(kind,mode,ids,newSet){
 }
 function endSession(){
   micClear();
+  speakHalt();
   $("study").classList.remove("on"); document.body.style.overflow=""; S=null;
-  try{ speechSynthesis.cancel(); }catch(e){}
   goView(curView);
 }
 $("sQuit").onclick=function(){
@@ -1254,11 +1298,12 @@ function focusAfterSpeak(el){
   if(!el) return;
   var done=false;
   function go(){ if(done) return; done=true; try{ el.focus(); }catch(e){} }
-  var u=speak._u;
-  if(u){
-    try{ u.addEventListener("end", go); u.addEventListener("error", go); }catch(e){}
+  var src=speak._src;
+  if(src){
+    var prev=src.onended;
+    src.onended=function(){ try{ if(prev) prev(); }catch(e){} go(); };
   }
-  setTimeout(go, 1500);
+  setTimeout(go, 1600);
 }
 function renderSpell(w){
   var dict=S.mode==="dict";
@@ -1345,7 +1390,7 @@ function showSettle(early){
   if(again) $("sAgain").onclick=function(){ endSessionQuiet(); startBattle(); };
   $("sBody").onclick=function(e){ var bx=$("settleBox"); if(bx && !e.target.closest("button,.it")) bx.classList.add("skipfx"); };
 }
-function endSessionQuiet(){ micClear(); $("study").classList.remove("on"); S=null; try{ speechSynthesis.cancel(); }catch(e){} }
+function endSessionQuiet(){ micClear(); speakHalt(); $("study").classList.remove("on"); S=null; }
 function roundWords(){
   var ids=[], seen={};
   if(!S) return ids;
@@ -2018,7 +2063,7 @@ $("bkLater").onclick=function(){ db.bkSnooze=Date.now()+3*DAY; persist(); checkB
 // 只上传：姓名、学习统计、近 35 天按天记录、最难的词。不上传：自建词、建议文字、备份文件。
 // 同步用独立的 localStorage 键 danci.sync，不碰 danci.v1。
 var SYNC_DEFAULT = {t:"w3f", k:"778b50de-d990-4df5-a20b-156e8a6fbfaf", f:"zganyasi"}; // Web3Forms 访问密钥是公开的（只能发信到赵干邮箱），不是机密
-var SYNC_APPV = "v22";
+var SYNC_APPV = "v23";
 var SYNC_KEY = "danci.sync";
 var syncSt = null, syncTimer = null, syncBusy = false;
 function syncLoad(){
@@ -2271,7 +2316,7 @@ loadPacks().then(function(){
 }).catch(function(){
   packState.failed=true; renderHome(); toast("扩充词库没加载上，联网后重新打开 App",3500);
 });
-var APPV="danci-v22", APPV_KEY="danci.appv";
+var APPV="danci-v23", APPV_KEY="danci.appv";
 var updWaiting=null, updClicked=false, updReloading=false, updJustUpdated=false, updSnooze=false;
 try{
   var _hadSw=!("serviceWorker" in navigator) ? false : !!navigator.serviceWorker.controller;

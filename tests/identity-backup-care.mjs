@@ -47,7 +47,7 @@ function db(over) {
 const browser = await puppeteer.launch({
   executablePath: CHROME,
   headless: true,
-  args: ["--no-sandbox", "--disable-dev-shm-usage", "--host-resolver-rules=MAP api.web3forms.com 127.0.0.1, MAP *.supabase.co 127.0.0.1"]
+  args: ["--no-sandbox", "--disable-dev-shm-usage", "--autoplay-policy=no-user-gesture-required", "--host-resolver-rules=MAP api.web3forms.com 127.0.0.1, MAP *.supabase.co 127.0.0.1"]
 });
 
 async function openPage(opts = {}) {
@@ -123,10 +123,15 @@ function prog(page) {
 }
 
 const html = await (await fetch(BASE + "/index.html")).text();
-check(html.includes('var APPV="danci-v22"') && html.includes('var SYNC_APPV = "v22"'), "page is app v22");
+check(html.includes('var APPV="danci-v23"') && html.includes('var SYNC_APPV = "v23"'), "page is app v23");
 check(html.includes('var KEY = "danci.v1"'), "learning key unchanged");
+check(html.includes('src="voice/mespeak.js"') && html.includes('rawdata:"array"') && html.includes("createBufferSource"), "demo audio is local eSpeak played through Web Audio");
+check(!html.includes("SpeechSynthesisUtterance") && !html.includes("speechSynthesis.speak"), "demo path does not call system TTS");
+check(!/responsivevoice|translate\.google|dictionaryapi|speech\.googleapis|unrealspeech|elevenlabs/i.test(html), "page has no online TTS service");
 const sw = await (await fetch(BASE + "/sw.js")).text();
-check(sw.includes('const CACHE = "danci-v22"'), "service worker cache is danci-v22");
+check(sw.includes('const CACHE = "danci-v23"') && sw.includes("./voice/mespeak.js"), "service worker cache is danci-v23 and includes the voice engine");
+const voiceJs = await (await fetch(BASE + "/voice/mespeak.js")).text();
+check(voiceJs.includes("en/en-rp") && voiceJs.includes("en/en-us") && voiceJs.length > 1000000, "bundled engine contains British and American voices");
 
 // 根因对照：旧公式把任意 lastBackup 直接换成天数。1700001000000 是 2023-11-14 的毫秒时间，
 // 上一版预览截图用了它，所以会出现大约 1097 天。这不是新安装被写成 1097。
@@ -438,7 +443,7 @@ async function backupText(over, sync) {
     extra: JSON.parse(localStorage.getItem("danci.v1")).prog.b0.extra
   }));
   check(ui.home && ui.title === "发现新版本" && ui.btn === "立即更新" && ui.bar, "opening an old version shows the home update card");
-  check(ui.appv === "danci-v22" && ui.extra === "keep", "version key advances without touching study data");
+  check(ui.appv === "danci-v23" && ui.extra === "keep", "version key advances without touching study data");
   await shot(page, "home_update_prompt.png");
   await page.click("#updLater");
   const hidden = await page.evaluate(() => document.getElementById("updHome").hidden && !document.getElementById("updBar").classList.contains("on"));
@@ -452,7 +457,7 @@ async function backupText(over, sync) {
   await close(page);
 }
 {
-  const page = await openPage({ storage: [["danci.v1", JSON.stringify(db({ name: "小红" }))], ["danci.appv", "danci-v22"]] });
+  const page = await openPage({ storage: [["danci.v1", JSON.stringify(db({ name: "小红" }))], ["danci.appv", "danci-v23"]] });
   const hidden = await page.evaluate(() => document.getElementById("updHome").hidden);
   check(hidden, "current version does not show the update card");
   await close(page);
@@ -642,7 +647,7 @@ async function backupText(over, sync) {
   await close(page);
 }
 
-// 喇叭：自动朗读后再点、打断后仍会读、失败有提示、录音后还能听示范和听我的。
+// 喇叭：真实音频缓冲起播。系统 TTS 抛错也不算成功。失败必须能看见。
 {
   const raw = JSON.stringify(db({
     name: "小红",
@@ -652,72 +657,99 @@ async function backupText(over, sync) {
       "jh:and": { n: 1, iv: 1, ef: 2.5, due: 2, lap: 0, first: 1, last: 1, extra: "keep" }
     }
   }));
-  const page = await openPage({ storage: [["danci.v1", raw], ["danci.appv", "danci-v22"]] });
+  const page = await openPage({ storage: [["danci.v1", raw], ["danci.appv", "danci-v23"]] });
   await page.waitForFunction(() => document.getElementById("dueN").textContent !== "0", { timeout: 8000 });
   const hooked = await page.evaluate(() => {
-    const log = [];
-    window.__speakLog = log;
-    const synth = window.speechSynthesis;
-    let speaking = false;
+    window.__ttsCalls = 0;
+    window.__audioStarts = [];
+    window.__audioStops = 0;
     try {
-      synth.speak = function (u) {
-        log.push("speak:" + String(u.text) + ":" + (u.volume == null ? 1 : u.volume));
-        speaking = true;
-        window.__lastUtter = u;
-        if (u.onstart) u.onstart();
-      };
-      synth.cancel = function () { log.push("cancel"); speaking = false; };
-      Object.defineProperty(synth, "speaking", { configurable: true, get() { return speaking; } });
-      Object.defineProperty(synth, "pending", { configurable: true, get() { return false; } });
-      Object.defineProperty(synth, "paused", { configurable: true, get() { return false; } });
+      const synth = window.speechSynthesis;
+      synth.speak = function () { window.__ttsCalls++; throw new Error("tts blocked"); };
+      synth.cancel = function () { window.__ttsCalls++; };
     } catch (e) { return String(e); }
+    const origStart = AudioBufferSourceNode.prototype.start;
+    const origStop = AudioBufferSourceNode.prototype.stop;
+    AudioBufferSourceNode.prototype.start = function () {
+      const b = this.buffer;
+      let peak = 0, hash = 0;
+      if (b && b.length) {
+        const d = b.getChannelData(0);
+        for (let i = 0; i < d.length; i += 17) {
+          const a = d[i] < 0 ? -d[i] : d[i];
+          if (a > peak) peak = a;
+          hash = (Math.imul(hash, 33) + ((d[i] * 1000) | 0)) | 0;
+        }
+      }
+      window.__audioStarts.push({
+        duration: b ? b.duration : 0,
+        samples: b ? b.length : 0,
+        rate: b ? b.sampleRate : 0,
+        peak, hash
+      });
+      return origStart.apply(this, arguments);
+    };
+    AudioBufferSourceNode.prototype.stop = function () {
+      window.__audioStops++;
+      return origStop.apply(this, arguments);
+    };
+    window.__audioStartWrapped = AudioBufferSourceNode.prototype.start;
+    window.__real = () => window.__audioStarts.filter((s) => s.duration >= 0.4 && s.peak >= 0.05 && s.samples > 1000 && s.rate === 22050);
     return "ok";
   });
-  check(hooked === "ok", "speech hook installed: " + hooked);
-  await page.evaluate(() => document.getElementById("goReview").click());
-  await page.waitForSelector("#sBody .say");
+  check(hooked === "ok", "audio buffer spy installed: " + hooked);
   const auto = await page.evaluate(() => {
+    window.__audioStarts.length = 0;
+    document.getElementById("goReview").click();
     const say = document.querySelector("#sBody .say");
     const top = document.getElementById("sSay2");
     const sr = say.getBoundingClientRect();
     const tr = top.getBoundingClientRect();
+    const real = window.__real();
     return {
-      log: window.__speakLog.slice(),
+      real,
+      tts: window.__ttsCalls,
       on: say.classList.contains("speaking"),
       sayH: Math.round(sr.height),
       sayW: Math.round(sr.width),
       topH: Math.round(tr.height),
       topW: Math.round(tr.width),
-      text: say.textContent
+      text: say.textContent,
+      word: document.querySelector("#sBody .word").textContent
     };
   });
-  check(auto.log.some((x) => x.startsWith("speak:I:")), "auto read speaks the word in the open gesture: " + auto.log.join(","));
+  check(auto.word === "I" && auto.real.length >= 1 && auto.real[0].peak >= 0.05 && auto.tts === 0, "auto read starts a real buffer without system TTS: " + JSON.stringify(auto.real[0]) + " tts=" + auto.tts);
   check(auto.on && auto.text.includes("听示范"), "听示范 shows it is speaking");
   check(auto.sayH >= 44 && auto.sayW >= 44 && auto.topH >= 44 && auto.topW >= 44, "speaker targets are at least 44px: " + auto.sayH + "x" + auto.sayW + " / " + auto.topH + "x" + auto.topW);
   const again = await page.evaluate(() => {
-    window.__speakLog.length = 0;
+    window.__audioStarts.length = 0;
+    window.__audioStops = 0;
     const say = document.querySelector("#sBody .say");
     say.click();
     say.click();
-    return window.__speakLog.slice();
+    return { real: window.__real(), stops: window.__audioStops, on: say.classList.contains("speaking") };
   });
-  check(again.filter((x) => x === "speak:I:1").length >= 2 && again.includes("cancel") && again.includes("speak: :0"), "second tap still speaks after cancel: " + again.join(","));
-  await page.click("#reveal");
-  await page.waitForSelector(".ans .ex button");
+  check(again.real.length >= 2 && again.stops >= 1 && again.on, "second tap stops the previous buffer and starts another: " + JSON.stringify(again));
   const ex = await page.evaluate(() => {
+    document.getElementById("reveal").click();
     const b = document.querySelector(".ans .ex button");
     const r = b.getBoundingClientRect();
-    window.__speakLog.length = 0;
+    window.__audioStarts.length = 0;
     b.click();
-    return { h: Math.round(r.height), w: Math.round(r.width), log: window.__speakLog.slice(), on: b.classList.contains("speaking") };
+    const real = window.__real();
+    return { h: Math.round(r.height), w: Math.round(r.width), on: b.classList.contains("speaking"), dur: real[0] && real[0].duration, n: real.length, text: b.parentElement.textContent };
   });
-  check(ex.h >= 44 && ex.w >= 44 && ex.on && ex.log.some((x) => x.startsWith("speak:I am")), "example speaker is tappable and speaks the sentence: " + ex.h + "x" + ex.w + " " + ex.log.join(","));
+  check(ex.h >= 44 && ex.w >= 44 && ex.on && ex.n >= 1 && ex.dur > 1 && ex.text.includes("I am"), "example speaker plays the sentence buffer: " + JSON.stringify(ex));
   const failed = await page.evaluate(() => {
-    speechSynthesis.speak = function () { throw new Error("blocked"); };
-    document.querySelector("#sBody .say").click();
-    return document.getElementById("toast").textContent;
+    const wrapped = window.__audioStartWrapped;
+    AudioBufferSourceNode.prototype.start = function () { throw new Error("blocked"); };
+    const say = document.querySelector("#sBody .say");
+    say.click();
+    const out = { toast: document.getElementById("toast").textContent, on: say.classList.contains("speaking") };
+    AudioBufferSourceNode.prototype.start = wrapped;
+    return out;
   });
-  check(failed.includes("朗读没有开始"), "a failed speak is not silent: " + failed);
+  check(failed.toast.includes("朗读没有开始") && !failed.on, "a failed speak is visible and not left looking successful: " + failed.toast + " on=" + failed.on);
   const nBefore = JSON.parse(await page.evaluate(() => localStorage.getItem("danci.v1"))).prog["jh:i"].n;
   const mic = await page.evaluate(async () => {
     window.__tracks = [];
@@ -738,15 +770,13 @@ async function backupText(over, sync) {
     document.getElementById("recGo").click();
     await new Promise((r) => setTimeout(r, 30));
     const recording = document.getElementById("recMsg").textContent;
-    window.__speakLog = [];
-    speechSynthesis.speak = function (u) { window.__speakLog.push("speak:" + String(u.text)); if (u.onstart) u.onstart(); };
-    speechSynthesis.cancel = function () { window.__speakLog.push("cancel"); };
+    window.__audioStarts.length = 0;
     document.querySelector("#sBody .say").click();
     await new Promise((r) => setTimeout(r, 30));
     const after = {
       recording,
       stopped: window.__tracks[0] && window.__tracks[0].stopped,
-      said: window.__speakLog.filter((x) => x.startsWith("speak:I")).length,
+      said: window.__real().length,
       msg: document.getElementById("recMsg").textContent
     };
     document.getElementById("recMine").click();
@@ -759,18 +789,69 @@ async function backupText(over, sync) {
   check(mic.played.startsWith("blob:") && mic.playMsg.includes("正在播放刚才的录音") && mic.playMsg.includes("不上传"), "听我的 plays the local clip only: " + mic.playMsg);
   const nAfter = JSON.parse(await page.evaluate(() => localStorage.getItem("danci.v1"))).prog["jh:i"].n;
   check(nAfter === nBefore, "listening does not change the review count");
-  await page.evaluate(() => { document.getElementById("sQuit").click(); });
+  const dict = await page.evaluate(() => {
+    document.getElementById("sQuit").click();
+    const sel = document.getElementById("prSrc");
+    sel.value = "p:learned";
+    sel.dispatchEvent(new Event("change"));
+    window.__audioStarts.length = 0;
+    document.getElementById("goDict").click();
+    const auto = window.__real();
+    window.__audioStarts.length = 0;
+    const slowBtn = document.getElementById("dictSlow");
+    slowBtn.click();
+    const slow = window.__real();
+    return {
+      auto: auto[0] && auto[0].duration,
+      slow: slow[0] && slow[0].duration,
+      on: slowBtn.classList.contains("speaking"),
+      n: JSON.parse(localStorage.getItem("danci.v1")).prog["jh:i"].n
+    };
+  });
+  check(dict.auto >= 0.4 && dict.slow > dict.auto * 1.2 && dict.on && dict.n === nBefore, "dictation plays locally and slow is longer: " + JSON.stringify(dict));
+  await page.evaluate(() => document.getElementById("sQuit").click());
   await page.waitForFunction(() => !document.getElementById("study").classList.contains("on"));
   await page.evaluate(() => document.querySelector('.tabs button[data-v="set"]').click());
   await page.waitForSelector("#testVoice");
   const voice = await page.evaluate(() => {
-    window.__speakLog.length = 0;
+    window.__audioStarts.length = 0;
     const b = document.getElementById("testVoice");
     const r = b.getBoundingClientRect();
     b.click();
-    return { h: Math.round(r.height), on: b.classList.contains("speaking"), log: window.__speakLog.slice() };
+    const preview = window.__real();
+    window.__audioStarts.length = 0;
+    document.querySelector('#setAccent button[data-v="en-US"]').click();
+    const us = window.__real()[0];
+    window.__audioStarts.length = 0;
+    document.querySelector('#setAccent button[data-v="en-GB"]').click();
+    const gb = window.__real()[0];
+    window.__audioStarts.length = 0;
+    document.querySelector('#setRate button[data-v="0.75"]').click();
+    const slower = window.__real()[0];
+    window.__audioStarts.length = 0;
+    document.querySelector('#setRate button[data-v="1"]').click();
+    const faster = window.__real()[0];
+    return {
+      h: Math.round(r.height),
+      on: b.classList.contains("speaking"),
+      preview: preview[0] && preview[0].duration,
+      us, gb, slower, faster,
+      tts: window.__ttsCalls
+    };
   });
-  check(voice.h >= 44 && voice.on && voice.log.some((x) => x.startsWith("speak:Practice makes perfect")), "settings preview speaks and shows it: " + voice.log.join(","));
+  check(voice.h >= 44 && voice.on && voice.preview > 1, "settings preview starts the practice sentence: " + voice.preview);
+  check(voice.us && voice.gb && (voice.us.hash !== voice.gb.hash || voice.us.samples !== voice.gb.samples), "British and American buffers differ: " + voice.gb.samples + " vs " + voice.us.samples);
+  check(voice.slower && voice.faster && voice.slower.duration > voice.faster.duration * 1.15, "slower rate makes a longer buffer: " + voice.slower.duration + " > " + voice.faster.duration);
+  check(voice.tts === 0, "system TTS was never called");
+  await page.setOfflineMode(true);
+  const offline = await page.evaluate(() => {
+    window.__audioStarts.length = 0;
+    const b = document.getElementById("testVoice");
+    b.click();
+    return { n: window.__real().length, on: b.classList.contains("speaking") };
+  });
+  check(offline.n >= 1 && offline.on, "offline replay still starts the local buffer");
+  await page.setOfflineMode(false);
   await shot(page, "speak_settings.png");
   check(page.__hits.length === 0, "speak walk sends nothing: " + page.__hits.join(","));
   check(page.__errors.length === 0, "no page errors in speak walk: " + page.__errors.join(" | "));
@@ -781,13 +862,22 @@ async function backupText(over, sync) {
     storage: [["danci.v1", JSON.stringify(db({
       name: "小红",
       prog: { "jh:i": { n: 1, iv: 1, ef: 2.5, due: 1, lap: 0, first: 1, last: 1, extra: "keep" } }
-    }))], ["danci.appv", "danci-v22"]]
+    }))], ["danci.appv", "danci-v23"]]
   });
   await page.evaluate(() => {
-    const log = [];
-    window.__speakLog = log;
-    speechSynthesis.speak = function (u) { log.push(String(u.text)); };
-    speechSynthesis.cancel = function () {};
+    window.__audioStarts = [];
+    const origStart = AudioBufferSourceNode.prototype.start;
+    AudioBufferSourceNode.prototype.start = function () {
+      const b = this.buffer;
+      let peak = 0;
+      if (b && b.length) {
+        const d = b.getChannelData(0);
+        for (let i = 0; i < d.length; i += 17) peak = Math.max(peak, Math.abs(d[i]));
+      }
+      window.__audioStarts.push({ duration: b ? b.duration : 0, samples: b ? b.length : 0, peak, rate: b ? b.sampleRate : 0 });
+      return origStart.apply(this, arguments);
+    };
+    window.__real = () => window.__audioStarts.filter((s) => s.duration >= 0.4 && s.peak >= 0.05 && s.samples > 1000);
     navigator.mediaDevices.getUserMedia = () => Promise.reject(new Error("denied"));
   });
   await page.waitForFunction(() => document.getElementById("dueN").textContent !== "0", { timeout: 8000 });
@@ -797,12 +887,98 @@ async function backupText(over, sync) {
   await page.click("#recGo");
   await page.waitForFunction(() => document.getElementById("recMsg").textContent.includes("没有使用麦克风"));
   const denied = await page.evaluate(() => {
-    window.__speakLog.length = 0;
-    document.querySelector("#sBody .say").click();
-    return { msg: document.getElementById("recMsg").textContent, said: window.__speakLog.slice(), n: JSON.parse(localStorage.getItem("danci.v1")).prog["jh:i"].n };
+    window.__audioStarts.length = 0;
+    const say = document.querySelector("#sBody .say");
+    say.click();
+    const word = document.querySelector("#sBody .word");
+    const box = word.getBoundingClientRect();
+    return {
+      msg: document.getElementById("recMsg").textContent,
+      said: window.__real().length,
+      on: say.classList.contains("speaking"),
+      n: JSON.parse(localStorage.getItem("danci.v1")).prog["jh:i"].n,
+      wordTop: box.top,
+      wordH: box.height
+    };
   });
-  check(denied.msg.includes("可以只听示范") && denied.said.includes("I") && denied.n === 1, "denied mic still speaks the demo: " + denied.said.join(","));
+  check(denied.msg.includes("可以只听示范") && denied.said >= 1 && denied.on && denied.n === 1, "denied mic still plays the demo buffer: " + JSON.stringify(denied));
+  check(denied.wordTop >= 0 && denied.wordTop < 500 && denied.wordH > 10, "375x667 still shows the word");
   await shot(page, "speak_demo.png");
+  await close(page);
+}
+{
+  const page = await openPage({
+    storage: [["danci.v1", JSON.stringify(db({
+      name: "小红",
+      custom: [{ id: "c1", w: "flibbertigibbet", cn: "自造词", ex: "A flibbertigibbet sat on the bench.", g: "我的生词" }],
+      prog: { c1: { n: 2, iv: 3, ef: 2.5, due: 1, lap: 0, first: 1, last: 1, extra: "keep" } }
+    }))], ["danci.appv", "danci-v23"]]
+  });
+  await page.evaluate(() => {
+    window.__audioStarts = [];
+    const origStart = AudioBufferSourceNode.prototype.start;
+    AudioBufferSourceNode.prototype.start = function () {
+      const b = this.buffer;
+      let peak = 0;
+      if (b && b.length) {
+        const d = b.getChannelData(0);
+        for (let i = 0; i < d.length; i += 17) peak = Math.max(peak, Math.abs(d[i]));
+      }
+      window.__audioStarts.push({ duration: b ? b.duration : 0, samples: b ? b.length : 0, peak });
+      return origStart.apply(this, arguments);
+    };
+    window.__real = () => window.__audioStarts.filter((s) => s.duration >= 0.4 && s.peak >= 0.05 && s.samples > 1000);
+  });
+  await page.waitForFunction(() => document.getElementById("dueN").textContent !== "0", { timeout: 8000 });
+  const custom = await page.evaluate(() => {
+    window.__audioStarts.length = 0;
+    document.getElementById("goReview").click();
+    const word = document.querySelector("#sBody .word").textContent;
+    const wordPlay = window.__real()[0];
+    document.getElementById("reveal").click();
+    window.__audioStarts.length = 0;
+    document.querySelector(".ans .ex button").click();
+    const exPlay = window.__real()[0];
+    const saved = JSON.parse(localStorage.getItem("danci.v1"));
+    return { word, wordDur: wordPlay && wordPlay.duration, exDur: exPlay && exPlay.duration, n: saved.prog.c1.n, extra: saved.prog.c1.extra, id: saved.custom[0].id };
+  });
+  check(custom.word === "flibbertigibbet" && custom.wordDur >= 0.4 && custom.exDur > custom.wordDur && custom.n === 2 && custom.extra === "keep" && custom.id === "c1", "a made-up word and its sentence both play, records unchanged: " + JSON.stringify(custom));
+  check(page.__hits.length === 0, "custom-word audio sends nothing: " + page.__hits.join(","));
+  await close(page);
+}
+{
+  const page = await openPage({
+    storage: [["danci.v1", JSON.stringify(db({
+      name: "小红",
+      custom: [{ id: "c1", w: "押金", cn: "没有英文", g: "我的生词" }],
+      prog: { c1: { n: 2, iv: 3, ef: 2.5, due: 1, lap: 0, first: 1, last: 1, extra: "keep" } }
+    }))], ["danci.appv", "danci-v23"]]
+  });
+  await page.evaluate(() => {
+    window.__audioStarts = [];
+    const origStart = AudioBufferSourceNode.prototype.start;
+    AudioBufferSourceNode.prototype.start = function () {
+      const b = this.buffer;
+      window.__audioStarts.push({ duration: b ? b.duration : 0, samples: b ? b.length : 0 });
+      return origStart.apply(this, arguments);
+    };
+  });
+  await page.waitForFunction(() => document.getElementById("dueN").textContent !== "0", { timeout: 8000 });
+  const quiet = await page.evaluate(() => {
+    window.__audioStarts.length = 0;
+    document.getElementById("goReview").click();
+    const say = document.querySelector("#sBody .say");
+    say.click();
+    const saved = JSON.parse(localStorage.getItem("danci.v1"));
+    return {
+      word: document.querySelector("#sBody .word").textContent,
+      toast: document.getElementById("toast").textContent,
+      on: say.classList.contains("speaking"),
+      starts: window.__audioStarts.length,
+      n: saved.prog.c1.n
+    };
+  });
+  check(quiet.word === "押金" && quiet.toast.includes("这个词没有示范音") && !quiet.on && quiet.starts === 0 && quiet.n === 2, "a word with no English letters says so instead of pretending to play: " + JSON.stringify(quiet));
   await close(page);
 }
 
