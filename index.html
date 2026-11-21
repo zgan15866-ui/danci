@@ -386,7 +386,7 @@
       <div class="chips" id="setRate"></div>
       <label class="f">出现单词时自动朗读</label>
       <div class="chips" id="setAuto"></div>
-      <label class="f">一次复习最多几个（积压多时分批来，不会累死）</label>
+      <label class="f">一次复习最多几个（一局备考最多 25、入门最多 15；设得更少就按你的来）</label>
       <div class="chips" id="setCap"></div>
       <label class="f">词汇量目标（首页按它显示还差多少）</label>
       <div class="chips" id="setGoal"></div>
@@ -544,7 +544,7 @@
         <li><b>✍️ 会用</b>：带这个标记的词，写作和口语要会拼、会用，学完建议去「看中文拼写」「听音写词」练一练；没有标记的词，阅读和听力认识就够。</li>
         <li><b>同义替换</b>：很多词下面有常见的替换说法，雅思阅读、听力常考“同义替换”，写作里也能避免重复。</li>
         <li><b>词汇量进度</b>：首页会显示已学词数和离目标还差多少。目标在「设置」里改（默认 7000）。这里只统计在本应用里学过的词，标为「太简单」的词不计入。</li>
-        <li><b>⚡ 开打</b>：首页一个按钮就行，先复习到期的词，再按当前程度的顺序学新词。周五 16:00 到周日 16:00 自动进入周末模式。备考档：每局新词约 35 个、复习上限 150，本周目标 70。入门档：平日每局约 8 个、周末约 20 个，复习上限 80，本周目标 40。复习积压多会分批，告诉你还剩多少。</li>
+        <li><b>⚡ 开打</b>：首页一个按钮就行，先复习到期的词，再学少量新词。备考一局最多复习 25 个、新词 5 个；入门一局最多复习 15 个、新词 3 个。设置里若把上限改得更少，就按更少的来，不会在周末再抬高。设得很多也不会一次塞满，剩下的可以点「再来一局」。首页写的数量和这一局实际数量一样。</li>
         <li><b>段位</b>按已学词数升级：新手 → 青铜 → 白银 → 黄金 → 铂金 → 钻石 → 大师 → 传奇。连续答对有 COMBO，打完一局有结算。「🖨️ 导出本周词表」可以打印或截图，平日拿纸背。</li>
         <li>新增的词库放在单独的文件里，第一次联网打开后就能离线用；已有的学习记录不会受影响。</li>
       </ul>
@@ -736,7 +736,17 @@ function wordsIn(g){
 // 孩子住校：只有周五 16:00 到周日 16:00 能用手机。自动判断，不设开关。
 function isWeekend(d){ d=d||new Date(); var w=d.getDay(), h=d.getHours(); return (w===5&&h>=16)||w===6||(w===0&&h<16); }
 function weekStartOf(n){ return n-((n+3)%7); } // 以周一为一周的开始（1970-01-01 是周四）
-function effCap(){ var c=db.set.cap||50; if(!isWeekend()) return c; var floor=isBeginner()?80:150; return c<floor?floor:c; }
+function roundReviewCap(){
+  var chosen=db.set.cap||50, soft=isBeginner()?15:25;
+  if(!(chosen>0)) chosen=soft;
+  return Math.min(chosen, soft);
+}
+function roundNewCap(){
+  var chosen=db.set.batch||10, soft=isBeginner()?3:5;
+  if(!(chosen>0)) chosen=soft;
+  return Math.min(chosen, soft);
+}
+function effCap(){ return roundReviewCap(); }
 function weekNewCount(){ var ws=weekStartOf(dayNum()), n=0; Object.keys(db.prog).forEach(function(id){ if(WORDS[id] && db.prog[id].first>=ws) n++; }); return n; }
 function weekActive(ws){ for(var i=0;i<7;i++){ var L=db.log[dayStr(ws+i)]; if(L && (L.nw+L.rv+L.sp)>0) return true; } return false; }
 function weekStreak(){ var ws=weekStartOf(dayNum()), n=weekActive(ws)?1:0; ws-=7; while(weekActive(ws)){ n++; ws-=7; } return n; }
@@ -965,7 +975,7 @@ function renderHome(){
   var due=dueList();
   $("dueN").textContent=due.length;
   var cap=effCap();
-  $("dueMore").textContent = due.length>cap ? "积压比较多，这次先复习最该复习的 "+cap+" 个，剩下的下次再来。" : (due.length? "隔几天没背也没关系，按忘记的顺序排好了。" : "暂时没有要复习的，去学几个新词吧。");
+  $("dueMore").textContent = due.length>cap ? "这局先复习 "+cap+" 个，还剩 "+(due.length-cap)+" 个，可以再来一局。" : (due.length? "这次复习 "+due.length+" 个。隔几天没背也没关系。" : "暂时没有要复习的，去学几个新词吧。");
   $("dueHint").textContent="";
   $("goReview").disabled=!due.length;
   sourceOptions($("newSrc"), false);
@@ -987,15 +997,9 @@ function newOrder(){
   return out;
 }
 function battlePlan(){
-  var we=isWeekend(), cap=effCap(), due=dueList(), rev=due.slice(0,cap), nw=[];
-  if(due.length<=cap){
-    var remain=trackWeekGoal()-weekNewCount();
-    var n;
-    if(isBeginner()) n = we ? (remain>0 ? Math.min(20, Math.max(remain,8)) : 8) : (remain>0 ? 8 : 5);
-    else n = we ? (remain>0 ? Math.min(35, Math.max(remain,10)) : 15) : (db.set.batch||10);
-    nw=newOrder().slice(0,n);
-  }
-  return {we:we, cap:cap, due:due.length, rev:rev, nw:nw, left:due.length-rev.length};
+  var cap=effCap(), due=dueList(), rev=due.slice(0,cap), nw=[];
+  if(due.length<=cap) nw=newOrder().slice(0, roundNewCap());
+  return {cap:cap, due:due.length, rev:rev, nw:nw, left:due.length-rev.length};
 }
 function renderVocab(){
   funInit();
@@ -1016,13 +1020,12 @@ function renderVocab(){
   if(easy>0) h+='<br>另有 '+easy+' 个标为「太简单」，没算在内。';
   $("vocabText").innerHTML=h;
   var pl=battlePlan(), btn=$("battleBtn"), sub;
-  $("battleT").textContent = isBeginner() ? (pl.we ? "入门 · 周末模式" : "入门") : (pl.we ? "本周 · 周末模式" : "对战");
+  $("battleT").textContent = isBeginner() ? "入门" : "开打";
   if(!pl.rev.length && !pl.nw.length){ btn.disabled=true; sub="词库都学完了 🎉"; }
   else {
     btn.disabled=false;
-    sub="复习 "+pl.rev.length+" · 新词 "+pl.nw.length;
+    sub=(pl.rev.length?"复习 "+pl.rev.length:"")+(pl.rev.length&&pl.nw.length?" · ":"")+(pl.nw.length?"新词 "+pl.nw.length:"");
     if(pl.left>0) sub+="<br>复习积压 "+pl.due+" 个，这局先清 "+pl.rev.length+" 个，打完还剩 "+pl.left+" 个，再来一局";
-    else if(pl.due===0 && pl.we) sub+="<br>周末一次打一局，累了随时点「退出」";
   }
   $("battleSub").innerHTML=sub;
 }
@@ -1068,7 +1071,9 @@ $("goDict").onclick=function(){
 var S=null;
 function startSession(kind,mode,ids,newSet){
   if(askName()||askWho()) return;
-  S={kind:kind,mode:mode,queue:ids.slice(),total:ids.length,done:0,seen:{},again:{},right:0,wrong:0,wrongList:[],step:"front",combo:0,maxCombo:0,xp:0,newSet:newSet||{},nNew:0,nRev:0};
+  var planRev=0, planNew=0;
+  ids.forEach(function(id){ if(newSet && newSet[id]) planNew++; else planRev++; });
+  S={kind:kind,mode:mode,queue:ids.slice(),total:ids.length,done:0,seen:{},again:{},right:0,wrong:0,wrongList:[],step:"front",combo:0,maxCombo:0,xp:0,newSet:newSet||{},nNew:0,nRev:0,planRev:planRev,planNew:planNew,planTotal:ids.length,spellRedo:{}};
   $("comboFx").className=""; $("sBody").onclick=null; funInit();
   $("study").classList.add("on");
   document.body.style.overflow="hidden";
@@ -1090,13 +1095,25 @@ $("sSay2").onclick=function(){
   speakMark(this);
   speak(WORDS[S.cur].w,false,true);
 };
+function paintProgress(){
+  if(!S) return;
+  var left=S.queue.length, again=false;
+  Object.keys(S.again||{}).forEach(function(id){ if(S.again[id]) again=true; });
+  var plan="";
+  if(S.kind==="battle") plan="这局计划：复习 "+S.planRev+" + 新词 "+S.planNew;
+  else if(S.kind==="new") plan="这局计划：新词 "+S.planNew;
+  else if(S.kind==="review") plan="这局计划：复习 "+S.planRev;
+  var line="已完成 "+S.done+"，还剩 "+left+(again?"（含再看的）":"");
+  $("sCount").textContent=plan ? plan+" · "+line : line;
+  var denom=S.planTotal||1;
+  $("sProg").style.width=Math.max(0, Math.min(100, S.done/denom*100))+"%";
+}
 function showCard(){
   micClear();
   if(!S.queue.length){ showDone(false); return; }
   if(S.mode==="quiz"){ $("sCount").textContent="测验 "+(S.done+1)+" / "+(S.done+S.queue.length); $("sProg").style.width=(S.done/(S.done+S.queue.length)*100)+"%"; renderQuiz(); return; }
   var id=S.queue[0], w=WORDS[id]; S.cur=id; S.step="front";
-  $("sCount").textContent="第 "+(S.done+1)+" 个，共 "+(S.done+S.queue.length)+" 个";
-  $("sProg").style.width=(S.done/(S.done+S.queue.length)*100)+"%";
+  paintProgress();
   if(S.mode==="card") renderFront(w);
   else renderSpell(w);
 }
@@ -1309,9 +1326,10 @@ function focusAfterSpeak(el){
 }
 function renderSpell(w){
   var dict=S.mode==="dict";
+  var note=S.noLedger?'<p class="sub" style="text-align:center">这几题不改变复习计划。</p>':'';
   $("sBody").innerHTML = (dict
-    ? '<div class="dict-play"><button class="btn say-lg" id="dictPlay">🔊 播放</button><div style="margin-top:12px"><button class="ghost" id="dictSlow">🐢 慢速</button></div><p class="sub" style="text-align:center;margin-top:14px">听发音，写出这个词。没声音就再点「播放」。</p></div>'
-    : '<div class="ans" style="margin-top:30px;text-align:center">'+tagFor(w)+'<div class="cn">'+esc(w.cn)+'</div>'+(w.ipa?'<div class="sub" style="margin:6px 0 0">/'+esc(w.ipa)+'/</div>':'')+'</div><p class="sub" style="text-align:center;margin-top:14px">写出英文（首字母：'+esc(w.w.charAt(0))+'）</p>')+
+    ? '<div class="dict-play"><button class="btn say-lg" id="dictPlay">🔊 播放</button><div style="margin-top:12px"><button class="ghost" id="dictSlow">🐢 慢速</button></div><p class="sub" style="text-align:center;margin-top:14px">听发音，写出这个词。没声音就再点「播放」。</p>'+note+'</div>'
+    : note+'<div class="ans" style="margin-top:30px;text-align:center">'+tagFor(w)+'<div class="cn">'+esc(w.cn)+'</div>'+(w.ipa?'<div class="sub" style="margin:6px 0 0">/'+esc(w.ipa)+'/</div>':'')+'</div><p class="sub" style="text-align:center;margin-top:14px">写出英文（首字母：'+esc(w.w.charAt(0))+'）</p>')+
     '<div class="spin"><input id="spIn" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="done" placeholder="在这里输入"></div><div class="res" id="spRes"></div>';
   $("sFoot").innerHTML='<div class="row"><button class="ghost" id="spSkip" style="flex:1">不会</button><button class="btn" id="spOk" style="flex:2">确定</button></div>';
   var inp=$("spIn");
@@ -1330,26 +1348,43 @@ function renderSpell(w){
 function checkSpell(w,val){
   if(S.step==="checked"){ next(); return; }
   var ok = norm(val)===norm(w.w);
+  var redo=!!(S.spellRedo && S.spellRedo[w.id]);
+  var quiet=!!S.noLedger || redo;
   S.step="checked";
-  funAnswer(ok, !ok, ok?8:0);
-  syncTouch(); var L=logDay(); L.sp++; if(ok) L.spok++;
-  var p=db.prog[w.id];
-  if(ok){ S.right++; }
-  else {
-    S.wrong++; S.wrongList.push(w.id);
-    if(!p){ p=db.prog[w.id]={n:0,iv:0,ef:2.5,due:dayNum(),lap:0,first:dayNum()}; }
-    p.sw=(p.sw||0)+1; if(!p.skip){ p.due=Math.min(p.due,dayNum()); } p.last=dayNum();
-  }
-  persist();
+  if(!quiet){
+    funAnswer(ok, !ok, ok?8:0);
+    syncTouch(); var L=logDay(); L.sp++; if(ok) L.spok++;
+    var p=db.prog[w.id];
+    if(ok){ S.right++; }
+    else {
+      S.wrong++; S.wrongList.push(w.id);
+      if(!p){ p=db.prog[w.id]={n:0,iv:0,ef:2.5,due:dayNum(),lap:0,first:dayNum()}; }
+      p.sw=(p.sw||0)+1; if(!p.skip){ p.due=Math.min(p.due,dayNum()); } p.last=dayNum();
+    }
+    persist();
+  } else if(!redo){ if(ok) S.right++; else S.wrong++; }
   $("spRes").innerHTML = (ok ? '<div class="ok">✓ 正确</div>' : '<div class="ng">✗ '+(val?'写成了 '+esc(val):'没关系，记一下')+'</div>')+
     '<div class="right">'+esc(w.w)+'</div>'+(w.ipa?'<div class="sub" style="margin:0">/'+esc(w.ipa)+'/</div>':'')+'<div>'+esc(w.cn)+'</div>';
   $("spIn").disabled=true;
   speak(w.w,false,true);
   $("sFoot").innerHTML='<button class="btn full" id="spNext" style="padding:15px">下一个</button>';
   $("spNext").onclick=next;
-  function next(){ S.queue.shift(); S.done++; showCard(); }
+  function next(){
+    S.queue.shift();
+    if(!ok && !redo){ S.spellRedo[w.id]=1; S.queue.push(w.id); }
+    else S.done++;
+    showCard();
+  }
+}
+function showPracticeDone(){
+  $("sCount").textContent="练完了";
+  $("sProg").style.width="100%";
+  $("sBody").innerHTML='<div class="done"><h2>拼了几个会用的</h2><p class="sub">对了 '+S.right+'，错了 '+S.wrong+'。<br>这几题不改变复习计划。</p></div>';
+  $("sFoot").innerHTML='<button type="button" class="btn full" id="sEnd" style="padding:15px">返回</button>';
+  $("sEnd").onclick=endSession;
 }
 function showDone(early){
+  if(S.noLedger){ showPracticeDone(); return; }
   if(S.mode!=="quiz"){ showSettle(early); return; }
   if(S.mode==="quiz") finishQuiz();
   var total=S.right+S.wrong;
@@ -1386,9 +1421,11 @@ function showSettle(early){
     (up?'<div class="rankup" style="color:'+up[2]+'">⬆ 段位提升<div style="font-size:26px;margin-top:2px">'+up[0]+'</div></div>':'')+
     (S.wrongList.length? '<div class="card" style="text-align:left;margin-top:20px"><h2>这次没记住的</h2><div class="list">'+uniq(S.wrongList).map(itemHtml).join("")+'</div></div>' : '')+'</div>';
   var quiz = roundWords().length ? '<button class="btn full" id="sQuiz" style="margin-bottom:10px;padding:15px">测一测</button>' : '';
-  $("sFoot").innerHTML= quiz + (again ? '<div class="row"><button class="ghost" id="sEnd" style="flex:1;padding:15px">返回</button><button class="btn" id="sAgain" style="flex:2;padding:15px">⚡ 再来一局</button></div>' : '<button class="btn full" id="sEnd" style="padding:15px">返回</button>');
+  var spell = roundProductive().length ? '<button class="ghost full" id="sSpell" style="margin-bottom:10px;padding:15px">拼几个会用的（不改复习计划）</button>' : '';
+  $("sFoot").innerHTML= quiz + spell + (again ? '<div class="row"><button class="ghost" id="sEnd" style="flex:1;padding:15px">返回</button><button class="btn" id="sAgain" style="flex:2;padding:15px">⚡ 再来一局</button></div>' : '<button class="btn full" id="sEnd" style="padding:15px">返回</button>');
   $("sEnd").onclick=endSession;
   if(quiz) $("sQuiz").onclick=openDrill;
+  if(spell) $("sSpell").onclick=openSettleSpell;
   if(again) $("sAgain").onclick=function(){ endSessionQuiet(); startBattle(); };
   $("sBody").onclick=function(e){ var bx=$("settleBox"); if(bx && !e.target.closest("button,.it")) bx.classList.add("skipfx"); };
 }
@@ -1398,6 +1435,34 @@ function roundWords(){
   if(!S) return ids;
   Object.keys(S.seen||{}).forEach(function(id){ if(WORDS[id] && !seen[id]){ seen[id]=1; ids.push(id); } });
   return ids;
+}
+function drillSource(){
+  var ids=[], seen={};
+  if(!S) return ids;
+  (S.wrongList||[]).forEach(function(id){ if(WORDS[id] && !seen[id]){ seen[id]=1; ids.push(id); } });
+  roundWords().forEach(function(id){ if(!seen[id]){ seen[id]=1; ids.push(id); } });
+  return ids;
+}
+function roundProductive(){
+  var ids=[], seen={};
+  if(!S) return ids;
+  function add(id){
+    var w=WORDS[id];
+    if(!w || seen[id] || w.use!=="productive" || !w.w) return;
+    seen[id]=1; ids.push(id);
+  }
+  (S.wrongList||[]).forEach(add);
+  roundWords().forEach(add);
+  return ids.slice(0,3);
+}
+function openSettleSpell(){
+  var ids=roundProductive();
+  if(!ids.length){ toast("这轮没有要拼的会用词"); return; }
+  micClear(); speakHalt();
+  S.kind="practice"; S.mode="spell"; S.noLedger=true;
+  S.queue=ids.slice(); S.done=0; S.right=0; S.wrong=0; S.wrongList=[];
+  S.planRev=0; S.planNew=0; S.planTotal=ids.length; S.spellRedo={}; S.again={};
+  showCard();
 }
 function normAns(s){
   return String(s||"").toLowerCase().replace(/[’']/g,"'").replace(/[^a-z' ]+/g," ").replace(/\s+/g," ").trim();
@@ -1422,18 +1487,21 @@ function makeDrills(ids){
     });
     function h(s){ var n=0; for(var i=0;i<s.length;i++) n=(n+s.charCodeAt(i))%97; return n; }
     opts.sort(function(a,b){ return h(a+"|"+w.w)-h(b+"|"+w.w); });
-    qs.push({prompt:w.cn, answer:w.w, opts:opts});
+    qs.push({id:id, prompt:w.cn, answer:w.w, opts:opts});
   });
   return qs;
 }
 var D=null;
+function startDrill(ids){
+  var qs=makeDrills(ids);
+  if(!qs.length){ toast("没有要再练的词"); return; }
+  D={qs:qs, i:0, right:0, wrong:0, outcome:{}};
+  renderDrill();
+}
 function openDrill(){
   micClear();
   $("comboFx").textContent=""; $("comboFx").className="";
-  var qs=makeDrills(roundWords());
-  if(!qs.length){ toast("这轮没有可测的词"); return; }
-  D={qs:qs, i:0, right:0, wrong:0};
-  renderDrill();
+  startDrill(drillSource());
 }
 function renderDrill(){
   var q=D.qs[D.i];
@@ -1442,7 +1510,7 @@ function renderDrill(){
   $("sBody").innerHTML='<p class="sub">选英文单词</p><p class="sub">词义</p><div class="qq">'+esc(q.prompt)+'</div><div id="drillOpts">'+q.opts.map(function(w,i){ return '<button type="button" class="qopt" data-opt="'+i+'">'+esc(w)+'</button>'; }).join("")+'</div><div class="res" id="drillRes"></div>';
   $("sFoot").innerHTML='<div class="row"><button type="button" class="ghost" id="drillQuit" style="flex:1">退出</button><button type="button" class="ghost" id="drillSkip" style="flex:1">跳过</button><button type="button" class="btn" id="drillOk" style="flex:2" disabled>检查</button></div>';
   $("drillQuit").onclick=endSession;
-  $("drillSkip").onclick=function(){ D.i++; if(D.i>=D.qs.length) drillResult(); else renderDrill(); };
+  $("drillSkip").onclick=function(){ if(D.locked) return; drillGrade(false); drillAfter(false); };
   $("drillOk").onclick=drillCheck;
   $("drillOpts").onclick=function(e){
     var b=e.target.closest("[data-opt]"); if(!b || D.locked) return;
@@ -1452,25 +1520,48 @@ function renderDrill(){
     $("drillRes").textContent="";
   };
 }
+function drillGrade(ok){
+  var q=D.qs[D.i];
+  var key=q.id||q.answer;
+  if(ok) D.outcome[key]="ok";
+  else if(D.outcome[key]!=="ok") D.outcome[key]="bad";
+  if(!ok && !q.redo) D.qs.push({id:q.id, prompt:q.prompt, answer:q.answer, opts:q.opts.slice(), redo:1});
+}
+function drillAfter(ok){
+  D.locked=false; D.i++;
+  if(D.i>=D.qs.length) drillResult(); else renderDrill();
+}
 function drillCheck(){
   var q=D.qs[D.i];
   if(D.locked) return;
   if(D.pick==null){ $("drillRes").innerHTML='<div class="ng">先选一个</div>'; return; }
   var chosen=q.opts[D.pick], ok=normAns(chosen)===normAns(q.answer);
   D.locked=true;
+  drillGrade(ok);
   if(ok) D.right++; else D.wrong++;
   [].forEach.call($("drillOpts").children, function(x){ x.disabled=true; });
   $("drillRes").innerHTML=(ok?'<div class="ok">正确</div>':'<div class="ng">不对</div>')+'<div class="right">'+esc(q.answer)+'</div>';
   var last=D.i+1>=D.qs.length;
   $("sFoot").innerHTML='<div class="row"><button type="button" class="ghost" id="drillQuit" style="flex:1">退出</button><button type="button" class="btn" id="drillNext" style="flex:2">'+(last?"看结果":"继续")+'</button></div>';
   $("drillQuit").onclick=endSession;
-  $("drillNext").onclick=function(){ D.locked=false; D.i++; if(D.i>=D.qs.length) drillResult(); else renderDrill(); };
+  $("drillNext").onclick=function(){ drillAfter(ok); };
+}
+function drillMissIds(){
+  var ids=[];
+  Object.keys(D.outcome||{}).forEach(function(id){ if(D.outcome[id]==="bad" && WORDS[id]) ids.push(id); });
+  return ids;
 }
 function drillResult(){
+  var bad=drillMissIds();
+  var list=bad.map(function(id){ var w=WORDS[id]; return '<div class="it"><span class="w">'+esc(w.w)+'</span><span class="c">'+esc(w.cn)+'</span></div>'; }).join("");
   $("sCount").textContent="测完了";
   $("sProg").style.width="100%";
-  $("sBody").innerHTML='<div class="done"><h2>测一测</h2><p class="sub">对了 '+D.right+' 题，错了 '+D.wrong+' 题。<br>这只看本轮刚学的词，不改变复习计划。</p></div>';
-  $("sFoot").innerHTML='<button type="button" class="btn full" id="sEnd" style="padding:15px">返回</button>';
+  $("sBody").innerHTML='<div class="done"><h2>测一测</h2><p class="sub">对了 '+D.right+' 题，错了 '+D.wrong+' 题。<br>这只看本轮刚学的词，不改变复习计划。</p>'+(list?'<div class="card" style="text-align:left;margin-top:16px"><h2>还没选对的</h2><div class="list">'+list+'</div></div>':'')+'</div>';
+  var again=bad.length?'<button type="button" class="btn full" id="drillAgain" style="margin-bottom:10px;padding:15px">再练这些</button>':'';
+  var hard=(S && S.wrongList && S.wrongList.length)?'<button type="button" class="ghost full" id="drillHard" style="margin-bottom:10px;padding:15px">再练没记住的</button>':'';
+  $("sFoot").innerHTML=again+hard+'<button type="button" class="btn full" id="sEnd" style="padding:15px">返回</button>';
+  if(again) $("drillAgain").onclick=function(){ startDrill(bad); };
+  if(hard) $("drillHard").onclick=function(){ startDrill(uniq(S.wrongList)); };
   $("sEnd").onclick=endSession;
 }
 function uniq(a){ var s={}; return a.filter(function(x){ if(s[x]) return false; s[x]=1; return true; }); }
@@ -1951,7 +2042,7 @@ function chipSet(el,opts,cur,cb){
 }
 function renderTrack(){
   var cur=isBeginner()?"beginner":"exam";
-  var opts=[["exam","备考（雅思）","为雅思考试准备：周末多学，词库按话题核心再到学术词。"],["beginner","入门（初中基础）","从最常用生活词开始，节奏更缓，适合打基础。"]];
+  var opts=[["exam","备考（雅思）","为雅思考试准备：词库按话题核心再到学术词。一局最多复习 25 个。"],["beginner","入门（初中基础）","从最常用生活词开始，节奏更缓。一局最多复习 15 个。"]];
   $("setTrack").innerHTML=opts.map(function(o){ return '<button type="button" data-v="'+o[0]+'" class="'+(cur===o[0]?"on":"")+'"><b>'+o[1]+'</b><span>'+o[2]+'</span></button>'; }).join("");
 }
 if(!$("setTrack")._ok){ $("setTrack")._ok=1; $("setTrack").addEventListener("click",function(e){

@@ -508,7 +508,7 @@ async function backupText(over, sync) {
   }));
   check(front.word === "I" && front.lab === "单词", "first card shows the word, not a stray bar: " + front.word);
   check(front.reveal === "看答案" && front.hint.includes("看答案") && !front.next, "before the answer, the way forward is 看答案");
-  check(front.quit.includes("退出") && /第\s*1\s*个/.test(front.count), "quit is 退出 and progress is a count, not a button: " + front.quit + " / " + front.count);
+  check(front.quit.includes("退出") && /已完成\s*0/.test(front.count) && /还剩\s*2/.test(front.count) && /复习\s*2/.test(front.count), "quit is 退出 and progress says done and left: " + front.quit + " / " + front.count);
   check((await page.$eval("#recGo", (el) => el.textContent)) === "开始录音", "record control is present before answering");
   await page.click("#recGo");
   await page.waitForFunction(() => /麦克风|不能录音|只听示范|不打分/.test(document.getElementById("recMsg").textContent), { timeout: 8000 });
@@ -623,6 +623,15 @@ async function backupText(over, sync) {
   const right = await page.$eval("#drillRes", (el) => el.textContent);
   check(right.includes("正确"), "choosing the right word is accepted: " + right);
   await page.click("#drillNext");
+  if (await page.$("#drillOpts")) {
+    await page.evaluate(() => {
+      var b = Array.from(document.querySelectorAll("#drillOpts button")).filter((x) => x.textContent.trim().toLowerCase() === "i")[0];
+      if (!b) throw new Error("missing redo");
+      b.click();
+    });
+    await page.click("#drillOk");
+    await page.click("#drillNext");
+  }
   await page.waitForSelector("#sEnd");
   const summary = await page.$eval("#sBody", (el) => el.innerText);
   check(summary.includes("对了") && summary.includes("不改变复习计划"), "quiz result is local and says the plan is unchanged");
@@ -1018,6 +1027,176 @@ async function backupText(over, sync) {
     };
   });
   check(quiet.word === "押金" && quiet.toast.includes("这个词没有示范音") && !quiet.on && quiet.starts === 0 && quiet.n === 2, "a word with no English letters says so instead of pretending to play: " + JSON.stringify(quiet));
+  await close(page);
+}
+
+function dueProg(n) {
+  const prog = {};
+  for (let i = 0; i < n; i++) prog["b" + i] = { n: 2, iv: 1, ef: 2.5, due: 1, lap: 0, first: 1, last: 1, extra: "keep" };
+  return prog;
+}
+{
+  const page = await openPage({
+    storage: [["danci.v1", JSON.stringify(db({ name: "小红", prog: dueProg(40), set: { cap: 50, batch: 10, track: "exam", accent: "en-GB", rate: 0.9, auto: false, goal: 7000, weekGoal: 70 } }))], ["danci.appv", "danci-v24"]]
+  });
+  await page.setViewport({ width: 375, height: 812, deviceScaleFactor: 2 });
+  await page.waitForFunction(() => /复习\s+25/.test(document.getElementById("battleSub").textContent), { timeout: 20000 });
+  const home = await page.evaluate(() => ({
+    sub: document.getElementById("battleSub").textContent,
+    due: document.getElementById("dueMore").textContent
+  }));
+  check(home.sub.includes("复习 25") && !home.sub.includes("新词") && home.due.includes("这局先复习 25") && home.due.includes("再来一局"), "home preview matches a 25-word round: " + home.sub + " / " + home.due);
+  await shot(page, "home_round.png");
+  await page.evaluate(() => document.getElementById("goReview").click());
+  await page.waitForSelector("#reveal");
+  const opened = await page.$eval("#sCount", (el) => el.textContent);
+  check(/还剩\s*25/.test(opened) && /复习\s*25/.test(opened), "review opens the same 25: " + opened);
+  await page.setViewport({ width: 375, height: 667, deviceScaleFactor: 2 });
+  await shot(page, "study_progress.png");
+  await close(page);
+}
+{
+  const low = await openPage({
+    storage: [["danci.v1", JSON.stringify(db({ name: "小红", prog: dueProg(40), set: { cap: 20, batch: 10, track: "exam", accent: "en-GB", rate: 0.9, auto: false, goal: 7000, weekGoal: 70 } }))], ["danci.appv", "danci-v24"]]
+  });
+  await low.waitForFunction(() => /复习\s+20/.test(document.getElementById("battleSub").textContent), { timeout: 20000 });
+  check((await low.$eval("#battleSub", (el) => el.textContent)).includes("复习 20"), "a lower cap of 20 is kept");
+  await close(low);
+  const beg = await openPage({
+    storage: [["danci.v1", JSON.stringify(db({ name: "小红", prog: dueProg(40), set: { cap: 100, batch: 10, track: "beginner", accent: "en-GB", rate: 0.9, auto: false, goal: 7000, weekGoal: 70 } }))], ["danci.appv", "danci-v24"]]
+  });
+  await beg.waitForFunction(() => /复习\s+15/.test(document.getElementById("battleSub").textContent), { timeout: 20000 });
+  check((await beg.$eval("#battleSub", (el) => el.textContent)).includes("复习 15"), "beginner round is 15 even with a high cap");
+  await close(beg);
+  const fresh = await openPage({
+    storage: [["danci.v1", JSON.stringify(db({ name: "小红", prog: {}, set: { cap: 9999, batch: 10, track: "exam", accent: "en-GB", rate: 0.9, auto: false, goal: 7000, weekGoal: 70 } }))], ["danci.appv", "danci-v24"]]
+  });
+  await fresh.waitForFunction(() => /新词\s+5/.test(document.getElementById("battleSub").textContent), { timeout: 20000 });
+  check((await fresh.$eval("#battleSub", (el) => el.textContent)).includes("新词 5"), "with no reviews, exam adds 5 new words");
+  await close(fresh);
+}
+{
+  const page = await openPage({
+    storage: [["danci.v1", JSON.stringify(db({
+      name: "小红",
+      prog: {
+        b0: { n: 2, iv: 1, ef: 2.5, due: 1, lap: 0, first: 1, last: 1, extra: "keep" },
+        b1: { n: 2, iv: 1, ef: 2.5, due: 1, lap: 0, first: 1, last: 1, extra: "keep" }
+      },
+      set: { cap: 50, batch: 10, track: "exam", accent: "en-GB", rate: 0.9, auto: false, goal: 7000, weekGoal: 70 }
+    }))], ["danci.appv", "danci-v24"]]
+  });
+  await page.setViewport({ width: 375, height: 812, deviceScaleFactor: 2 });
+  await page.waitForFunction(() => document.getElementById("dueN").textContent !== "0", { timeout: 20000 });
+  await page.evaluate(() => document.getElementById("goReview").click());
+  await page.waitForSelector("#reveal");
+  await page.click("#reveal");
+  await page.click('button[data-q="2"]');
+  await page.click("#cardNext");
+  await page.waitForSelector("#reveal");
+  const width1 = await page.$eval("#sProg", (el) => el.style.width);
+  await page.waitForSelector("#reveal");
+  await page.click("#reveal");
+  await page.click('button[data-q="0"]');
+  await page.click("#cardNext");
+  const afterFail = await page.evaluate(() => ({
+    text: document.getElementById("sCount").textContent,
+    width: document.getElementById("sProg").style.width
+  }));
+  check(width1 === "50%" && afterFail.width === "50%" && afterFail.text.includes("含再看的"), "unfamiliar requeue does not rewind the bar: " + JSON.stringify(afterFail));
+  for (let i = 0; i < 6 && await page.$("#reveal"); i++) {
+    await page.click("#reveal");
+    await page.click('button[data-q="0"]');
+    await page.click("#cardNext");
+  }
+  await page.waitForSelector("#sQuiz");
+  const lap = await page.evaluate(() => JSON.parse(localStorage.getItem("danci.v1")).prog.b1.lap);
+  check(lap === 1, "unfamiliar is recorded once: lap " + lap);
+  await page.click("#sQuiz");
+  await page.waitForSelector(".qq");
+  const first = await page.$eval(".qq", (el) => el.textContent);
+  check(first.includes("污染"), "quiz starts with the missed word: " + first);
+  let sawRedo = false;
+  for (let i = 0; i < 4 && !(await page.$("#drillAgain")); i++) {
+    const q = await page.$eval(".qq", (el) => el.textContent);
+    if (i > 0 && q.includes("污染")) sawRedo = true;
+    await page.evaluate(() => {
+      const buttons = Array.from(document.querySelectorAll("#drillOpts button"));
+      const bad = buttons.filter((b) => !/pollution/i.test(b.textContent))[0] || buttons[0];
+      bad.click();
+    });
+    await page.click("#drillOk");
+    await page.click("#drillNext");
+  }
+  check(sawRedo, "a missed quiz item is asked once more");
+  await page.waitForSelector("#drillAgain");
+  const result = await page.$eval("#sBody", (el) => el.innerText);
+  const nAfter = await page.evaluate(() => JSON.parse(localStorage.getItem("danci.v1")).prog.b1.n);
+  check(result.includes("还没选对的") && result.includes("不改变复习计划") && nAfter === 0, "quiz redo does not change the review count: " + nAfter);
+  await page.setViewport({ width: 375, height: 667, deviceScaleFactor: 2 });
+  await shot(page, "quiz_retry.png");
+  await close(page);
+}
+{
+  const page = await openPage({
+    storage: [["danci.v1", JSON.stringify(db({
+      name: "小红",
+      prog: { b326: { n: 1, iv: 1, ef: 2.5, due: 1, lap: 0, first: 1, last: 1, extra: "keep" } },
+      set: { cap: 50, batch: 10, track: "exam", accent: "en-GB", rate: 0.9, auto: false, goal: 7000, weekGoal: 70 }
+    }))], ["danci.appv", "danci-v24"]]
+  });
+  await page.waitForFunction(() => document.getElementById("dueN").textContent !== "0", { timeout: 20000 });
+  await page.evaluate(() => document.getElementById("goReview").click());
+  await page.waitForFunction(() => document.querySelector("#sBody .word") && document.querySelector("#sBody .word").textContent === "advantage");
+  await page.click("#reveal");
+  await page.click('button[data-q="2"]');
+  await page.click("#cardNext");
+  await page.waitForSelector("#sSpell");
+  const spellLabel = await page.$eval("#sSpell", (el) => el.textContent);
+  const before = await page.evaluate(() => JSON.parse(localStorage.getItem("danci.v1")).prog.b326);
+  await page.click("#sSpell");
+  await page.waitForSelector("#spIn");
+  const note = await page.$eval("#sBody", (el) => el.innerText);
+  await page.type("#spIn", "zzz");
+  await page.click("#spOk");
+  await page.click("#spNext");
+  await page.waitForSelector("#spIn");
+  await page.type("#spIn", "zzz");
+  await page.click("#spOk");
+  await page.click("#spNext");
+  await page.waitForSelector("#sEnd");
+  const afterSpell = await page.evaluate(() => {
+    const p = JSON.parse(localStorage.getItem("danci.v1"));
+    return { sw: p.prog.b326.sw || 0, due: p.prog.b326.due, n: p.prog.b326.n, text: document.getElementById("sBody").innerText };
+  });
+  check(spellLabel.includes("不改复习计划") && note.includes("不改变复习计划"), "settlement spelling is labeled optional");
+  check(!afterSpell.sw && afterSpell.due === before.due && afterSpell.n === before.n && afterSpell.text.includes("不改变复习计划"), "settlement spelling does not write the ledger: " + JSON.stringify(afterSpell));
+  await close(page);
+}
+{
+  const page = await openPage({
+    storage: [["danci.v1", JSON.stringify(db({
+      name: "小红",
+      custom: [{ id: "c1", w: "deposit", cn: "押金", g: "我的生词" }],
+      set: { cap: 50, batch: 10, track: "exam", accent: "en-GB", rate: 0.9, auto: false, goal: 7000, weekGoal: 70, pr: "m:我的生词" }
+    }))], ["danci.appv", "danci-v24"]]
+  });
+  await page.waitForFunction(() => document.getElementById("goSpell"), { timeout: 20000 });
+  await page.evaluate(() => { document.getElementById("moreBox").open = true; });
+  await page.select("#prSrc", "m:我的生词");
+  await page.click("#goSpell");
+  await page.waitForSelector("#spIn");
+  await page.type("#spIn", "zzz");
+  await page.click("#spOk");
+  const mid = await page.evaluate(() => JSON.parse(localStorage.getItem("danci.v1")).prog.c1);
+  await page.click("#spNext");
+  await page.waitForSelector("#spIn");
+  const again = await page.$eval("#sBody", (el) => el.innerText);
+  await page.type("#spIn", "zzz");
+  await page.click("#spOk");
+  const after = await page.evaluate(() => JSON.parse(localStorage.getItem("danci.v1")).prog.c1);
+  check(mid.sw === 1 && after.sw === 1 && after.due === mid.due && after.n === mid.n, "dictation-style spelling redo does not record the miss twice: " + JSON.stringify({ mid, after, again: again.slice(0, 40) }));
+  check(page.__hits.length === 0, "round changes send nothing: " + page.__hits.join(","));
   await close(page);
 }
 
