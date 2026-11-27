@@ -1,0 +1,7422 @@
+{
+ "pack": "read",
+ "name": "学术阅读补缺",
+ "source": "Headwords from the New Academic Word List 1.2 (Browne, Culligan & Phillips), CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/). https://www.newgeneralservicelist.com/new-academic-word-list . Only headwords are used. Narrow laboratory terms, linguistics notation and mathematics jargon were left out. The headword list in this file is shared under CC BY-SA 4.0 as an adaptation of the NAWL. British spelling follows the teaching list where it gives a UK form. Words already in this app were not added again. Chinese glosses, example sentences and synonyms are original. IPA is machine-generated with eSpeak NG (en-gb) and lightly normalised.",
+ "words": [
+  {
+   "id": "read:repertoire",
+   "w": "repertoire",
+   "ipa": "ˈrepətwˌɑː",
+   "cn": "n. 全部节目；全部技能",
+   "ex": "The child's repertoire of learning strategies grew quickly.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "range",
+    "skills"
+   ]
+  },
+  {
+   "id": "read:distribution",
+   "w": "distribution",
+   "ipa": "ˌdɪstrɪbjˈuːʃən",
+   "cn": "n. 分布；分配",
+   "ex": "The distribution of income varied widely across regions.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "spread",
+    "allocation"
+   ]
+  },
+  {
+   "id": "read:cognitive",
+   "w": "cognitive",
+   "ipa": "ˈkɒɡnɪtˌɪv",
+   "cn": "adj. 认知的",
+   "ex": "Sleep supports cognitive skills in early childhood.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "mental"
+   ]
+  },
+  {
+   "id": "read:graph",
+   "w": "graph",
+   "ipa": "ˈɡraf",
+   "cn": "n. 图表",
+   "ex": "The graph shows a steady rise in temperature.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "chart",
+    "diagram"
+   ]
+  },
+  {
+   "id": "read:correlation",
+   "w": "correlation",
+   "ipa": "ˌkɒrɪlˈeɪʃən",
+   "cn": "n. 相关性",
+   "ex": "A strong correlation exists between sleep and memory.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "link",
+    "connection"
+   ]
+  },
+  {
+   "id": "read:linguistic",
+   "w": "linguistic",
+   "ipa": "lɪŋɡwˈɪstɪk",
+   "cn": "adj. 语言的",
+   "ex": "Teachers noted linguistic differences in the two classes.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:acid",
+   "w": "acid",
+   "ipa": "ˈasɪd",
+   "cn": "n. 酸",
+   "ex": "Rain containing acid damaged the forest soil.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:velocity",
+   "w": "velocity",
+   "ipa": "vəlˈɒsɪti",
+   "cn": "n. 速度",
+   "ex": "The velocity of the wind increased during the storm.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "speed"
+   ]
+  },
+  {
+   "id": "read:discourse",
+   "w": "discourse",
+   "ipa": "ˈdɪskɔːs",
+   "cn": "n. 话语；论述",
+   "ex": "Political discourse shapes public views on climate change.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "discussion",
+    "speech"
+   ]
+  },
+  {
+   "id": "read:stimulus",
+   "w": "stimulus",
+   "ipa": "ˈstɪmjʊləs",
+   "cn": "n. 刺激",
+   "ex": "A bright stimulus can attract a young child's attention.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "signal",
+    "trigger"
+   ]
+  },
+  {
+   "id": "read:fluid",
+   "w": "fluid",
+   "ipa": "ˈfluːɪd",
+   "cn": "n. 流体；流动的",
+   "ex": "Body fluid loss increased during the heat experiment.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "liquid"
+   ]
+  },
+  {
+   "id": "read:developmental",
+   "w": "developmental",
+   "ipa": "dɪvˈeləpmˈentəl",
+   "cn": "adj. 发展的",
+   "ex": "Doctors track developmental delays in the early school years.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:bound",
+   "w": "bound",
+   "ipa": "ˈbaʊnd",
+   "cn": "adj. 必定的；受约束的",
+   "ex": "These findings are bound to influence education policy.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "certain",
+    "obliged"
+   ]
+  },
+  {
+   "id": "read:transformation",
+   "w": "transformation",
+   "ipa": "transfɔːmˈeɪʃən",
+   "cn": "n. 转变；转化",
+   "ex": "Industrial transformation changed patterns of urban employment.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "change",
+    "conversion"
+   ]
+  },
+  {
+   "id": "read:spatial",
+   "w": "spatial",
+   "ipa": "ˈspeɪʃəl",
+   "cn": "adj. 空间的",
+   "ex": "Animals use spatial memory to locate food and shelter.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:translation",
+   "w": "translation",
+   "ipa": "translˈeɪʃən",
+   "cn": "n. 翻译；转化",
+   "ex": "Accurate translation made the research available to clinicians.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "rendering"
+   ]
+  },
+  {
+   "id": "read:simulation",
+   "w": "simulation",
+   "ipa": "ˌsɪmjʊlˈeɪʃən",
+   "cn": "n. 模拟",
+   "ex": "A computer simulation predicted the spread of the disease.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "model"
+   ]
+  },
+  {
+   "id": "read:marker",
+   "w": "marker",
+   "ipa": "ˈmɑːkə",
+   "cn": "n. 标志；标记",
+   "ex": "Language use can be a marker of social identity.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "sign",
+    "indicator"
+   ]
+  },
+  {
+   "id": "read:statistical",
+   "w": "statistical",
+   "ipa": "stətˈɪstɪkəl",
+   "cn": "adj. 统计的",
+   "ex": "A statistical analysis revealed a clear difference between groups.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:equilibrium",
+   "w": "equilibrium",
+   "ipa": "ˌiːkwɪlˈɪbriəm",
+   "cn": "n. 平衡",
+   "ex": "The market reached equilibrium after prices stopped changing.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "balance"
+   ]
+  },
+  {
+   "id": "read:intensity",
+   "w": "intensity",
+   "ipa": "ɪntˈensɪti",
+   "cn": "n. 强度",
+   "ex": "The intensity of the pain increased after exercise.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "strength"
+   ]
+  },
+  {
+   "id": "read:identification",
+   "w": "identification",
+   "ipa": "aɪdˈentɪfɪkˈeɪʃən",
+   "cn": "n. 识别；鉴定",
+   "ex": "Early identification of the problem improved treatment outcomes.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "recognition"
+   ]
+  },
+  {
+   "id": "read:partial",
+   "w": "partial",
+   "ipa": "ˈpɑːʃəl",
+   "cn": "adj. 部分的",
+   "ex": "The report gives only a partial account of the causes.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "incomplete",
+    "limited"
+   ]
+  },
+  {
+   "id": "read:correlate",
+   "w": "correlate",
+   "ipa": "ˈkɒrɪlˌeɪt",
+   "cn": "v. 相关",
+   "ex": "Test scores correlate with hours of focused study.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "match",
+    "link"
+   ]
+  },
+  {
+   "id": "read:mortality",
+   "w": "mortality",
+   "ipa": "mɔːtˈalɪti",
+   "cn": "n. 死亡率",
+   "ex": "Infant mortality fell after cleaner water became available.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:temporal",
+   "w": "temporal",
+   "ipa": "ˈtempərəl",
+   "cn": "adj. 时间的",
+   "ex": "Researchers mapped temporal changes in local farming patterns.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:behavioural",
+   "w": "behavioural",
+   "ipa": "bɪhˈeɪvjərəl",
+   "cn": "adj. 行为的",
+   "ex": "Teachers reported behavioural problems during the long closure.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:sensitivity",
+   "w": "sensitivity",
+   "ipa": "ˌsensɪtˈɪvɪti",
+   "cn": "n. 敏感性；灵敏度",
+   "ex": "The test showed high sensitivity to small chemical changes.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:similarity",
+   "w": "similarity",
+   "ipa": "ˌsɪmɪlˈarɪti",
+   "cn": "n. 相似性",
+   "ex": "The similarity between the two languages surprised the linguists.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "likeness",
+    "resemblance"
+   ]
+  },
+  {
+   "id": "read:optimal",
+   "w": "optimal",
+   "ipa": "ˈɒptɪməl",
+   "cn": "adj. 最佳的",
+   "ex": "Plants show optimal growth when water and light are balanced.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "best",
+    "ideal"
+   ]
+  },
+  {
+   "id": "read:colonial",
+   "w": "colonial",
+   "ipa": "kəlˈəʊnɪəl",
+   "cn": "adj. 殖民的",
+   "ex": "Historians studied colonial rule and land ownership.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:spectrum",
+   "w": "spectrum",
+   "ipa": "ˈspektrəm",
+   "cn": "n. 光谱；范围",
+   "ex": "The spectrum of opinion on the policy was very wide.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "range"
+   ]
+  },
+  {
+   "id": "read:dominant",
+   "w": "dominant",
+   "ipa": "ˈdɒmɪnənt",
+   "cn": "adj. 占主导的",
+   "ex": "A dominant culture can influence minority language use.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "main",
+    "leading"
+   ]
+  },
+  {
+   "id": "read:pathway",
+   "w": "pathway",
+   "ipa": "ˈpaθweɪ",
+   "cn": "n. 途径；通路",
+   "ex": "Education is a pathway to more stable employment.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "route",
+    "path"
+   ]
+  },
+  {
+   "id": "read:calculation",
+   "w": "calculation",
+   "ipa": "ˌkalkjʊlˈeɪʃən",
+   "cn": "n. 计算",
+   "ex": "The calculation of risk included age and medical history.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:subset",
+   "w": "subset",
+   "ipa": "ˈsʌbset",
+   "cn": "n. 子集",
+   "ex": "A subset of patients responded well to the treatment.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "subgroup",
+    "part"
+   ]
+  },
+  {
+   "id": "read:orientation",
+   "w": "orientation",
+   "ipa": "ˌɔːriəntˈeɪʃən",
+   "cn": "n. 方向；取向",
+   "ex": "The building's orientation affected how much sunlight entered.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "direction"
+   ]
+  },
+  {
+   "id": "read:proposition",
+   "w": "proposition",
+   "ipa": "ˌprɒpəzˈɪʃən",
+   "cn": "n. 命题；主张",
+   "ex": "The central proposition of the essay remains highly controversial.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "claim",
+    "proposal"
+   ]
+  },
+  {
+   "id": "read:prevalence",
+   "w": "prevalence",
+   "ipa": "ˈprevələns",
+   "cn": "n. 流行率；普遍程度",
+   "ex": "The prevalence of asthma rose in crowded urban areas.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "frequency"
+   ]
+  },
+  {
+   "id": "read:differential",
+   "w": "differential",
+   "ipa": "ˌdɪfərˈenʃəl",
+   "cn": "adj. 差别的",
+   "ex": "The study found differential pay between the two sectors.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "unequal"
+   ]
+  },
+  {
+   "id": "read:generalise",
+   "w": "generalise",
+   "ipa": "ˈdʒenərəlˌaɪz",
+   "cn": "v. 概括；推广",
+   "ex": "Researchers should not generalise from one small study.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:beam",
+   "w": "beam",
+   "ipa": "ˈbiːm",
+   "cn": "n. 光束；梁",
+   "ex": "A narrow beam of light entered the dark chamber.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "ray"
+   ]
+  },
+  {
+   "id": "read:pulse",
+   "w": "pulse",
+   "ipa": "ˈpʌls",
+   "cn": "n. 脉搏；脉冲",
+   "ex": "A rapid pulse can indicate stress or physical illness.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "beat"
+   ]
+  },
+  {
+   "id": "read:trait",
+   "w": "trait",
+   "ipa": "ˈtreɪt",
+   "cn": "n. 特征；特质",
+   "ex": "Curiosity is a trait linked with academic success.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "feature",
+    "characteristic"
+   ]
+  },
+  {
+   "id": "read:prediction",
+   "w": "prediction",
+   "ipa": "prɪdˈɪkʃən",
+   "cn": "n. 预测",
+   "ex": "The prediction about future rainfall proved largely correct.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "forecast"
+   ]
+  },
+  {
+   "id": "read:correspondence",
+   "w": "correspondence",
+   "ipa": "ˌkɒrɪspˈɒndəns",
+   "cn": "n. 对应；通信",
+   "ex": "There is a close correspondence between the two data sets.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "match",
+    "agreement"
+   ]
+  },
+  {
+   "id": "read:syllable",
+   "w": "syllable",
+   "ipa": "ˈsɪləbəl",
+   "cn": "n. 音节",
+   "ex": "Children often miss a syllable when reading aloud.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:infect",
+   "w": "infect",
+   "ipa": "ɪnfˈekt",
+   "cn": "v. 感染",
+   "ex": "The virus can infect cells in the human lung.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:magnetic",
+   "w": "magnetic",
+   "ipa": "maɡnˈetɪk",
+   "cn": "adj. 磁的",
+   "ex": "Strong magnetic fields can disturb sensitive instruments.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:configuration",
+   "w": "configuration",
+   "ipa": "kənfˌɪɡjərˈeɪʃən",
+   "cn": "n. 配置；结构",
+   "ex": "The configuration of the classroom affected group discussion.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "arrangement",
+    "layout"
+   ]
+  },
+  {
+   "id": "read:numerical",
+   "w": "numerical",
+   "ipa": "njuːmˈerɪkəl",
+   "cn": "adj. 数值的",
+   "ex": "The paper presents numerical data on income and age.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:namely",
+   "w": "namely",
+   "ipa": "ˈneɪmli",
+   "cn": "adv. 即；也就是",
+   "ex": "Three gases matter, namely oxygen, nitrogen, and carbon dioxide.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "specifically"
+   ]
+  },
+  {
+   "id": "read:transmission",
+   "w": "transmission",
+   "ipa": "transmˈɪʃən",
+   "cn": "n. 传播；传输",
+   "ex": "The transmission of the disease occurred through unclean water.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "spread",
+    "transfer"
+   ]
+  },
+  {
+   "id": "read:occurrence",
+   "w": "occurrence",
+   "ipa": "əkˈɜːrəns",
+   "cn": "n. 发生；出现",
+   "ex": "The occurrence of floods has increased in this valley.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "incidence"
+   ]
+  },
+  {
+   "id": "read:maternal",
+   "w": "maternal",
+   "ipa": "mətˈɜːnəl",
+   "cn": "adj. 母亲的；母体的",
+   "ex": "Poor maternal health can slow a baby's early development.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:axis",
+   "w": "axis",
+   "ipa": "ˈaksɪs",
+   "cn": "n. 轴",
+   "ex": "The horizontal axis shows time in the experiment.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:elite",
+   "w": "elite",
+   "ipa": "ɪlˈiːt",
+   "cn": "n. 精英",
+   "ex": "The urban elite controlled most of the land.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:approximation",
+   "w": "approximation",
+   "ipa": "əprˌɒksɪmˈeɪʃən",
+   "cn": "n. 近似",
+   "ex": "The figure is only an approximation of the true value.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "estimate"
+   ]
+  },
+  {
+   "id": "read:classification",
+   "w": "classification",
+   "ipa": "ˌklasɪfɪkˈeɪʃən",
+   "cn": "n. 分类",
+   "ex": "The classification of species depends on shared physical traits.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "grouping"
+   ]
+  },
+  {
+   "id": "read:threshold",
+   "w": "threshold",
+   "ipa": "ˈθreʃəʊld",
+   "cn": "n. 阈值；门槛",
+   "ex": "Pain increased once the threshold of tolerance was passed.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "limit"
+   ]
+  },
+  {
+   "id": "read:syndrome",
+   "w": "syndrome",
+   "ipa": "ˈsɪndrəʊm",
+   "cn": "n. 综合征",
+   "ex": "The syndrome includes fatigue, pain, and poor sleep.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "condition",
+    "disorder"
+   ]
+  },
+  {
+   "id": "read:comparative",
+   "w": "comparative",
+   "ipa": "kəmpˈarətˌɪv",
+   "cn": "adj. 比较的",
+   "ex": "A comparative study examined schools in three countries.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "relative"
+   ]
+  },
+  {
+   "id": "read:activate",
+   "w": "activate",
+   "ipa": "ˈaktɪvˌeɪt",
+   "cn": "v. 激活",
+   "ex": "Stress can activate hormones that raise heart rate.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "trigger",
+    "start"
+   ]
+  },
+  {
+   "id": "read:utterance",
+   "w": "utterance",
+   "ipa": "ˈʌtərəns",
+   "cn": "n. 话语；表述",
+   "ex": "Each utterance was recorded for later linguistic analysis.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "statement",
+    "remark"
+   ]
+  },
+  {
+   "id": "read:encode",
+   "w": "encode",
+   "ipa": "eŋkˈəʊd",
+   "cn": "v. 编码",
+   "ex": "The brain can encode new words during deep sleep.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "code"
+   ]
+  },
+  {
+   "id": "read:induction",
+   "w": "induction",
+   "ipa": "ɪndˈʌkʃən",
+   "cn": "n. 归纳；诱导",
+   "ex": "Careful induction from many examples produced a general rule.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "inference"
+   ]
+  },
+  {
+   "id": "read:trajectory",
+   "w": "trajectory",
+   "ipa": "trədʒˈektəri",
+   "cn": "n. 轨迹",
+   "ex": "The trajectory of the ball changed in the strong wind.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "path",
+    "course"
+   ]
+  },
+  {
+   "id": "read:manuscript",
+   "w": "manuscript",
+   "ipa": "ˈmanjuːskrˌɪpt",
+   "cn": "n. 手稿",
+   "ex": "The manuscript was revised before the journal accepted it.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "draft"
+   ]
+  },
+  {
+   "id": "read:commonly",
+   "w": "commonly",
+   "ipa": "ˈkɒmənli",
+   "cn": "adv. 通常",
+   "ex": "This error is commonly found in student essays.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "often",
+    "frequently"
+   ]
+  },
+  {
+   "id": "read:grammatical",
+   "w": "grammatical",
+   "ipa": "ɡrəmˈatɪkəl",
+   "cn": "adj. 语法的",
+   "ex": "Frequent grammatical errors reduced the clarity of the argument.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:accuracy",
+   "w": "accuracy",
+   "ipa": "ˈakjʊrəsi",
+   "cn": "n. 准确性",
+   "ex": "The accuracy of the measurement improved with better tools.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "precision"
+   ]
+  },
+  {
+   "id": "read:amplitude",
+   "w": "amplitude",
+   "ipa": "ˈamplɪtjˌuːd",
+   "cn": "n. 振幅",
+   "ex": "The amplitude of the wave grew as the wind rose.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "size"
+   ]
+  },
+  {
+   "id": "read:adaptation",
+   "w": "adaptation",
+   "ipa": "ˌadaptˈeɪʃən",
+   "cn": "n. 适应",
+   "ex": "Cultural adaptation can take several years after migration.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "adjustment"
+   ]
+  },
+  {
+   "id": "read:systematic",
+   "w": "systematic",
+   "ipa": "ˌsɪstəmˈatɪk",
+   "cn": "adj. 系统的",
+   "ex": "A systematic review compared findings from forty studies.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "methodical"
+   ]
+  },
+  {
+   "id": "read:horizontal",
+   "w": "horizontal",
+   "ipa": "ˌhɒrɪzˈɒntəl",
+   "cn": "adj. 水平的",
+   "ex": "A horizontal line divided the diagram into two parts.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "level",
+    "flat"
+   ]
+  },
+  {
+   "id": "read:synthesis",
+   "w": "synthesis",
+   "ipa": "ˈsɪnθəsˌɪs",
+   "cn": "n. 综合；合成",
+   "ex": "The essay offers a synthesis of the main theories.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "combination"
+   ]
+  },
+  {
+   "id": "read:projection",
+   "w": "projection",
+   "ipa": "prədʒˈekʃən",
+   "cn": "n. 预测；投影",
+   "ex": "The projection suggests a large rise in urban population.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "forecast",
+    "estimate"
+   ]
+  },
+  {
+   "id": "read:diameter",
+   "w": "diameter",
+   "ipa": "daɪˈamɪtə",
+   "cn": "n. 直径",
+   "ex": "The diameter of the pipe limited the water flow.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "width"
+   ]
+  },
+  {
+   "id": "read:cone",
+   "w": "cone",
+   "ipa": "ˈkəʊn",
+   "cn": "n. 圆锥；锥体",
+   "ex": "The volcano formed a steep cone of ash and rock.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:dependence",
+   "w": "dependence",
+   "ipa": "dɪpˈendəns",
+   "cn": "n. 依赖",
+   "ex": "Economic dependence on one crop increased local risk.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "reliance"
+   ]
+  },
+  {
+   "id": "read:organism",
+   "w": "organism",
+   "ipa": "ˈɔːɡənˌɪzəm",
+   "cn": "n. 生物体",
+   "ex": "Every organism needs energy to grow and reproduce.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "creature"
+   ]
+  },
+  {
+   "id": "read:emergence",
+   "w": "emergence",
+   "ipa": "ɪmˈɜːdʒəns",
+   "cn": "n. 出现",
+   "ex": "The emergence of cities changed early human society.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "appearance",
+    "rise"
+   ]
+  },
+  {
+   "id": "read:substitution",
+   "w": "substitution",
+   "ipa": "ˌsʌbstɪtjˈuːʃən",
+   "cn": "n. 替代",
+   "ex": "The substitution of oil with gas reduced local pollution.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "replacement"
+   ]
+  },
+  {
+   "id": "read:explicitly",
+   "w": "explicitly",
+   "ipa": "eksplˈɪsɪtli",
+   "cn": "adv. 明确地",
+   "ex": "The paper explicitly states its limits and assumptions.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "clearly",
+    "openly"
+   ]
+  },
+  {
+   "id": "read:conceptual",
+   "w": "conceptual",
+   "ipa": "kənsˈeptʃuːəl",
+   "cn": "adj. 概念的",
+   "ex": "The conceptual framework guides the design of the study.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "theoretical"
+   ]
+  },
+  {
+   "id": "read:detection",
+   "w": "detection",
+   "ipa": "dɪtˈekʃən",
+   "cn": "n. 检测",
+   "ex": "Early detection of the tumour improved survival rates.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "discovery"
+   ]
+  },
+  {
+   "id": "read:neural",
+   "w": "neural",
+   "ipa": "ˈnjuːrəl",
+   "cn": "adj. 神经的",
+   "ex": "Brain scans showed neural activity during hard problem solving.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:conception",
+   "w": "conception",
+   "ipa": "kənsˈepʃən",
+   "cn": "n. 概念；构想",
+   "ex": "Their conception of justice differed from the legal view.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "idea",
+    "notion"
+   ]
+  },
+  {
+   "id": "read:quantitative",
+   "w": "quantitative",
+   "ipa": "ˈkwɒntɪtˌeɪtɪv",
+   "cn": "adj. 定量的",
+   "ex": "The team used quantitative methods to measure income and age.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "numerical"
+   ]
+  },
+  {
+   "id": "read:instability",
+   "w": "instability",
+   "ipa": "ɪnstəbˈɪlɪti",
+   "cn": "n. 不稳定性",
+   "ex": "Political instability reduced investment in public education.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "uncertainty"
+   ]
+  },
+  {
+   "id": "read:specification",
+   "w": "specification",
+   "ipa": "ˌspesɪfɪkˈeɪʃən",
+   "cn": "n. 规格；说明",
+   "ex": "The specification describes the size and material required.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "requirement"
+   ]
+  },
+  {
+   "id": "read:classify",
+   "w": "classify",
+   "ipa": "ˈklasɪfˌaɪ",
+   "cn": "v. 分类",
+   "ex": "Scientists classify plants by flower shape and leaf form.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "group",
+    "sort"
+   ]
+  },
+  {
+   "id": "read:physician",
+   "w": "physician",
+   "ipa": "fɪzˈɪʃən",
+   "cn": "n. 医生",
+   "ex": "The physician explained the risks before the operation.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "doctor"
+   ]
+  },
+  {
+   "id": "read:computation",
+   "w": "computation",
+   "ipa": "ˌkɒmpjuːtˈeɪʃən",
+   "cn": "n. 运算；计算",
+   "ex": "The computation of the average took only a few seconds.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "calculation"
+   ]
+  },
+  {
+   "id": "read:oral",
+   "w": "oral",
+   "ipa": "ˈɔːrəl",
+   "cn": "adj. 口头的",
+   "ex": "Communities preserve oral history that books often miss.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "spoken",
+    "verbal"
+   ]
+  },
+  {
+   "id": "read:indicator",
+   "w": "indicator",
+   "ipa": "ˈɪndɪkˌeɪtə",
+   "cn": "n. 指标",
+   "ex": "Unemployment is a useful indicator of economic health.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "sign",
+    "measure"
+   ]
+  },
+  {
+   "id": "read:variant",
+   "w": "variant",
+   "ipa": "ˈveəriənt",
+   "cn": "n. 变体",
+   "ex": "A new variant of the virus spread through the city.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "form",
+    "version"
+   ]
+  },
+  {
+   "id": "read:evolutionary",
+   "w": "evolutionary",
+   "ipa": "ɪvəlˈuːʃənəri",
+   "cn": "adj. 进化的",
+   "ex": "Slow evolutionary change appears across many generations.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:feedback",
+   "w": "feedback",
+   "ipa": "ˈfiːdbak",
+   "cn": "n. 反馈",
+   "ex": "Teacher feedback helped students improve their written arguments.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "response"
+   ]
+  },
+  {
+   "id": "read:collective",
+   "w": "collective",
+   "ipa": "kəlˈektɪv",
+   "cn": "adj. 集体的",
+   "ex": "Local collective action reduced pollution in the river.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "joint",
+    "shared"
+   ]
+  },
+  {
+   "id": "read:estimation",
+   "w": "estimation",
+   "ipa": "ˌestɪmˈeɪʃən",
+   "cn": "n. 估计",
+   "ex": "The estimation of population size used satellite images.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "estimate"
+   ]
+  },
+  {
+   "id": "read:deviation",
+   "w": "deviation",
+   "ipa": "ˌdiːvɪˈeɪʃən",
+   "cn": "n. 偏差",
+   "ex": "A large deviation from the mean required further checking.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "difference"
+   ]
+  },
+  {
+   "id": "read:compact",
+   "w": "compact",
+   "ipa": "kəmpˈakt",
+   "cn": "adj. 紧凑的",
+   "ex": "The compact design saved space in the small laboratory.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "dense",
+    "small"
+   ]
+  },
+  {
+   "id": "read:diagram",
+   "w": "diagram",
+   "ipa": "ˈdaɪəɡrˌam",
+   "cn": "n. 图解",
+   "ex": "The diagram explains how blood moves through the heart.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "figure",
+    "chart"
+   ]
+  },
+  {
+   "id": "read:tropical",
+   "w": "tropical",
+   "ipa": "ˈtrɒpɪkəl",
+   "cn": "adj. 热带的",
+   "ex": "Large tropical forests store vast amounts of carbon.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:defect",
+   "w": "defect",
+   "ipa": "ˈdiːfekt",
+   "cn": "n. 缺陷",
+   "ex": "A genetic defect caused the child's hearing loss.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "fault",
+    "flaw"
+   ]
+  },
+  {
+   "id": "read:separation",
+   "w": "separation",
+   "ipa": "ˌsepərˈeɪʃən",
+   "cn": "n. 分离",
+   "ex": "The separation of church and state shaped the law.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "division",
+    "split"
+   ]
+  },
+  {
+   "id": "read:convergence",
+   "w": "convergence",
+   "ipa": "kənvˈɜːdʒəns",
+   "cn": "n. 汇聚；趋同",
+   "ex": "The convergence of the two rivers created a wide basin.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "meeting"
+   ]
+  },
+  {
+   "id": "read:sufficiently",
+   "w": "sufficiently",
+   "ipa": "səfˈɪʃəntli",
+   "cn": "adv. 充分地",
+   "ex": "The sample was not sufficiently large to support the claim.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "adequately",
+    "enough"
+   ]
+  },
+  {
+   "id": "read:interface",
+   "w": "interface",
+   "ipa": "ˈɪntəfˌeɪs",
+   "cn": "n. 界面；接口",
+   "ex": "The interface between soil and water affects nutrient flow.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "boundary"
+   ]
+  },
+  {
+   "id": "read:radiation",
+   "w": "radiation",
+   "ipa": "ˌreɪdɪˈeɪʃən",
+   "cn": "n. 辐射",
+   "ex": "Solar radiation warms the land and the ocean surface.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:vertical",
+   "w": "vertical",
+   "ipa": "ˈvɜːtɪkəl",
+   "cn": "adj. 垂直的",
+   "ex": "A vertical crack appeared in the outer stone wall.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "upright"
+   ]
+  },
+  {
+   "id": "read:embed",
+   "w": "embed",
+   "ipa": "embˈed",
+   "cn": "v. 嵌入",
+   "ex": "Teachers embed new words in meaningful short stories.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "insert"
+   ]
+  },
+  {
+   "id": "read:acute",
+   "w": "acute",
+   "ipa": "əkjˈuːt",
+   "cn": "adj. 急性的",
+   "ex": "Doctors treated acute pain immediately in the hospital.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "severe"
+   ]
+  },
+  {
+   "id": "read:utility",
+   "w": "utility",
+   "ipa": "juːtˈɪlɪti",
+   "cn": "n. 效用；实用",
+   "ex": "The utility of the test depends on its reliability.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "usefulness",
+    "value"
+   ]
+  },
+  {
+   "id": "read:leaf",
+   "w": "leaf",
+   "ipa": "ˈliːf",
+   "cn": "n. 叶子",
+   "ex": "Each leaf absorbs light and produces food for the plant.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:verbal",
+   "w": "verbal",
+   "ipa": "ˈvɜːbəl",
+   "cn": "adj. 言语的",
+   "ex": "Students followed verbal instructions better than written notes.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "spoken",
+    "oral"
+   ]
+  },
+  {
+   "id": "read:organ",
+   "w": "organ",
+   "ipa": "ˈɔːɡən",
+   "cn": "n. 器官",
+   "ex": "The heart is the organ that pumps blood.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:gradient",
+   "w": "gradient",
+   "ipa": "ˈɡreɪdiənt",
+   "cn": "n. 梯度",
+   "ex": "The temperature gradient was steep near the coast.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "slope"
+   ]
+  },
+  {
+   "id": "read:methodology",
+   "w": "methodology",
+   "ipa": "ˌmeθədˈɒlədʒi",
+   "cn": "n. 方法论",
+   "ex": "The methodology section explains how the data were collected.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "method"
+   ]
+  },
+  {
+   "id": "read:tumour",
+   "w": "tumour",
+   "ipa": "ˈtjuːmə",
+   "cn": "n. 肿瘤",
+   "ex": "The tumour grew slowly and caused few early symptoms.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "growth"
+   ]
+  },
+  {
+   "id": "read:infinite",
+   "w": "infinite",
+   "ipa": "ˈɪnfɪnət",
+   "cn": "adj. 无限的",
+   "ex": "An infinite number of points lie on a straight line.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "endless",
+    "limitless"
+   ]
+  },
+  {
+   "id": "read:diagnostic",
+   "w": "diagnostic",
+   "ipa": "ˌdaɪəɡnˈɒstɪk",
+   "cn": "adj. 诊断的",
+   "ex": "Further diagnostic tests confirmed the cause of the illness.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:continuity",
+   "w": "continuity",
+   "ipa": "kɒntɪnjˈuːɪti",
+   "cn": "n. 连续性",
+   "ex": "Cultural continuity remained strong despite rapid urban change.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "continuation"
+   ]
+  },
+  {
+   "id": "read:variability",
+   "w": "variability",
+   "ipa": "ˌveərɪəbˈɪlɪti",
+   "cn": "n. 变异性",
+   "ex": "Climate variability makes long-term farming plans more difficult.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "variation"
+   ]
+  },
+  {
+   "id": "read:outer",
+   "w": "outer",
+   "ipa": "ˈaʊtə",
+   "cn": "adj. 外部的",
+   "ex": "The outer wall protected the city from strong winds.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "external"
+   ]
+  },
+  {
+   "id": "read:notation",
+   "w": "notation",
+   "ipa": "nəʊtˈeɪʃən",
+   "cn": "n. 符号；记法",
+   "ex": "Chemical notation represents each element with a symbol.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "symbols"
+   ]
+  },
+  {
+   "id": "read:probe",
+   "w": "probe",
+   "ipa": "ˈprəʊb",
+   "cn": "v. 探究",
+   "ex": "Interviews probe how families cope with long illness.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "investigate",
+    "examine"
+   ]
+  },
+  {
+   "id": "read:mathematical",
+   "w": "mathematical",
+   "ipa": "ˌmaθɪmˈatɪkəl",
+   "cn": "adj. 数学的",
+   "ex": "A mathematical model predicted the spread of infection.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:likelihood",
+   "w": "likelihood",
+   "ipa": "ˈlaɪklihˌʊd",
+   "cn": "n. 可能性",
+   "ex": "The likelihood of drought increases in a warmer climate.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "probability",
+    "chance"
+   ]
+  },
+  {
+   "id": "read:comparable",
+   "w": "comparable",
+   "ipa": "ˈkɒmpərəbəl",
+   "cn": "adj. 可比较的",
+   "ex": "The two groups were comparable in age and income.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "similar"
+   ]
+  },
+  {
+   "id": "read:magnitude",
+   "w": "magnitude",
+   "ipa": "ˈmaɡnɪtjˌuːd",
+   "cn": "n. 量级；程度",
+   "ex": "The magnitude of the earthquake surprised local scientists.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "size",
+    "scale"
+   ]
+  },
+  {
+   "id": "read:array",
+   "w": "array",
+   "ipa": "ərˈeɪ",
+   "cn": "n. 一系列；阵列",
+   "ex": "The study used an array of tests to measure memory.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "range",
+    "set"
+   ]
+  },
+  {
+   "id": "read:inclusion",
+   "w": "inclusion",
+   "ipa": "ɪŋklˈuːʒən",
+   "cn": "n. 包含；纳入",
+   "ex": "The inclusion of rural schools changed the overall results.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "addition"
+   ]
+  },
+  {
+   "id": "read:inference",
+   "w": "inference",
+   "ipa": "ˈɪnfərəns",
+   "cn": "n. 推断",
+   "ex": "The inference from the data was cautious but clear.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "conclusion"
+   ]
+  },
+  {
+   "id": "read:consciousness",
+   "w": "consciousness",
+   "ipa": "ˈkɒnʃəsnəs",
+   "cn": "n. 意识",
+   "ex": "The patient regained consciousness several hours after surgery.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "awareness"
+   ]
+  },
+  {
+   "id": "read:simultaneously",
+   "w": "simultaneously",
+   "ipa": "ˌsɪməltˈeɪniəsli",
+   "cn": "adv. 同时地",
+   "ex": "Both groups were tested simultaneously under identical conditions.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "together"
+   ]
+  },
+  {
+   "id": "read:disturbance",
+   "w": "disturbance",
+   "ipa": "dɪstˈɜːbəns",
+   "cn": "n. 干扰；扰动",
+   "ex": "Noise disturbance reduced how well students could concentrate.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "disruption"
+   ]
+  },
+  {
+   "id": "read:rotation",
+   "w": "rotation",
+   "ipa": "rəʊtˈeɪʃən",
+   "cn": "n. 旋转",
+   "ex": "The rotation of the Earth causes day and night.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "turning"
+   ]
+  },
+  {
+   "id": "read:validity",
+   "w": "validity",
+   "ipa": "valˈɪdɪti",
+   "cn": "n. 效度；有效性",
+   "ex": "Researchers questioned the validity of the survey results.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:periodic",
+   "w": "periodic",
+   "ipa": "ˌpiərɪˈɒdɪk",
+   "cn": "adj. 周期的",
+   "ex": "Managers scheduled periodic reviews of the new programme.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "regular"
+   ]
+  },
+  {
+   "id": "read:atom",
+   "w": "atom",
+   "ipa": "ˈatəm",
+   "cn": "n. 原子",
+   "ex": "Each atom contains a nucleus and surrounding electrons.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:modification",
+   "w": "modification",
+   "ipa": "ˌmɒdɪfɪkˈeɪʃən",
+   "cn": "n. 修改",
+   "ex": "A small modification of the method improved the results.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "change",
+    "alteration"
+   ]
+  },
+  {
+   "id": "read:partition",
+   "w": "partition",
+   "ipa": "pɑːtˈɪʃən",
+   "cn": "n. 分割；分区",
+   "ex": "The partition of the land caused lasting social conflict.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "division"
+   ]
+  },
+  {
+   "id": "read:autonomy",
+   "w": "autonomy",
+   "ipa": "ɔːtˈɒnəmi",
+   "cn": "n. 自主；自治",
+   "ex": "Local autonomy allowed schools to choose their own curriculum.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "independence"
+   ]
+  },
+  {
+   "id": "read:consonant",
+   "w": "consonant",
+   "ipa": "ˈkɒnsənənt",
+   "cn": "n. 辅音",
+   "ex": "The child could not pronounce the final consonant clearly.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:biology",
+   "w": "biology",
+   "ipa": "baɪˈɒlədʒi",
+   "cn": "n. 生物学",
+   "ex": "School biology explains how living organisms grow and change.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:conditional",
+   "w": "conditional",
+   "ipa": "kəndˈɪʃənəl",
+   "cn": "adj. 有条件的",
+   "ex": "Approval was conditional on a further safety review.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "dependent"
+   ]
+  },
+  {
+   "id": "read:lateral",
+   "w": "lateral",
+   "ipa": "ˈlatərəl",
+   "cn": "adj. 侧面的；横向的",
+   "ex": "Glaciers show slow lateral movement across the valley floor.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "sideways"
+   ]
+  },
+  {
+   "id": "read:injection",
+   "w": "injection",
+   "ipa": "ɪndʒˈekʃən",
+   "cn": "n. 注射",
+   "ex": "An injection of the drug reduced pain within an hour.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:effectiveness",
+   "w": "effectiveness",
+   "ipa": "ɪfˈektɪvnəs",
+   "cn": "n. 有效性",
+   "ex": "The effectiveness of the vaccine was tested in adults.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "success"
+   ]
+  },
+  {
+   "id": "read:logical",
+   "w": "logical",
+   "ipa": "ˈlɒdʒɪkəl",
+   "cn": "adj. 合乎逻辑的",
+   "ex": "The conclusion follows a logical reading of the evidence.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "reasoned"
+   ]
+  },
+  {
+   "id": "read:usage",
+   "w": "usage",
+   "ipa": "ˈjuːsɪdʒ",
+   "cn": "n. 用法",
+   "ex": "Dictionary usage has changed with online reference tools.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "use"
+   ]
+  },
+  {
+   "id": "read:longitudinal",
+   "w": "longitudinal",
+   "ipa": "ˈlɒndʒɪtjˌuːdɪnəl",
+   "cn": "adj. 纵向的",
+   "ex": "A longitudinal study followed the same children for years.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:marginal",
+   "w": "marginal",
+   "ipa": "ˈmɑːdʒɪnəl",
+   "cn": "adj. 边缘的；微小的",
+   "ex": "The reform brought only a marginal gain in test scores.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "slight",
+    "minor"
+   ]
+  },
+  {
+   "id": "read:client",
+   "w": "client",
+   "ipa": "ˈklaɪənt",
+   "cn": "n. 客户",
+   "ex": "The therapist asked each client about sleep and mood.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "customer"
+   ]
+  },
+  {
+   "id": "read:characterisation",
+   "w": "characterisation",
+   "ipa": "ˌkarɪktəraɪzˈeɪʃən",
+   "cn": "n. 描述；表征",
+   "ex": "The characterisation of the sample included weight and colour.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "description"
+   ]
+  },
+  {
+   "id": "read:ethical",
+   "w": "ethical",
+   "ipa": "ˈeθɪkəl",
+   "cn": "adj. 伦理的",
+   "ex": "The study needed ethical approval before interviews began.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "moral"
+   ]
+  },
+  {
+   "id": "read:superior",
+   "w": "superior",
+   "ipa": "suːpˈiərɪə",
+   "cn": "adj. 更优的",
+   "ex": "The new method produced superior results in every trial.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "better"
+   ]
+  },
+  {
+   "id": "read:singular",
+   "w": "singular",
+   "ipa": "ˈsɪŋɡjʊlə",
+   "cn": "adj. 单数的",
+   "ex": "The word takes a singular verb in this sentence.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:converge",
+   "w": "converge",
+   "ipa": "kənvˈɜːdʒ",
+   "cn": "v. 汇合；趋同",
+   "ex": "The two paths converge near the mouth of the river.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "meet",
+    "merge"
+   ]
+  },
+  {
+   "id": "read:fetal",
+   "w": "fetal",
+   "ipa": "ˈfiːtəl",
+   "cn": "adj. 胎儿的",
+   "ex": "Poor nutrition slowed fetal growth in the final months.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:comprehension",
+   "w": "comprehension",
+   "ipa": "ˌkɒmprɪhˈenʃən",
+   "cn": "n. 理解",
+   "ex": "Reading comprehension improved after daily guided practice.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "understanding"
+   ]
+  },
+  {
+   "id": "read:span",
+   "w": "span",
+   "ipa": "ˈspan",
+   "cn": "n. 跨度",
+   "ex": "The study covered a span of twenty years.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "period",
+    "range"
+   ]
+  },
+  {
+   "id": "read:oxygen",
+   "w": "oxygen",
+   "ipa": "ˈɒksɪdʒən",
+   "cn": "n. 氧气",
+   "ex": "Plants release oxygen during daylight through their leaves.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:formulation",
+   "w": "formulation",
+   "ipa": "ˌfɔːmjʊlˈeɪʃən",
+   "cn": "n. 表述；配方",
+   "ex": "The formulation of the hypothesis came after long observation.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "wording"
+   ]
+  },
+  {
+   "id": "read:colony",
+   "w": "colony",
+   "ipa": "ˈkɒləni",
+   "cn": "n. 殖民地；菌落",
+   "ex": "The colony exported raw materials to the ruling country.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "settlement"
+   ]
+  },
+  {
+   "id": "read:loop",
+   "w": "loop",
+   "ipa": "ˈluːp",
+   "cn": "n. 环；回路",
+   "ex": "A feedback loop kept the body temperature nearly stable.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "cycle",
+    "circuit"
+   ]
+  },
+  {
+   "id": "read:algebra",
+   "w": "algebra",
+   "ipa": "ˈaldʒɪbrə",
+   "cn": "n. 代数",
+   "ex": "Students learn algebra before they study advanced calculus.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:derivative",
+   "w": "derivative",
+   "ipa": "dɪrˈɪvətˌɪv",
+   "cn": "n. 导数；派生物",
+   "ex": "The derivative measures how quickly a quantity changes.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:appendix",
+   "w": "appendix",
+   "ipa": "əpˈendɪks",
+   "cn": "n. 附录",
+   "ex": "The raw data appear in an appendix at the end.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "supplement"
+   ]
+  },
+  {
+   "id": "read:overview",
+   "w": "overview",
+   "ipa": "ˈəʊvəvjˌuː",
+   "cn": "n. 概述",
+   "ex": "The introduction gives an overview of previous research.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "summary"
+   ]
+  },
+  {
+   "id": "read:diffusion",
+   "w": "diffusion",
+   "ipa": "dɪfjˈuːʒən",
+   "cn": "n. 扩散",
+   "ex": "The diffusion of new ideas was faster in large cities.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "spread"
+   ]
+  },
+  {
+   "id": "read:specimen",
+   "w": "specimen",
+   "ipa": "ˈspesɪmən",
+   "cn": "n. 标本",
+   "ex": "Each specimen was labelled and stored for later analysis.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "sample"
+   ]
+  },
+  {
+   "id": "read:assert",
+   "w": "assert",
+   "ipa": "əsˈɜːt",
+   "cn": "v. 断言",
+   "ex": "The authors assert that early education reduces inequality.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "claim",
+    "state"
+   ]
+  },
+  {
+   "id": "read:competence",
+   "w": "competence",
+   "ipa": "ˈkɒmpɪtəns",
+   "cn": "n. 能力",
+   "ex": "Language competence grows through use in real situations.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "ability",
+    "skill"
+   ]
+  },
+  {
+   "id": "read:residual",
+   "w": "residual",
+   "ipa": "rɪsˈɪdʒuːəl",
+   "cn": "adj. 剩余的",
+   "ex": "Engineers measured residual heat in the metal after cooling.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "remaining"
+   ]
+  },
+  {
+   "id": "read:fusion",
+   "w": "fusion",
+   "ipa": "ˈfjuːʒən",
+   "cn": "n. 融合；聚变",
+   "ex": "Nuclear fusion releases energy inside the sun.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "merging"
+   ]
+  },
+  {
+   "id": "read:virtue",
+   "w": "virtue",
+   "ipa": "ˈvɜːtʃuː",
+   "cn": "n. 凭借；美德",
+   "ex": "The species survives by virtue of its thick fur.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:partially",
+   "w": "partially",
+   "ipa": "ˈpɑːʃəli",
+   "cn": "adv. 部分地",
+   "ex": "The hypothesis was only partially supported by the data.",
+   "g": "r:1",
+   "use": "receptive",
+   "syns": [
+    "partly"
+   ]
+  },
+  {
+   "id": "read:philosophical",
+   "w": "philosophical",
+   "ipa": "ˌfɪləsˈɒfɪkəl",
+   "cn": "adj. 哲学的",
+   "ex": "The book raises a philosophical question about free will.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:transaction",
+   "w": "transaction",
+   "ipa": "transˈakʃən",
+   "cn": "n. 交易",
+   "ex": "Each transaction was recorded in the company accounts.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "deal",
+    "exchange"
+   ]
+  },
+  {
+   "id": "read:prominent",
+   "w": "prominent",
+   "ipa": "ˈprɒmɪnənt",
+   "cn": "adj. 突出的",
+   "ex": "A prominent scholar challenged the accepted historical account.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "leading",
+    "notable"
+   ]
+  },
+  {
+   "id": "read:indigenous",
+   "w": "indigenous",
+   "ipa": "ɪndˈɪdʒənəs",
+   "cn": "adj. 土著的；本地的",
+   "ex": "Many indigenous communities protected the forest for centuries.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "native"
+   ]
+  },
+  {
+   "id": "read:render",
+   "w": "render",
+   "ipa": "ˈrendə",
+   "cn": "v. 使变得",
+   "ex": "Poor lighting can render a detailed map hard to read.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "make"
+   ]
+  },
+  {
+   "id": "read:independently",
+   "w": "independently",
+   "ipa": "ˌɪndɪpˈendəntli",
+   "cn": "adv. 独立地",
+   "ex": "Two teams worked independently and reached the same result.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "separately"
+   ]
+  },
+  {
+   "id": "read:symbolic",
+   "w": "symbolic",
+   "ipa": "sɪmbˈɒlɪk",
+   "cn": "adj. 象征的",
+   "ex": "The flag has symbolic meaning for the new nation.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:physiological",
+   "w": "physiological",
+   "ipa": "ˌfɪzɪəlˈɒdʒɪkəl",
+   "cn": "adj. 生理的",
+   "ex": "Sleep loss causes physiological changes in the human body.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "bodily"
+   ]
+  },
+  {
+   "id": "read:indirect",
+   "w": "indirect",
+   "ipa": "ɪndaɪrˈekt",
+   "cn": "adj. 间接的",
+   "ex": "The tax had an indirect effect on food prices.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:assembly",
+   "w": "assembly",
+   "ipa": "əsˈemblɪ",
+   "cn": "n. 组装；集会",
+   "ex": "The assembly of the machine required skilled manual labour.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "construction"
+   ]
+  },
+  {
+   "id": "read:strictly",
+   "w": "strictly",
+   "ipa": "ˈstrɪktli",
+   "cn": "adv. 严格地",
+   "ex": "The term is strictly defined in the methods section.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "exactly"
+   ]
+  },
+  {
+   "id": "read:unity",
+   "w": "unity",
+   "ipa": "ˈjuːnɪti",
+   "cn": "n. 统一；团结",
+   "ex": "Political unity weakened after the disputed election.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "union"
+   ]
+  },
+  {
+   "id": "read:psychiatric",
+   "w": "psychiatric",
+   "ipa": "ˌsaɪkɪˈatrɪk",
+   "cn": "adj. 精神科的",
+   "ex": "Hospitals provide psychiatric care for severe depression.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:critique",
+   "w": "critique",
+   "ipa": "krɪtˈiːk",
+   "cn": "n. 评论；批评",
+   "ex": "The article offers a critique of current testing policy.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "criticism",
+    "review"
+   ]
+  },
+  {
+   "id": "read:differentiation",
+   "w": "differentiation",
+   "ipa": "ˌdɪfərˌenʃɪˈeɪʃən",
+   "cn": "n. 分化；区别",
+   "ex": "Cell differentiation allows tissues to perform special tasks.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "distinction"
+   ]
+  },
+  {
+   "id": "read:closure",
+   "w": "closure",
+   "ipa": "ˈkləʊʒə",
+   "cn": "n. 关闭；结束",
+   "ex": "The closure of the factory increased local unemployment.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "shutdown"
+   ]
+  },
+  {
+   "id": "read:selective",
+   "w": "selective",
+   "ipa": "sɪlˈektɪv",
+   "cn": "adj. 选择性的",
+   "ex": "Farmers used selective breeding to raise milk yields.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:availability",
+   "w": "availability",
+   "ipa": "əvˌeɪləbˈɪlɪti",
+   "cn": "n. 可获得性",
+   "ex": "The availability of clean water improved public health.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:depict",
+   "w": "depict",
+   "ipa": "dɪpˈɪkt",
+   "cn": "v. 描绘",
+   "ex": "The drawings depict daily life in a medieval town.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "show",
+    "portray"
+   ]
+  },
+  {
+   "id": "read:cue",
+   "w": "cue",
+   "ipa": "ˈkjuː",
+   "cn": "n. 提示",
+   "ex": "A visual cue helped participants recall the target word.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "signal",
+    "prompt"
+   ]
+  },
+  {
+   "id": "read:parental",
+   "w": "parental",
+   "ipa": "pərˈentəl",
+   "cn": "adj. 父母的",
+   "ex": "Strong parental support improves children's school success.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:fertility",
+   "w": "fertility",
+   "ipa": "fɜːtˈɪlɪti",
+   "cn": "n. 生育力；肥力",
+   "ex": "Soil fertility declined after years of intensive farming.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:readily",
+   "w": "readily",
+   "ipa": "ˈredili",
+   "cn": "adv. 容易地",
+   "ex": "Young children readily learn patterns in spoken language.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "easily"
+   ]
+  },
+  {
+   "id": "read:observer",
+   "w": "observer",
+   "ipa": "ɒbzˈɜːvə",
+   "cn": "n. 观察者",
+   "ex": "An independent observer recorded behaviour during the lesson.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "watcher"
+   ]
+  },
+  {
+   "id": "read:inhibition",
+   "w": "inhibition",
+   "ipa": "ɪnhɪbˈɪʃən",
+   "cn": "n. 抑制",
+   "ex": "Fear and inhibition can prevent students from speaking.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "restraint"
+   ]
+  },
+  {
+   "id": "read:generalisation",
+   "w": "generalisation",
+   "ipa": "ˌdʒenərəlaɪzˈeɪʃən",
+   "cn": "n. 概括",
+   "ex": "A broad generalisation may hide important group differences.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:locally",
+   "w": "locally",
+   "ipa": "ˈləʊkəli",
+   "cn": "adv. 局部地",
+   "ex": "The drug acted locally and did not affect other organs.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:nutrient",
+   "w": "nutrient",
+   "ipa": "ˈnjuːtriənt",
+   "cn": "n. 营养物质",
+   "ex": "Each nutrient plays a role in healthy human growth.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:statistically",
+   "w": "statistically",
+   "ipa": "stətˈɪstɪkli",
+   "cn": "adv. 在统计上",
+   "ex": "The income gap was statistically significant in both trials.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:dense",
+   "w": "dense",
+   "ipa": "ˈdens",
+   "cn": "adj. 密集的",
+   "ex": "Farming replaced dense forest on many of the hills.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "thick",
+    "crowded"
+   ]
+  },
+  {
+   "id": "read:ecology",
+   "w": "ecology",
+   "ipa": "ekˈɒlədʒi",
+   "cn": "n. 生态学",
+   "ex": "Modern ecology studies how organisms interact with environments.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:terminal",
+   "w": "terminal",
+   "ipa": "ˈtɜːmɪnəl",
+   "cn": "adj. 晚期的；末端的",
+   "ex": "The illness was terminal, and treatment aimed to ease pain.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "fatal"
+   ]
+  },
+  {
+   "id": "read:informal",
+   "w": "informal",
+   "ipa": "ɪnfˈɔːməl",
+   "cn": "adj. 非正式的",
+   "ex": "Much informal learning happens through conversation at work.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "casual",
+    "unofficial"
+   ]
+  },
+  {
+   "id": "read:discharge",
+   "w": "discharge",
+   "ipa": "dɪstʃˈɑːdʒ",
+   "cn": "n. 排放；出院",
+   "ex": "The discharge of waste into the river killed many fish.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "release"
+   ]
+  },
+  {
+   "id": "read:adaptive",
+   "w": "adaptive",
+   "ipa": "ədˈaptɪv",
+   "cn": "adj. 适应的",
+   "ex": "Such adaptive behaviour helps animals survive habitat change.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:ecological",
+   "w": "ecological",
+   "ipa": "ˌekəlˈɒdʒɪkəl",
+   "cn": "adj. 生态的",
+   "ex": "Clearing forest caused ecological damage across the valley.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "environmental"
+   ]
+  },
+  {
+   "id": "read:progressive",
+   "w": "progressive",
+   "ipa": "prəɡrˈesɪv",
+   "cn": "adj. 渐进的",
+   "ex": "Doctors observed progressive hearing loss in older patients.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "gradual"
+   ]
+  },
+  {
+   "id": "read:aesthetic",
+   "w": "aesthetic",
+   "ipa": "iːsθˈetɪk",
+   "cn": "adj. 审美的",
+   "ex": "Critics discussed the aesthetic judgement of the new building.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "artistic"
+   ]
+  },
+  {
+   "id": "read:agriculture",
+   "w": "agriculture",
+   "ipa": "ˈaɡrɪkˌʌltʃə",
+   "cn": "n. 农业",
+   "ex": "Intensive agriculture increased food supply but damaged soil.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "farming"
+   ]
+  },
+  {
+   "id": "read:equivalence",
+   "w": "equivalence",
+   "ipa": "ɪkwˈɪvələns",
+   "cn": "n. 等值；等同",
+   "ex": "There is no exact equivalence between the two grading systems.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "equality"
+   ]
+  },
+  {
+   "id": "read:pragmatic",
+   "w": "pragmatic",
+   "ipa": "praɡmˈatɪk",
+   "cn": "adj. 务实的",
+   "ex": "A pragmatic approach focused on what schools could actually do.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "practical"
+   ]
+  },
+  {
+   "id": "read:arrow",
+   "w": "arrow",
+   "ipa": "ˈarəʊ",
+   "cn": "n. 箭头",
+   "ex": "An arrow on the diagram shows the direction of flow.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:reproduce",
+   "w": "reproduce",
+   "ipa": "rɪprədjˈuːs",
+   "cn": "v. 繁殖；复制",
+   "ex": "Many plants reproduce through seeds carried by the wind.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "breed"
+   ]
+  },
+  {
+   "id": "read:commentary",
+   "w": "commentary",
+   "ipa": "ˈkɒməntri",
+   "cn": "n. 评论",
+   "ex": "The commentary explains the limits of the historical evidence.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "analysis"
+   ]
+  },
+  {
+   "id": "read:residue",
+   "w": "residue",
+   "ipa": "ˈresɪdjˌuː",
+   "cn": "n. 残留物",
+   "ex": "Chemical residue remained on the leaves after spraying.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "remains"
+   ]
+  },
+  {
+   "id": "read:unstable",
+   "w": "unstable",
+   "ipa": "ʌnstˈeɪbəl",
+   "cn": "adj. 不稳定的",
+   "ex": "The unstable slope collapsed after several days of rain.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "unsteady"
+   ]
+  },
+  {
+   "id": "read:consensus",
+   "w": "consensus",
+   "ipa": "kənsˈensəs",
+   "cn": "n. 共识",
+   "ex": "There is no consensus among experts about the best treatment.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "agreement"
+   ]
+  },
+  {
+   "id": "read:simplify",
+   "w": "simplify",
+   "ipa": "ˈsɪmplɪfˌaɪ",
+   "cn": "v. 简化",
+   "ex": "Teachers simplify instructions when the task is very new.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:radius",
+   "w": "radius",
+   "ipa": "ˈreɪdɪəs",
+   "cn": "n. 半径",
+   "ex": "The blast damaged buildings within a radius of two kilometres.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:artificial",
+   "w": "artificial",
+   "ipa": "ˌɑːtɪfˈɪʃəl",
+   "cn": "adj. 人造的",
+   "ex": "Night-time artificial light can disturb natural sleep patterns.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "synthetic"
+   ]
+  },
+  {
+   "id": "read:suicide",
+   "w": "suicide",
+   "ipa": "ˈsuːɪsˌaɪd",
+   "cn": "n. 自杀",
+   "ex": "The study examined social factors linked with suicide risk.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:replicate",
+   "w": "replicate",
+   "ipa": "ˈreplɪkˌeɪt",
+   "cn": "v. 重复；复制",
+   "ex": "Other laboratories could not replicate the original findings.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "repeat",
+    "copy"
+   ]
+  },
+  {
+   "id": "read:mechanical",
+   "w": "mechanical",
+   "ipa": "mɪkˈanɪkəl",
+   "cn": "adj. 机械的",
+   "ex": "A mechanical failure caused the pump to stop working.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:cattle",
+   "w": "cattle",
+   "ipa": "ˈkatəl",
+   "cn": "n. 牛",
+   "ex": "Heavy cattle grazing reduced plant cover on the hills.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "cows",
+    "livestock"
+   ]
+  },
+  {
+   "id": "read:purely",
+   "w": "purely",
+   "ipa": "ˈpjʊəli",
+   "cn": "adv. 纯粹地",
+   "ex": "The decision was not purely economic in character.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "only",
+    "solely"
+   ]
+  },
+  {
+   "id": "read:contradiction",
+   "w": "contradiction",
+   "ipa": "ˌkɒntrədˈɪkʃən",
+   "cn": "n. 矛盾",
+   "ex": "A contradiction between the two reports required explanation.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "conflict"
+   ]
+  },
+  {
+   "id": "read:scatter",
+   "w": "scatter",
+   "ipa": "ˈskatə",
+   "cn": "v. 分散",
+   "ex": "Strong winds scatter seeds far from the parent plant.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "spread",
+    "disperse"
+   ]
+  },
+  {
+   "id": "read:problematic",
+   "w": "problematic",
+   "ipa": "ˌprɒbəlmˈatɪk",
+   "cn": "adj. 有问题的",
+   "ex": "The small sample made the conclusion problematic.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "difficult"
+   ]
+  },
+  {
+   "id": "read:correction",
+   "w": "correction",
+   "ipa": "kərˈekʃən",
+   "cn": "n. 纠正",
+   "ex": "A correction was issued after the calculation error.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "amendment"
+   ]
+  },
+  {
+   "id": "read:linguistics",
+   "w": "linguistics",
+   "ipa": "lɪŋɡwˈɪstɪks",
+   "cn": "n. 语言学",
+   "ex": "University linguistics examines how language is structured and used.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:hormone",
+   "w": "hormone",
+   "ipa": "ˈhɔːməʊn",
+   "cn": "n. 激素",
+   "ex": "This hormone regulates growth during childhood and adolescence.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:primitive",
+   "w": "primitive",
+   "ipa": "ˈprɪmɪtˌɪv",
+   "cn": "adj. 原始的",
+   "ex": "Archaeologists found primitive tools for preparing food.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "early",
+    "simple"
+   ]
+  },
+  {
+   "id": "read:accumulation",
+   "w": "accumulation",
+   "ipa": "əkjˌuːmjʊlˈeɪʃən",
+   "cn": "n. 积累",
+   "ex": "The accumulation of debt limited public spending on health.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "build-up"
+   ]
+  },
+  {
+   "id": "read:static",
+   "w": "static",
+   "ipa": "ˈstatɪk",
+   "cn": "adj. 静态的",
+   "ex": "Prices remained static despite strong demand for housing.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "fixed",
+    "unchanging"
+   ]
+  },
+  {
+   "id": "read:separately",
+   "w": "separately",
+   "ipa": "ˈseprətli",
+   "cn": "adv. 分别地",
+   "ex": "Each factor was analysed separately before the final model.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "individually"
+   ]
+  },
+  {
+   "id": "read:randomise",
+   "w": "randomise",
+   "ipa": "ˈrandəmˌaɪz",
+   "cn": "v. 使随机化",
+   "ex": "Researchers randomise group assignment to reduce bias.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:sensory",
+   "w": "sensory",
+   "ipa": "ˈsensəri",
+   "cn": "adj. 感官的",
+   "ex": "Age-related sensory loss made distance harder to judge.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:peripheral",
+   "w": "peripheral",
+   "ipa": "pərˈɪfərəl",
+   "cn": "adj. 外周的；外围的",
+   "ex": "Drivers rely on peripheral vision to detect side movement.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "outer"
+   ]
+  },
+  {
+   "id": "read:spontaneous",
+   "w": "spontaneous",
+   "ipa": "spɒntˈeɪniəs",
+   "cn": "adj. 自发的",
+   "ex": "Teachers recorded spontaneous speech during free play.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "unplanned",
+    "natural"
+   ]
+  },
+  {
+   "id": "read:reliability",
+   "w": "reliability",
+   "ipa": "rɪlˌaɪəbˈɪlɪti",
+   "cn": "n. 信度；可靠性",
+   "ex": "The reliability of the test was checked with a second sample.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "consistency"
+   ]
+  },
+  {
+   "id": "read:elaborate",
+   "w": "elaborate",
+   "ipa": "ɪlˈabərˌeɪt",
+   "cn": "v. 详述",
+   "ex": "The author does not elaborate on the source of the data.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "expand"
+   ]
+  },
+  {
+   "id": "read:nominal",
+   "w": "nominal",
+   "ipa": "ˈnɒmɪnəl",
+   "cn": "adj. 名义上的",
+   "ex": "The king retained only nominal power after the reform.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:reproduction",
+   "w": "reproduction",
+   "ipa": "rɪprədˈʌkʃən",
+   "cn": "n. 繁殖；复制",
+   "ex": "Sexual reproduction increases genetic variation in a population.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "breeding"
+   ]
+  },
+  {
+   "id": "read:dominance",
+   "w": "dominance",
+   "ipa": "ˈdɒmɪnəns",
+   "cn": "n. 支配；优势",
+   "ex": "Market dominance allowed the firm to set higher prices.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "control"
+   ]
+  },
+  {
+   "id": "read:allocation",
+   "w": "allocation",
+   "ipa": "ˌaləkˈeɪʃən",
+   "cn": "n. 分配",
+   "ex": "The allocation of funding favoured large research universities.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "distribution"
+   ]
+  },
+  {
+   "id": "read:lung",
+   "w": "lung",
+   "ipa": "ˈlʌŋ",
+   "cn": "n. 肺",
+   "ex": "Smoke damages the lung and reduces oxygen intake.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:productive",
+   "w": "productive",
+   "ipa": "prədˈʌktɪv",
+   "cn": "adj. 富有成效的；多产的",
+   "ex": "Clear shared goals make discussion more productive.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "fruitful"
+   ]
+  },
+  {
+   "id": "read:decay",
+   "w": "decay",
+   "ipa": "dɪkˈeɪ",
+   "cn": "n. 腐烂；衰变",
+   "ex": "Tooth decay became less common after fluoride was added.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "rot"
+   ]
+  },
+  {
+   "id": "read:conscious",
+   "w": "conscious",
+   "ipa": "ˈkɒnʃəs",
+   "cn": "adj. 有意识的",
+   "ex": "Participants were conscious of being observed during the task.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "aware"
+   ]
+  },
+  {
+   "id": "read:thickness",
+   "w": "thickness",
+   "ipa": "ˈθɪknəs",
+   "cn": "n. 厚度",
+   "ex": "The thickness of the ice varied across the lake.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:offspring",
+   "w": "offspring",
+   "ipa": "ˈɒfsprɪŋ",
+   "cn": "n. 后代",
+   "ex": "The offspring inherited traits from both parent plants.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "young"
+   ]
+  },
+  {
+   "id": "read:resemble",
+   "w": "resemble",
+   "ipa": "rɪzˈembəl",
+   "cn": "v. 类似",
+   "ex": "The results resemble findings from earlier urban studies.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "match"
+   ]
+  },
+  {
+   "id": "read:circulation",
+   "w": "circulation",
+   "ipa": "ˌsɜːkjʊlˈeɪʃən",
+   "cn": "n. 循环",
+   "ex": "Poor circulation can cause cold hands and feet.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "flow"
+   ]
+  },
+  {
+   "id": "read:correctly",
+   "w": "correctly",
+   "ipa": "kərˈektli",
+   "cn": "adv. 正确地",
+   "ex": "Students who planned their essays answered correctly more often.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "accurately"
+   ]
+  },
+  {
+   "id": "read:necessity",
+   "w": "necessity",
+   "ipa": "nəsˈesɪti",
+   "cn": "n. 必要性",
+   "ex": "Clean water is a necessity for public health.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "need"
+   ]
+  },
+  {
+   "id": "read:metaphor",
+   "w": "metaphor",
+   "ipa": "ˈmetəfˌɔː",
+   "cn": "n. 隐喻",
+   "ex": "The metaphor of a journey shapes the writer's argument.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "image"
+   ]
+  },
+  {
+   "id": "read:tract",
+   "w": "tract",
+   "ipa": "ˈtrakt",
+   "cn": "n. 道；地带",
+   "ex": "Infection spread along the digestive tract and caused pain.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "passage"
+   ]
+  },
+  {
+   "id": "read:liver",
+   "w": "liver",
+   "ipa": "ˈlɪvə",
+   "cn": "n. 肝脏",
+   "ex": "The liver removes harmful substances from the blood.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:subjective",
+   "w": "subjective",
+   "ipa": "sʌbdʒˈektɪv",
+   "cn": "adj. 主观的",
+   "ex": "Patients gave subjective judgements of pain after surgery.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "personal"
+   ]
+  },
+  {
+   "id": "read:rejection",
+   "w": "rejection",
+   "ipa": "rɪdʒˈekʃən",
+   "cn": "n. 拒绝；排斥",
+   "ex": "Doctors feared rejection of the transplant within a week.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "refusal"
+   ]
+  },
+  {
+   "id": "read:replacement",
+   "w": "replacement",
+   "ipa": "rɪplˈeɪsmənt",
+   "cn": "n. 替换",
+   "ex": "The replacement of coal with gas reduced air pollution.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "substitute"
+   ]
+  },
+  {
+   "id": "read:amongst",
+   "w": "amongst",
+   "ipa": "əmˈʌŋst",
+   "cn": "prep. 在……之中",
+   "ex": "Support for the policy was strongest amongst young voters.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "among"
+   ]
+  },
+  {
+   "id": "read:complication",
+   "w": "complication",
+   "ipa": "ˌkɒmplɪkˈeɪʃən",
+   "cn": "n. 并发症",
+   "ex": "Infection was a serious complication after the operation.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:valve",
+   "w": "valve",
+   "ipa": "ˈvalv",
+   "cn": "n. 瓣膜；阀门",
+   "ex": "A faulty valve allowed blood to flow backwards.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:plural",
+   "w": "plural",
+   "ipa": "ˈplʊərəl",
+   "cn": "adj. 复数的",
+   "ex": "The plural form of the noun is used in this title.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:absorption",
+   "w": "absorption",
+   "ipa": "əbsˈɔːpʃən",
+   "cn": "n. 吸收",
+   "ex": "The absorption of nutrients occurs mainly in the small intestine.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "uptake"
+   ]
+  },
+  {
+   "id": "read:monetary",
+   "w": "monetary",
+   "ipa": "ˈmʌnɪtəri",
+   "cn": "adj. 货币的",
+   "ex": "Central banks use monetary policy to influence inflation.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "financial"
+   ]
+  },
+  {
+   "id": "read:thermal",
+   "w": "thermal",
+   "ipa": "ˈθɜːməl",
+   "cn": "adj. 热的",
+   "ex": "Stored thermal energy from the sun warms the ocean.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "heat"
+   ]
+  },
+  {
+   "id": "read:tolerance",
+   "w": "tolerance",
+   "ipa": "ˈtɒlərəns",
+   "cn": "n. 耐受；宽容",
+   "ex": "Low oxygen tolerance limited work at high altitude.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "endurance"
+   ]
+  },
+  {
+   "id": "read:articulate",
+   "w": "articulate",
+   "ipa": "ɑːtˈɪkjʊlˌeɪt",
+   "cn": "v. 清楚地表达",
+   "ex": "Good writers articulate complex ideas in simple language.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "express"
+   ]
+  },
+  {
+   "id": "read:mobility",
+   "w": "mobility",
+   "ipa": "məʊbˈɪlɪti",
+   "cn": "n. 流动性",
+   "ex": "Social mobility remained limited for low-income families.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "movement"
+   ]
+  },
+  {
+   "id": "read:manipulation",
+   "w": "manipulation",
+   "ipa": "mənˌɪpjʊlˈeɪʃən",
+   "cn": "n. 操纵；操作",
+   "ex": "Genetic manipulation remains controversial in food production.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "control"
+   ]
+  },
+  {
+   "id": "read:elevate",
+   "w": "elevate",
+   "ipa": "ˈelɪvˌeɪt",
+   "cn": "v. 提高",
+   "ex": "Regular exercise can elevate mood and physical health.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "raise",
+    "lift"
+   ]
+  },
+  {
+   "id": "read:nationalism",
+   "w": "nationalism",
+   "ipa": "ˈnaʃənəlˌɪzəm",
+   "cn": "n. 民族主义",
+   "ex": "Rising nationalism influenced foreign policy in the period.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:adverse",
+   "w": "adverse",
+   "ipa": "advˈɜːs",
+   "cn": "adj. 不利的",
+   "ex": "Farmers faced adverse weather during the wheat harvest.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "harmful"
+   ]
+  },
+  {
+   "id": "read:plausible",
+   "w": "plausible",
+   "ipa": "ˈplɔːzɪbəl",
+   "cn": "adj. 合理的",
+   "ex": "A plausible explanation linked the decline to air pollution.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "reasonable",
+    "credible"
+   ]
+  },
+  {
+   "id": "read:nitrogen",
+   "w": "nitrogen",
+   "ipa": "ˈnaɪtrədʒən",
+   "cn": "n. 氮",
+   "ex": "Farmers add nitrogen to support rapid plant growth.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:vein",
+   "w": "vein",
+   "ipa": "ˈveɪn",
+   "cn": "n. 静脉",
+   "ex": "A blocked vein can slow the return of blood.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:wheat",
+   "w": "wheat",
+   "ipa": "ˈwiːt",
+   "cn": "n. 小麦",
+   "ex": "Dry weather reduced wheat production across the region.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:rewrite",
+   "w": "rewrite",
+   "ipa": "rɪrˈaɪt",
+   "cn": "v. 改写",
+   "ex": "Editors rewrite unclear sentences before the article is published.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "revise"
+   ]
+  },
+  {
+   "id": "read:strategic",
+   "w": "strategic",
+   "ipa": "strətˈiːdʒɪk",
+   "cn": "adj. 战略的",
+   "ex": "The school used strategic planning to raise examination results.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:peasant",
+   "w": "peasant",
+   "ipa": "ˈpezənt",
+   "cn": "n. 农民",
+   "ex": "Each peasant family farmed a small plot of land.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "farmer"
+   ]
+  },
+  {
+   "id": "read:absorb",
+   "w": "absorb",
+   "ipa": "əbsˈɔːb",
+   "cn": "v. 吸收",
+   "ex": "Dark surfaces absorb more heat than pale ones.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:sketch",
+   "w": "sketch",
+   "ipa": "ˈsketʃ",
+   "cn": "n. 草图；概述",
+   "ex": "The sketch shows the layout of the ancient settlement.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "drawing",
+    "outline"
+   ]
+  },
+  {
+   "id": "read:justification",
+   "w": "justification",
+   "ipa": "ˌdʒʌstɪfɪkˈeɪʃən",
+   "cn": "n. 理由；辩护",
+   "ex": "The report provides little justification for the new policy.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "reason",
+    "defence"
+   ]
+  },
+  {
+   "id": "read:lifetime",
+   "w": "lifetime",
+   "ipa": "ˈlaɪftaɪm",
+   "cn": "n. 一生；寿命",
+   "ex": "Exposure accumulated over a lifetime of factory work.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "lifespan"
+   ]
+  },
+  {
+   "id": "read:binary",
+   "w": "binary",
+   "ipa": "ˈbaɪnəri",
+   "cn": "adj. 二元的",
+   "ex": "A binary choice ignores the many options in between.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "dual"
+   ]
+  },
+  {
+   "id": "read:contour",
+   "w": "contour",
+   "ipa": "ˈkɒntʊə",
+   "cn": "n. 轮廓",
+   "ex": "The contour of the coast has shifted after erosion.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "outline",
+    "shape"
+   ]
+  },
+  {
+   "id": "read:execution",
+   "w": "execution",
+   "ipa": "ˌeksɪkjˈuːʃən",
+   "cn": "n. 执行",
+   "ex": "Successful execution of the plan required local support.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "implementation"
+   ]
+  },
+  {
+   "id": "read:rhythm",
+   "w": "rhythm",
+   "ipa": "ˈrɪðəm",
+   "cn": "n. 节奏",
+   "ex": "The daily rhythm of sleep is controlled by light.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "beat",
+    "pattern"
+   ]
+  },
+  {
+   "id": "read:dictionary",
+   "w": "dictionary",
+   "ipa": "ˈdɪkʃənəri",
+   "cn": "n. 词典",
+   "ex": "A learner's dictionary explains words in simple language.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:constitution",
+   "w": "constitution",
+   "ipa": "ˌkɒnstɪtjˈuːʃən",
+   "cn": "n. 宪法；体质",
+   "ex": "The constitution protects freedom of speech and assembly.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "charter"
+   ]
+  },
+  {
+   "id": "read:acceleration",
+   "w": "acceleration",
+   "ipa": "əksˌelərˈeɪʃən",
+   "cn": "n. 加速度",
+   "ex": "Constant acceleration changes the velocity of a moving object.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:strand",
+   "w": "strand",
+   "ipa": "ˈstrand",
+   "cn": "n. 链；股",
+   "ex": "Each strand of DNA carries genetic information.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "thread"
+   ]
+  },
+  {
+   "id": "read:randomly",
+   "w": "randomly",
+   "ipa": "ˈrandəmli",
+   "cn": "adv. 随机地",
+   "ex": "Names were randomly selected from the school register.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:philosopher",
+   "w": "philosopher",
+   "ipa": "fɪlˈɒsəfə",
+   "cn": "n. 哲学家",
+   "ex": "The philosopher questioned what makes a just society.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "thinker"
+   ]
+  },
+  {
+   "id": "read:pronounce",
+   "w": "pronounce",
+   "ipa": "prənˈaʊns",
+   "cn": "v. 发音",
+   "ex": "Learners often pronounce unfamiliar words incorrectly at first.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "say"
+   ]
+  },
+  {
+   "id": "read:objection",
+   "w": "objection",
+   "ipa": "ɒbdʒˈekʃən",
+   "cn": "n. 反对",
+   "ex": "The main objection concerned the size of the sample.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "protest"
+   ]
+  },
+  {
+   "id": "read:meaningful",
+   "w": "meaningful",
+   "ipa": "ˈmiːnɪŋfəl",
+   "cn": "adj. 有意义的",
+   "ex": "Teachers link meaningful learning with prior knowledge.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "significant"
+   ]
+  },
+  {
+   "id": "read:realm",
+   "w": "realm",
+   "ipa": "ˈrelm",
+   "cn": "n. 领域",
+   "ex": "This question lies in the realm of moral philosophy.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "domain",
+    "sphere"
+   ]
+  },
+  {
+   "id": "read:replication",
+   "w": "replication",
+   "ipa": "ˌreplɪkˈeɪʃən",
+   "cn": "n. 重复；复制",
+   "ex": "Successful replication confirmed the original experimental result.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "repetition"
+   ]
+  },
+  {
+   "id": "read:basin",
+   "w": "basin",
+   "ipa": "ˈbeɪsən",
+   "cn": "n. 流域；盆地",
+   "ex": "The river basin supports farming and several large towns.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "valley"
+   ]
+  },
+  {
+   "id": "read:interestingly",
+   "w": "interestingly",
+   "ipa": "ˈɪntrɪstɪŋli",
+   "cn": "adv. 有趣的是",
+   "ex": "Results interestingly matched an earlier and smaller study.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:grid",
+   "w": "grid",
+   "ipa": "ˈɡrɪd",
+   "cn": "n. 网格",
+   "ex": "A grid of streets divided the new city into blocks.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "network"
+   ]
+  },
+  {
+   "id": "read:displacement",
+   "w": "displacement",
+   "ipa": "dɪsplˈeɪsmənt",
+   "cn": "n. 流离；位移",
+   "ex": "The displacement of people followed the long civil war.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "shift"
+   ]
+  },
+  {
+   "id": "read:standardise",
+   "w": "standardise",
+   "ipa": "ˈstandədˌaɪz",
+   "cn": "v. 使标准化",
+   "ex": "Schools standardise tests so results can be compared.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:civilisation",
+   "w": "civilisation",
+   "ipa": "ˌsɪvɪlaɪzˈeɪʃən",
+   "cn": "n. 文明",
+   "ex": "The civilisation declined after years of drought and conflict.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "culture"
+   ]
+  },
+  {
+   "id": "read:positively",
+   "w": "positively",
+   "ipa": "ˈpɒzɪtˌɪvli",
+   "cn": "adv. 正向地；积极地",
+   "ex": "Exercise is positively associated with better mental health.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:deficiency",
+   "w": "deficiency",
+   "ipa": "dɪfˈɪʃənsi",
+   "cn": "n. 缺乏",
+   "ex": "Iron deficiency can cause tiredness and poor concentration.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "shortage",
+    "lack"
+   ]
+  },
+  {
+   "id": "read:legitimate",
+   "w": "legitimate",
+   "ipa": "lədʒˈɪtɪmət",
+   "cn": "adj. 合法的；合理的",
+   "ex": "The court ruled that the claim was legitimate.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "lawful",
+    "valid"
+   ]
+  },
+  {
+   "id": "read:accelerate",
+   "w": "accelerate",
+   "ipa": "əksˈelərˌeɪt",
+   "cn": "v. 加速",
+   "ex": "New technology can accelerate change in the labour market.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "quicken"
+   ]
+  },
+  {
+   "id": "read:formally",
+   "w": "formally",
+   "ipa": "ˈfɔːməli",
+   "cn": "adv. 正式地",
+   "ex": "The agreement was formally signed by both governments.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "officially"
+   ]
+  },
+  {
+   "id": "read:socially",
+   "w": "socially",
+   "ipa": "ˈsəʊʃəli",
+   "cn": "adv. 在社会上",
+   "ex": "The policy was socially beneficial but costly to deliver.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:accurately",
+   "w": "accurately",
+   "ipa": "ˈakjʊrətli",
+   "cn": "adv. 准确地",
+   "ex": "The instrument accurately measured small changes in pressure.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "precisely"
+   ]
+  },
+  {
+   "id": "read:progression",
+   "w": "progression",
+   "ipa": "prəɡrˈeʃən",
+   "cn": "n. 进展",
+   "ex": "Disease progression was slower in the treated group.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "advance"
+   ]
+  },
+  {
+   "id": "read:essence",
+   "w": "essence",
+   "ipa": "ˈesəns",
+   "cn": "n. 本质",
+   "ex": "The essence of the argument is easy to state.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "core",
+    "nature"
+   ]
+  },
+  {
+   "id": "read:cylinder",
+   "w": "cylinder",
+   "ipa": "ˈsɪlɪndə",
+   "cn": "n. 圆柱体；圆筒",
+   "ex": "The volume of a cylinder depends on radius and height.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:predominantly",
+   "w": "predominantly",
+   "ipa": "prɪdˈɒmɪnəntli",
+   "cn": "adv. 主要地；大多",
+   "ex": "Coastal cities are predominantly built on low ground.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "mainly",
+    "chiefly"
+   ]
+  },
+  {
+   "id": "read:impulse",
+   "w": "impulse",
+   "ipa": "ˈɪmpʌls",
+   "cn": "n. 冲动；脉冲",
+   "ex": "A sudden impulse led her to leave the meeting early.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "urge"
+   ]
+  },
+  {
+   "id": "read:theorist",
+   "w": "theorist",
+   "ipa": "ˈθiərɪst",
+   "cn": "n. 理论家",
+   "ex": "The theorist proposed a model of urban social change.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:alliance",
+   "w": "alliance",
+   "ipa": "əlˈaɪəns",
+   "cn": "n. 联盟；同盟",
+   "ex": "The two states formed an alliance to protect trade routes.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "coalition",
+    "pact"
+   ]
+  },
+  {
+   "id": "read:crystal",
+   "w": "crystal",
+   "ipa": "ˈkrɪstəl",
+   "cn": "n. 晶体；水晶",
+   "ex": "Salt crystal forms when seawater slowly evaporates.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:importantly",
+   "w": "importantly",
+   "ipa": "ɪmpˈɔːtəntli",
+   "cn": "adv. 重要的是",
+   "ex": "The report, importantly, includes data from rural schools.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:stack",
+   "w": "stack",
+   "ipa": "ˈstak",
+   "cn": "n. 一叠；堆",
+   "ex": "A stack of journals sat beside the laboratory bench.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "pile",
+    "heap"
+   ]
+  },
+  {
+   "id": "read:drift",
+   "w": "drift",
+   "ipa": "ˈdrɪft",
+   "cn": "v. 漂流；渐渐偏移",
+   "ex": "Ice sheets drift slowly towards the open polar sea.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "float"
+   ]
+  },
+  {
+   "id": "read:nest",
+   "w": "nest",
+   "ipa": "ˈnest",
+   "cn": "n. 巢；窝",
+   "ex": "Each nest held three eggs hidden among the reeds.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:fossil",
+   "w": "fossil",
+   "ipa": "ˈfɒsəl",
+   "cn": "n. 化石",
+   "ex": "This fossil shows how early fish developed bony jaws.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:resistant",
+   "w": "resistant",
+   "ipa": "rɪsˈɪstənt",
+   "cn": "adj. 有抵抗力的；耐受的",
+   "ex": "Some bacteria are resistant to common hospital drugs.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:dimensional",
+   "w": "dimensional",
+   "ipa": "daɪmˈenʃənəl",
+   "cn": "adj. 维的；有维度的",
+   "ex": "Engineers built a three dimensional model of the bridge.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:rhetoric",
+   "w": "rhetoric",
+   "ipa": "ˈretərˌɪk",
+   "cn": "n. 修辞；辞令",
+   "ex": "Political rhetoric often hides the real cost of reform.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:artefact",
+   "w": "artefact",
+   "ipa": "ˈɑːtɪfˌakt",
+   "cn": "n. 人工制品；文物",
+   "ex": "Each artefact was labelled and stored in a dry room.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:carrier",
+   "w": "carrier",
+   "ipa": "ˈkariə",
+   "cn": "n. 携带者；载体",
+   "ex": "A carrier may spread the virus without showing symptoms.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:surgical",
+   "w": "surgical",
+   "ipa": "ˈsɜːdʒɪkəl",
+   "cn": "adj. 外科的；手术的",
+   "ex": "The team prepared surgical tools before the operation.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:coordination",
+   "w": "coordination",
+   "ipa": "kəʊˈɔːdɪnˈeɪʃən",
+   "cn": "n. 协调；配合",
+   "ex": "Good coordination between teams reduced delays on site.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:turbulent",
+   "w": "turbulent",
+   "ipa": "ˈtɜːbjʊlənt",
+   "cn": "adj. 动荡的；湍急的",
+   "ex": "The boat crossed turbulent water near the rocky mouth.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:sediment",
+   "w": "sediment",
+   "ipa": "ˈsedɪmənt",
+   "cn": "n. 沉积物；沉渣",
+   "ex": "River sediment builds new land where the current slows.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "deposit"
+   ]
+  },
+  {
+   "id": "read:ray",
+   "w": "ray",
+   "ipa": "ˈreɪ",
+   "cn": "n. 光线；射线",
+   "ex": "A single ray of light entered through the narrow slit.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "beam"
+   ]
+  },
+  {
+   "id": "read:conserve",
+   "w": "conserve",
+   "ipa": "kənsˈɜːv",
+   "cn": "v. 节约；保护",
+   "ex": "Farmers conserve water by irrigating only at night.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "save",
+    "preserve"
+   ]
+  },
+  {
+   "id": "read:grasp",
+   "w": "grasp",
+   "ipa": "ˈɡrasp",
+   "cn": "v. 理解；抓住",
+   "ex": "Students must grasp the theory before they analyse data.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "understand"
+   ]
+  },
+  {
+   "id": "read:terminology",
+   "w": "terminology",
+   "ipa": "ˌtɜːmɪnˈɒlədʒi",
+   "cn": "n. 术语",
+   "ex": "Medical terminology can confuse patients reading a report.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "terms"
+   ]
+  },
+  {
+   "id": "read:triangle",
+   "w": "triangle",
+   "ipa": "ˈtraɪaŋɡəl",
+   "cn": "n. 三角形",
+   "ex": "The roof forms a triangle above the main stone wall.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:traditionally",
+   "w": "traditionally",
+   "ipa": "trədˈɪʃənəli",
+   "cn": "adv. 传统上",
+   "ex": "This festival traditionally marks the start of the harvest.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:execute",
+   "w": "execute",
+   "ipa": "ˈeksɪkjˌuːt",
+   "cn": "v. 执行；实施",
+   "ex": "The team will execute the plan once funding is approved.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "perform"
+   ]
+  },
+  {
+   "id": "read:intensive",
+   "w": "intensive",
+   "ipa": "ɪntˈensɪv",
+   "cn": "adj. 密集的；强化的",
+   "ex": "Years of intensive farming can exhaust the soil.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:reconstruct",
+   "w": "reconstruct",
+   "ipa": "ˌriːkənstrˈʌkt",
+   "cn": "v. 重建；复原",
+   "ex": "Historians reconstruct daily life from letters and objects.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "rebuild"
+   ]
+  },
+  {
+   "id": "read:broadly",
+   "w": "broadly",
+   "ipa": "ˈbrɔːdli",
+   "cn": "adv. 大致上；广泛地",
+   "ex": "The results are broadly similar across three age groups.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "generally"
+   ]
+  },
+  {
+   "id": "read:revolutionary",
+   "w": "revolutionary",
+   "ipa": "ˌrevəlˈuːʃənəri",
+   "cn": "adj. 革命性的",
+   "ex": "The steam engine was a revolutionary invention in transport.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "radical"
+   ]
+  },
+  {
+   "id": "read:merge",
+   "w": "merge",
+   "ipa": "ˈmɜːdʒ",
+   "cn": "v. 合并；融合",
+   "ex": "The two departments will merge early next year.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "combine",
+    "unite"
+   ]
+  },
+  {
+   "id": "read:dilemma",
+   "w": "dilemma",
+   "ipa": "daɪlˈemə",
+   "cn": "n. 两难；困境",
+   "ex": "The council faced a dilemma between cost and safety.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:motif",
+   "w": "motif",
+   "ipa": "məʊtˈiːf",
+   "cn": "n. 主题图案；母题",
+   "ex": "A leaf motif repeats across the temple walls.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "theme",
+    "pattern"
+   ]
+  },
+  {
+   "id": "read:subtle",
+   "w": "subtle",
+   "ipa": "ˈsʌtəl",
+   "cn": "adj. 微妙的；细微的",
+   "ex": "She noticed a subtle change in the colour of the dye.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "slight"
+   ]
+  },
+  {
+   "id": "read:susceptible",
+   "w": "susceptible",
+   "ipa": "səsˈeptɪbəl",
+   "cn": "adj. 易受影响的；易感染的",
+   "ex": "Young children are susceptible to this infection.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "vulnerable"
+   ]
+  },
+  {
+   "id": "read:architect",
+   "w": "architect",
+   "ipa": "ˈɑːkɪtˌekt",
+   "cn": "n. 建筑师",
+   "ex": "The architect designed a library with wide public rooms.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "designer"
+   ]
+  },
+  {
+   "id": "read:breakdown",
+   "w": "breakdown",
+   "ipa": "ˈbreɪkdaʊn",
+   "cn": "n. 故障；分类明细",
+   "ex": "A breakdown in communication delayed the rescue for hours.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "failure"
+   ]
+  },
+  {
+   "id": "read:inject",
+   "w": "inject",
+   "ipa": "ɪndʒˈekt",
+   "cn": "v. 注射；注入",
+   "ex": "Nurses inject the vaccine into the upper arm.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:economist",
+   "w": "economist",
+   "ipa": "ɪkˈɒnəmˌɪst",
+   "cn": "n. 经济学家",
+   "ex": "The economist warned that food prices could rise sharply.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:momentum",
+   "w": "momentum",
+   "ipa": "məʊmˈentəm",
+   "cn": "n. 势头；动量",
+   "ex": "The campaign lost momentum after the first month.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "drive"
+   ]
+  },
+  {
+   "id": "read:polar",
+   "w": "polar",
+   "ipa": "ˈpəʊlə",
+   "cn": "adj. 极地的；相反的",
+   "ex": "Sea ice in polar regions reflects sunlight back into space.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:backward",
+   "w": "backward",
+   "ipa": "ˈbakwəd",
+   "cn": "adj. 向后的；落后的",
+   "ex": "A backward glance showed smoke behind the convoy.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:multiply",
+   "w": "multiply",
+   "ipa": "ˌmʌltɪplˈaɪ",
+   "cn": "v. 乘；迅速增多",
+   "ex": "Bacteria multiply quickly in warm moist conditions.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "increase"
+   ]
+  },
+  {
+   "id": "read:morality",
+   "w": "morality",
+   "ipa": "mɒrˈalɪti",
+   "cn": "n. 道德",
+   "ex": "The novel questions the morality of war and obedience.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "ethics"
+   ]
+  },
+  {
+   "id": "read:communicative",
+   "w": "communicative",
+   "ipa": "kəmjˈuːnɪkətˌɪv",
+   "cn": "adj. 交际的",
+   "ex": "The test measures communicative skill in spoken English.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:physically",
+   "w": "physically",
+   "ipa": "ˈfɪzɪkli",
+   "cn": "adv. 身体上；物理上",
+   "ex": "The work is physically hard even for trained adults.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:rainfall",
+   "w": "rainfall",
+   "ipa": "ˈreɪnfɔːl",
+   "cn": "n. 降雨量",
+   "ex": "Annual rainfall has declined across the southern farms.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "rain"
+   ]
+  },
+  {
+   "id": "read:politically",
+   "w": "politically",
+   "ipa": "pəlˈɪtɪkli",
+   "cn": "adv. 政治上",
+   "ex": "The decision was politically difficult for the ruling party.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:invasion",
+   "w": "invasion",
+   "ipa": "ɪnvˈeɪʒən",
+   "cn": "n. 入侵",
+   "ex": "The invasion destroyed crops and forced families to flee.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:capitalism",
+   "w": "capitalism",
+   "ipa": "ˈkapɪtəlˌɪzəm",
+   "cn": "n. 资本主义",
+   "ex": "Under capitalism, firms compete to sell goods for profit.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:expertise",
+   "w": "expertise",
+   "ipa": "ˌekspətˈiːz",
+   "cn": "n. 专门知识；专长",
+   "ex": "The museum hired staff with expertise in old textiles.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "skill"
+   ]
+  },
+  {
+   "id": "read:inferior",
+   "w": "inferior",
+   "ipa": "ɪnfˈiəriə",
+   "cn": "adj. 较差的；下级的",
+   "ex": "The copy was inferior in colour and fine detail.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "worse"
+   ]
+  },
+  {
+   "id": "read:actively",
+   "w": "actively",
+   "ipa": "ˈaktɪvli",
+   "cn": "adv. 积极地",
+   "ex": "Students who actively join discussions remember more.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:quotation",
+   "w": "quotation",
+   "ipa": "kwəʊtˈeɪʃən",
+   "cn": "n. 引文；报价",
+   "ex": "The essay opens with a quotation from a local historian.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "quote"
+   ]
+  },
+  {
+   "id": "read:composite",
+   "w": "composite",
+   "ipa": "ˈkɒmpəzˌɪt",
+   "cn": "adj. 复合的",
+   "ex": "These composite materials are light but very strong.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "compound"
+   ]
+  },
+  {
+   "id": "read:historically",
+   "w": "historically",
+   "ipa": "hɪstˈɒrɪkli",
+   "cn": "adv. 在历史上",
+   "ex": "The port historically linked farms with overseas markets.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:bundle",
+   "w": "bundle",
+   "ipa": "ˈbʌndəl",
+   "cn": "n. 捆；包",
+   "ex": "She carried a bundle of letters tied with string.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "pack"
+   ]
+  },
+  {
+   "id": "read:elementary",
+   "w": "elementary",
+   "ipa": "ˌelɪmˈentəri",
+   "cn": "adj. 基础的；初级的",
+   "ex": "The course begins with elementary ideas about heat.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "basic"
+   ]
+  },
+  {
+   "id": "read:capitalist",
+   "w": "capitalist",
+   "ipa": "ˈkapɪtəlˌɪst",
+   "cn": "adj. 资本主义的",
+   "ex": "A capitalist economy depends on private ownership.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:flexibility",
+   "w": "flexibility",
+   "ipa": "ˌfleksəbˈɪlɪti",
+   "cn": "n. 灵活性",
+   "ex": "Part-time work gives parents more flexibility each week.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:cord",
+   "w": "cord",
+   "ipa": "ˈkɔːd",
+   "cn": "n. 绳索；软线",
+   "ex": "A thick cord held the tent against the wind.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "rope"
+   ]
+  },
+  {
+   "id": "read:realistic",
+   "w": "realistic",
+   "ipa": "riəlˈɪstɪk",
+   "cn": "adj. 现实的；切合实际的",
+   "ex": "A realistic plan must include maintenance costs.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "practical"
+   ]
+  },
+  {
+   "id": "read:initiation",
+   "w": "initiation",
+   "ipa": "ɪnˌɪʃɪˈeɪʃən",
+   "cn": "n. 开始；入会仪式",
+   "ex": "The initiation of the project followed long consultation.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "start"
+   ]
+  },
+  {
+   "id": "read:horizon",
+   "w": "horizon",
+   "ipa": "hərˈaɪzən",
+   "cn": "n. 地平线；视野",
+   "ex": "Low hills marked the horizon beyond the open plain.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:consultation",
+   "w": "consultation",
+   "ipa": "kɒnsəltˈeɪʃən",
+   "cn": "n. 咨询；商议",
+   "ex": "The plan changed after consultation with local residents.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "discussion"
+   ]
+  },
+  {
+   "id": "read:ruler",
+   "w": "ruler",
+   "ipa": "ˈruːlə",
+   "cn": "n. 统治者；尺子",
+   "ex": "The ruler ordered a census of every town.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "leader"
+   ]
+  },
+  {
+   "id": "read:freely",
+   "w": "freely",
+   "ipa": "ˈfriːli",
+   "cn": "adv. 自由地；无偿地",
+   "ex": "Visitors may freely enter the gardens in daylight.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:rotate",
+   "w": "rotate",
+   "ipa": "rəʊtˈeɪt",
+   "cn": "v. 旋转；轮换",
+   "ex": "The blades rotate faster as the wind strengthens.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "turn",
+    "spin"
+   ]
+  },
+  {
+   "id": "read:elevation",
+   "w": "elevation",
+   "ipa": "ˌelɪvˈeɪʃən",
+   "cn": "n. 海拔；升高",
+   "ex": "The town sits at an elevation of six hundred metres.",
+   "g": "r:2",
+   "use": "receptive",
+   "syns": [
+    "height"
+   ]
+  },
+  {
+   "id": "read:atomic",
+   "w": "atomic",
+   "ipa": "ətˈɒmɪk",
+   "cn": "adj. 原子的",
+   "ex": "Scientists study atomic structure to explain chemical bonds.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:trivial",
+   "w": "trivial",
+   "ipa": "ˈtrɪvɪəl",
+   "cn": "adj. 微不足道的",
+   "ex": "The error looked trivial yet it changed the total.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "minor"
+   ]
+  },
+  {
+   "id": "read:stance",
+   "w": "stance",
+   "ipa": "ˈstans",
+   "cn": "n. 立场",
+   "ex": "The minister kept her stance on school funding.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "position"
+   ]
+  },
+  {
+   "id": "read:stabilise",
+   "w": "stabilise",
+   "ipa": "ˈsteɪbəlˌaɪz",
+   "cn": "v. 使稳定",
+   "ex": "Doctors tried to stabilise the patient before surgery.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "steady"
+   ]
+  },
+  {
+   "id": "read:profound",
+   "w": "profound",
+   "ipa": "prəfˈaʊnd",
+   "cn": "adj. 深刻的；深远的",
+   "ex": "The war had a profound effect on family life.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "deep"
+   ]
+  },
+  {
+   "id": "read:genetics",
+   "w": "genetics",
+   "ipa": "dʒɪnˈetɪks",
+   "cn": "n. 遗传学",
+   "ex": "Modern genetics helps explain disease within families.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:gravity",
+   "w": "gravity",
+   "ipa": "ˈɡravɪti",
+   "cn": "n. 重力；严重性",
+   "ex": "Objects fall because gravity pulls them towards Earth.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:pole",
+   "w": "pole",
+   "ipa": "ˈpəʊl",
+   "cn": "n. 极；杆",
+   "ex": "The team reached the pole after weeks of cold.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:puzzle",
+   "w": "puzzle",
+   "ipa": "ˈpʌzəl",
+   "cn": "n. 难题；谜",
+   "ex": "The drop in fish numbers remains a puzzle for scientists.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "mystery"
+   ]
+  },
+  {
+   "id": "read:respiratory",
+   "w": "respiratory",
+   "ipa": "rɪspˈɪrətəri",
+   "cn": "adj. 呼吸的",
+   "ex": "Smoke can cause respiratory illness in young children.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:elimination",
+   "w": "elimination",
+   "ipa": "ɪlˌɪmɪnˈeɪʃən",
+   "cn": "n. 消除；淘汰",
+   "ex": "The elimination of lead from petrol improved health.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "removal"
+   ]
+  },
+  {
+   "id": "read:exit",
+   "w": "exit",
+   "ipa": "ˈeɡzɪt",
+   "cn": "n. 出口；退出",
+   "ex": "An exit sign was marked at the end of the hall.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "way out"
+   ]
+  },
+  {
+   "id": "read:circulate",
+   "w": "circulate",
+   "ipa": "ˈsɜːkjʊlˌeɪt",
+   "cn": "v. 循环；传播",
+   "ex": "Blood must circulate freely to keep the organs healthy.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "flow"
+   ]
+  },
+  {
+   "id": "read:obscure",
+   "w": "obscure",
+   "ipa": "ɒbskjˈʊə",
+   "cn": "adj. 晦涩的；不知名的",
+   "ex": "The poem uses obscure words that few readers recognise.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "unclear"
+   ]
+  },
+  {
+   "id": "read:interfere",
+   "w": "interfere",
+   "ipa": "ˌɪntəfˈiə",
+   "cn": "v. 干扰；干涉",
+   "ex": "Tall buildings can interfere with radio signals nearby.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "hinder"
+   ]
+  },
+  {
+   "id": "read:trauma",
+   "w": "trauma",
+   "ipa": "ˈtrɔːmə",
+   "cn": "n. 创伤",
+   "ex": "Childhood trauma may affect health many years later.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:upward",
+   "w": "upward",
+   "ipa": "ˈʌpwəd",
+   "cn": "adj. 向上的",
+   "ex": "An upward trend in wages appears in the latest figures.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "rising"
+   ]
+  },
+  {
+   "id": "read:gross",
+   "w": "gross",
+   "ipa": "ˈɡrəʊs",
+   "cn": "adj. 总的；严重的",
+   "ex": "The report lists gross income before tax and deductions.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "total"
+   ]
+  },
+  {
+   "id": "read:optical",
+   "w": "optical",
+   "ipa": "ˈɒptɪkəl",
+   "cn": "adj. 光学的",
+   "ex": "These optical tools let scientists study distant stars.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:communist",
+   "w": "communist",
+   "ipa": "ˈkɒmjuːnˌɪst",
+   "cn": "adj. 共产主义的",
+   "ex": "The communist government controlled prices for basic food.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:continent",
+   "w": "continent",
+   "ipa": "ˈkɒntɪnənt",
+   "cn": "n. 洲；大陆",
+   "ex": "Antarctica is the coldest continent on Earth.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:physics",
+   "w": "physics",
+   "ipa": "ˈfɪzɪks",
+   "cn": "n. 物理学",
+   "ex": "School physics explains how light bends in water.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:viable",
+   "w": "viable",
+   "ipa": "ˈvaɪəbəl",
+   "cn": "adj. 可行的；能存活的",
+   "ex": "The scheme is viable only if local funding continues.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "workable"
+   ]
+  },
+  {
+   "id": "read:limb",
+   "w": "limb",
+   "ipa": "ˈlɪm",
+   "cn": "n. 肢体；树枝",
+   "ex": "A broken limb can take months to heal fully.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:retrieve",
+   "w": "retrieve",
+   "ipa": "rɪtrˈiːv",
+   "cn": "v. 取回；检索",
+   "ex": "Divers retrieve tools lost on the harbour floor.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "recover"
+   ]
+  },
+  {
+   "id": "read:rationality",
+   "w": "rationality",
+   "ipa": "ˌraʃənˈalɪti",
+   "cn": "n. 理性",
+   "ex": "Economic models often assume rationality in human choice.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "reason"
+   ]
+  },
+  {
+   "id": "read:slavery",
+   "w": "slavery",
+   "ipa": "ˈsleɪvəri",
+   "cn": "n. 奴隶制",
+   "ex": "The book describes slavery and the long fight for freedom.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:artistic",
+   "w": "artistic",
+   "ipa": "ɑːtˈɪstɪk",
+   "cn": "adj. 艺术的",
+   "ex": "Her artistic training shows in the careful line work.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:anthropology",
+   "w": "anthropology",
+   "ipa": "ˌanθrəpˈɒlədʒi",
+   "cn": "n. 人类学",
+   "ex": "Students of anthropology learn how communities organise daily life.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:portray",
+   "w": "portray",
+   "ipa": "pɔːtrˈeɪ",
+   "cn": "v. 描绘；描写",
+   "ex": "The film does not portray factory work as easy.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "depict",
+    "show"
+   ]
+  },
+  {
+   "id": "read:sexuality",
+   "w": "sexuality",
+   "ipa": "ˈsekʃuːˈalɪti",
+   "cn": "n. 性；性取向",
+   "ex": "The study examines how culture shapes ideas of sexuality.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:chemistry",
+   "w": "chemistry",
+   "ipa": "ˈkemɪstri",
+   "cn": "n. 化学",
+   "ex": "School chemistry covers acids, metals, and simple reactions.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:pest",
+   "w": "pest",
+   "ipa": "ˈpest",
+   "cn": "n. 害虫",
+   "ex": "The beetle became a serious pest in the wheat fields.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:fracture",
+   "w": "fracture",
+   "ipa": "ˈfraktʃə",
+   "cn": "n. 断裂；骨折",
+   "ex": "A fracture in the pipe let gas escape slowly.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "break",
+    "crack"
+   ]
+  },
+  {
+   "id": "read:goods",
+   "w": "goods",
+   "ipa": "ˈɡʊdz",
+   "cn": "n. 货物；商品",
+   "ex": "Imported goods arrived by ship and were stored nearby.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "products"
+   ]
+  },
+  {
+   "id": "read:shortly",
+   "w": "shortly",
+   "ipa": "ˈʃɔːtli",
+   "cn": "adv. 不久",
+   "ex": "The results will appear shortly after the conference.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "soon"
+   ]
+  },
+  {
+   "id": "read:inversion",
+   "w": "inversion",
+   "ipa": "ɪnvˈɜːʃən",
+   "cn": "n. 倒置；逆温",
+   "ex": "A temperature inversion can trap smoke near the ground.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "reversal"
+   ]
+  },
+  {
+   "id": "read:irrelevant",
+   "w": "irrelevant",
+   "ipa": "ɪrˈelɪvənt",
+   "cn": "adj. 不相关的",
+   "ex": "Those details are irrelevant to the main question.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "unrelated"
+   ]
+  },
+  {
+   "id": "read:mechanic",
+   "w": "mechanic",
+   "ipa": "mɪkˈanɪk",
+   "cn": "n. 机械修理工",
+   "ex": "A mechanic checked the engine before the desert trip.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:epidemiology",
+   "w": "epidemiology",
+   "ipa": "ˌepɪdˌemɪˈɒlədʒi",
+   "cn": "n. 流行病学",
+   "ex": "Field epidemiology tracks how a disease spreads through towns.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:dissolve",
+   "w": "dissolve",
+   "ipa": "dɪsˈɒlv",
+   "cn": "v. 溶解；解散",
+   "ex": "Sugar will dissolve faster in hot water than in cold.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:bargain",
+   "w": "bargain",
+   "ipa": "ˈbɑːɡɪn",
+   "cn": "n. 交易；便宜货",
+   "ex": "The treaty was a bargain both sides could accept.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "deal"
+   ]
+  },
+  {
+   "id": "read:infectious",
+   "w": "infectious",
+   "ipa": "ɪnfˈekʃəs",
+   "cn": "adj. 传染的",
+   "ex": "Crowded rooms let infectious diseases spread quickly.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "contagious"
+   ]
+  },
+  {
+   "id": "read:individually",
+   "w": "individually",
+   "ipa": "ˌɪndɪvˈɪdʒuːəli",
+   "cn": "adv. 各自；单独地",
+   "ex": "Each sample was tested individually to avoid mixed results.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "separately"
+   ]
+  },
+  {
+   "id": "read:psychologist",
+   "w": "psychologist",
+   "ipa": "saɪkˈɒlədʒˌɪst",
+   "cn": "n. 心理学家",
+   "ex": "A psychologist studied how stress affects adult memory.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:diary",
+   "w": "diary",
+   "ipa": "ˈdaɪəri",
+   "cn": "n. 日记",
+   "ex": "Her diary records the weather and the state of the crops.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "journal"
+   ]
+  },
+  {
+   "id": "read:illusion",
+   "w": "illusion",
+   "ipa": "ɪlˈuːʒən",
+   "cn": "n. 错觉",
+   "ex": "The painting creates an illusion of depth and space.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:optimum",
+   "w": "optimum",
+   "ipa": "ˈɒptɪməm",
+   "cn": "adj. 最佳的",
+   "ex": "Plants grow best near the optimum temperature for them.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "best",
+    "ideal"
+   ]
+  },
+  {
+   "id": "read:fever",
+   "w": "fever",
+   "ipa": "ˈfiːvə",
+   "cn": "n. 发烧；狂热",
+   "ex": "A high fever kept the child in bed for days.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:paradox",
+   "w": "paradox",
+   "ipa": "ˈparədˌɒks",
+   "cn": "n. 悖论",
+   "ex": "The paradox is that more choice can make decisions harder.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "contradiction"
+   ]
+  },
+  {
+   "id": "read:kidney",
+   "w": "kidney",
+   "ipa": "ˈkɪdni",
+   "cn": "n. 肾",
+   "ex": "Each kidney filters waste from the blood every day.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:infinity",
+   "w": "infinity",
+   "ipa": "ɪnfˈɪnɪti",
+   "cn": "n. 无穷",
+   "ex": "Mathematicians use infinity for a quantity without end.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:shallow",
+   "w": "shallow",
+   "ipa": "ˈʃaləʊ",
+   "cn": "adj. 浅的；肤浅的",
+   "ex": "These shallow lakes warm quickly in summer sunlight.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:fundamentally",
+   "w": "fundamentally",
+   "ipa": "ˌfʌndəmˈentəli",
+   "cn": "adv. 根本上",
+   "ex": "The two theories are fundamentally different in their aims.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "basically"
+   ]
+  },
+  {
+   "id": "read:synthetic",
+   "w": "synthetic",
+   "ipa": "sɪnθˈetɪk",
+   "cn": "adj. 合成的；人造的",
+   "ex": "Many synthetic fibres cost less than wool and dry faster.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "artificial"
+   ]
+  },
+  {
+   "id": "read:ton",
+   "w": "ton",
+   "ipa": "ˈtʌn",
+   "cn": "n. 吨",
+   "ex": "The ship carried more than a ton of dried fish.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:bubble",
+   "w": "bubble",
+   "ipa": "ˈbʌbəl",
+   "cn": "n. 气泡；泡沫",
+   "ex": "A bubble of air rose slowly through the thick liquid.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:bracket",
+   "w": "bracket",
+   "ipa": "ˈbrakɪt",
+   "cn": "n. 括号；档次",
+   "ex": "Place the date inside a bracket at the end.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:elasticity",
+   "w": "elasticity",
+   "ipa": "ɪlastˈɪsɪti",
+   "cn": "n. 弹性",
+   "ex": "The elasticity of rubber lets it regain its shape.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:cure",
+   "w": "cure",
+   "ipa": "ˈkjʊə",
+   "cn": "v. 治愈；解决",
+   "ex": "No single drug can cure every form of the illness.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "heal"
+   ]
+  },
+  {
+   "id": "read:contradictory",
+   "w": "contradictory",
+   "ipa": "ˌkɒntrədˈɪktəri",
+   "cn": "adj. 矛盾的",
+   "ex": "The reports give contradictory accounts of the same event.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "conflicting"
+   ]
+  },
+  {
+   "id": "read:sensation",
+   "w": "sensation",
+   "ipa": "sensˈeɪʃən",
+   "cn": "n. 感觉；轰动",
+   "ex": "A tingling sensation spread through her fingers.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "feeling"
+   ]
+  },
+  {
+   "id": "read:elastic",
+   "w": "elastic",
+   "ipa": "ɪlˈastɪk",
+   "cn": "adj. 有弹性的",
+   "ex": "The elastic tissue in the lungs stretches with each breath.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "flexible"
+   ]
+  },
+  {
+   "id": "read:machinery",
+   "w": "machinery",
+   "ipa": "məʃˈiːnəri",
+   "cn": "n. 机器；机制",
+   "ex": "Old machinery still powers the mill beside the river.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "machines"
+   ]
+  },
+  {
+   "id": "read:dictate",
+   "w": "dictate",
+   "ipa": "dɪktˈeɪt",
+   "cn": "v. 决定；口述",
+   "ex": "Safety rules dictate how chemicals are stored on site.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "determine"
+   ]
+  },
+  {
+   "id": "read:enforcement",
+   "w": "enforcement",
+   "ipa": "enfˈɔːsmənt",
+   "cn": "n. 强制执行",
+   "ex": "Strict enforcement of the fishing ban helped stocks recover.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:cyclic",
+   "w": "cyclic",
+   "ipa": "ˈsaɪklɪk",
+   "cn": "adj. 周期性的",
+   "ex": "The region suffers cyclic drought every few decades.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "recurring"
+   ]
+  },
+  {
+   "id": "read:friction",
+   "w": "friction",
+   "ipa": "ˈfrɪkʃən",
+   "cn": "n. 摩擦；冲突",
+   "ex": "The tyre loses speed through friction with the road.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:noble",
+   "w": "noble",
+   "ipa": "ˈnəʊbəl",
+   "cn": "adj. 高尚的；贵族的",
+   "ex": "She made a noble effort to protect the old forest.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "honourable"
+   ]
+  },
+  {
+   "id": "read:potassium",
+   "w": "potassium",
+   "ipa": "pətˈasiəm",
+   "cn": "n. 钾",
+   "ex": "Bananas provide potassium in a normal daily diet.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:reactive",
+   "w": "reactive",
+   "ipa": "rɪˈaktɪv",
+   "cn": "adj. 易起反应的",
+   "ex": "Sodium is highly reactive when it touches water.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:genetically",
+   "w": "genetically",
+   "ipa": "dʒɪnˈetɪkli",
+   "cn": "adv. 在基因上",
+   "ex": "The two groups are genetically distinct from each other.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:bacteria",
+   "w": "bacteria",
+   "ipa": "baktˈiəriə",
+   "cn": "n. 细菌",
+   "ex": "Soil bacteria help plants take up nitrogen.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:wisdom",
+   "w": "wisdom",
+   "ipa": "ˈwɪzdəm",
+   "cn": "n. 智慧",
+   "ex": "Folk wisdom about the weather is not always reliable.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:crude",
+   "w": "crude",
+   "ipa": "ˈkruːd",
+   "cn": "adj. 粗略的；未加工的",
+   "ex": "The crude estimate ignored seasonal changes in demand.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "rough"
+   ]
+  },
+  {
+   "id": "read:realism",
+   "w": "realism",
+   "ipa": "ˈriəlɪzəm",
+   "cn": "n. 现实主义",
+   "ex": "Critics praise the novel for its realism about work.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:deliberately",
+   "w": "deliberately",
+   "ipa": "dɪlˈɪbərətli",
+   "cn": "adv. 故意地",
+   "ex": "The fire was started deliberately beside the warehouse.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "intentionally"
+   ]
+  },
+  {
+   "id": "read:surplus",
+   "w": "surplus",
+   "ipa": "ˈsɜːpləs",
+   "cn": "n. 盈余；过剩",
+   "ex": "A surplus of grain was stored for the winter.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "excess"
+   ]
+  },
+  {
+   "id": "read:directive",
+   "w": "directive",
+   "ipa": "daɪrˈektɪv",
+   "cn": "n. 指令",
+   "ex": "A new directive told factories to cut smoke emissions.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "order"
+   ]
+  },
+  {
+   "id": "read:alien",
+   "w": "alien",
+   "ipa": "ˈeɪliən",
+   "cn": "adj. 外来的；陌生的",
+   "ex": "These alien plants crowd out species native to the island.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "foreign"
+   ]
+  },
+  {
+   "id": "read:portfolio",
+   "w": "portfolio",
+   "ipa": "pɔːtfˈəʊlɪˌəʊ",
+   "cn": "n. 作品集；投资组合",
+   "ex": "Her portfolio included photos, sketches, and short films.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:monopoly",
+   "w": "monopoly",
+   "ipa": "mənˈɒpəli",
+   "cn": "n. 垄断",
+   "ex": "The firm held a monopoly on rail travel for decades.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:invert",
+   "w": "invert",
+   "ipa": "ɪnvˈɜːt",
+   "cn": "v. 使颠倒",
+   "ex": "If you invert the glass, the water runs out.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "reverse"
+   ]
+  },
+  {
+   "id": "read:thread",
+   "w": "thread",
+   "ipa": "ˈθred",
+   "cn": "n. 线；线索",
+   "ex": "One thread of evidence linked him to the site.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "strand"
+   ]
+  },
+  {
+   "id": "read:clay",
+   "w": "clay",
+   "ipa": "ˈkleɪ",
+   "cn": "n. 黏土",
+   "ex": "Wet clay was shaped into pots and left to dry.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:dye",
+   "w": "dye",
+   "ipa": "ˈdaɪ",
+   "cn": "n. 染料",
+   "ex": "A plant dye gave the cloth a deep blue colour.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:transcribe",
+   "w": "transcribe",
+   "ipa": "transkrˈaɪb",
+   "cn": "v. 誊写；转录",
+   "ex": "Researchers transcribe interviews before they analyse them.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:dilute",
+   "w": "dilute",
+   "ipa": "daɪlˈuːt",
+   "cn": "v. 稀释",
+   "ex": "You should dilute the juice with water before serving.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "weaken"
+   ]
+  },
+  {
+   "id": "read:tribe",
+   "w": "tribe",
+   "ipa": "ˈtraɪb",
+   "cn": "n. 部落",
+   "ex": "The tribe moved herds between two river valleys.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:damp",
+   "w": "damp",
+   "ipa": "ˈdamp",
+   "cn": "adj. 潮湿的",
+   "ex": "Cold damp walls can encourage mould in a closed room.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "moist"
+   ]
+  },
+  {
+   "id": "read:economically",
+   "w": "economically",
+   "ipa": "ˌiːkənˈɒmɪkli",
+   "cn": "adv. 在经济上；节约地",
+   "ex": "The region is economically dependent on one export.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:critically",
+   "w": "critically",
+   "ipa": "ˈkrɪtɪkli",
+   "cn": "adv. 批判地；极其",
+   "ex": "Reviewers critically examined the methods in the study.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:hip",
+   "w": "hip",
+   "ipa": "ˈhɪp",
+   "cn": "n. 髋部",
+   "ex": "A fall on ice injured her hip and slowed her walk.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:plantation",
+   "w": "plantation",
+   "ipa": "plantˈeɪʃən",
+   "cn": "n. 种植园；人工林",
+   "ex": "The plantation replaced forest with rows of rubber trees.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:onwards",
+   "w": "onwards",
+   "ipa": "ˈɒnwədz",
+   "cn": "adv. 以后",
+   "ex": "From 1990 onwards, the city grew quickly along the coast.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:interrupt",
+   "w": "interrupt",
+   "ipa": "ˈɪntərˌʌpt",
+   "cn": "v. 打断；中断",
+   "ex": "Please do not interrupt the speaker during the talk.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:domination",
+   "w": "domination",
+   "ipa": "ˌdɒmɪnˈeɪʃən",
+   "cn": "n. 支配；统治",
+   "ex": "The firm's domination of the market limited real choice.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "control"
+   ]
+  },
+  {
+   "id": "read:soluble",
+   "w": "soluble",
+   "ipa": "ˈsɒljuːbəl",
+   "cn": "adj. 可溶的；可解决的",
+   "ex": "Salt is soluble in water, but sand is not.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:innate",
+   "w": "innate",
+   "ipa": "ɪnnˈeɪt",
+   "cn": "adj. 天生的",
+   "ex": "Birds have an innate ability to navigate long distances.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "inborn"
+   ]
+  },
+  {
+   "id": "read:dioxide",
+   "w": "dioxide",
+   "ipa": "daɪˈɒksaɪd",
+   "cn": "n. 二氧化物",
+   "ex": "Carbon dioxide traps heat in the atmosphere.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:emit",
+   "w": "emit",
+   "ipa": "ɪmˈɪt",
+   "cn": "v. 排放；发出",
+   "ex": "The factory will emit less smoke after new filters.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "release"
+   ]
+  },
+  {
+   "id": "read:confound",
+   "w": "confound",
+   "ipa": "kənfˈaʊnd",
+   "cn": "v. 使混淆；扰乱",
+   "ex": "Odd results confound researchers who expected a clear pattern.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "confuse"
+   ]
+  },
+  {
+   "id": "read:competent",
+   "w": "competent",
+   "ipa": "ˈkɒmpɪtənt",
+   "cn": "adj. 胜任的",
+   "ex": "A competent guide keeps a group safe in the hills.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "capable"
+   ]
+  },
+  {
+   "id": "read:degrade",
+   "w": "degrade",
+   "ipa": "dɪɡrˈeɪd",
+   "cn": "v. 降解；退化",
+   "ex": "Plastic bags degrade very slowly in cold seawater.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "decay"
+   ]
+  },
+  {
+   "id": "read:layout",
+   "w": "layout",
+   "ipa": "ˈleɪaʊt",
+   "cn": "n. 布局",
+   "ex": "The layout of the museum leads visitors through each age.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "design"
+   ]
+  },
+  {
+   "id": "read:fabric",
+   "w": "fabric",
+   "ipa": "ˈfabrɪk",
+   "cn": "n. 织物；结构",
+   "ex": "Local fabric was woven from wool and plant dyes.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "cloth"
+   ]
+  },
+  {
+   "id": "read:container",
+   "w": "container",
+   "ipa": "kəntˈeɪnə",
+   "cn": "n. 容器",
+   "ex": "Store the sample in a sealed container away from heat.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:fungus",
+   "w": "fungus",
+   "ipa": "ˈfʌŋɡəs",
+   "cn": "n. 真菌",
+   "ex": "A fungus was growing on the damp side of the log.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:bodily",
+   "w": "bodily",
+   "ipa": "ˈbɒdili",
+   "cn": "adj. 身体的",
+   "ex": "Regular bodily movement helps children build strength.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "physical"
+   ]
+  },
+  {
+   "id": "read:niche",
+   "w": "niche",
+   "ipa": "ˈniːʃ",
+   "cn": "n. 生态位；小众市场",
+   "ex": "That bird occupies a niche high in the forest.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:vague",
+   "w": "vague",
+   "ipa": "ˈveɪɡ",
+   "cn": "adj. 含糊的",
+   "ex": "The instructions were too vague to follow alone.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "unclear"
+   ]
+  },
+  {
+   "id": "read:affirm",
+   "w": "affirm",
+   "ipa": "əfˈɜːm",
+   "cn": "v. 肯定；确认",
+   "ex": "The witnesses affirm that the gate was locked.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "confirm"
+   ]
+  },
+  {
+   "id": "read:afterwards",
+   "w": "afterwards",
+   "ipa": "ˈaftəwədz",
+   "cn": "adv. 之后；后来",
+   "ex": "We labelled the samples afterwards in the field lab.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "later"
+   ]
+  },
+  {
+   "id": "read:jazz",
+   "w": "jazz",
+   "ipa": "ˈdʒaz",
+   "cn": "n. 爵士乐",
+   "ex": "Live jazz filled the hall during the summer festival.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:antiquity",
+   "w": "antiquity",
+   "ipa": "antˈɪkwɪti",
+   "cn": "n. 古代",
+   "ex": "Stone temples from antiquity still stand by the river.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:unemployed",
+   "w": "unemployed",
+   "ipa": "ʌnemplˈɔɪd",
+   "cn": "adj. 失业的",
+   "ex": "Many unemployed adults joined training for building work.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "jobless"
+   ]
+  },
+  {
+   "id": "read:forum",
+   "w": "forum",
+   "ipa": "ˈfɔːrəm",
+   "cn": "n. 论坛",
+   "ex": "The forum let residents question the city planners.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:bleed",
+   "w": "bleed",
+   "ipa": "ˈbliːd",
+   "cn": "v. 出血",
+   "ex": "A small cut may bleed for several minutes.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:overhead",
+   "w": "overhead",
+   "ipa": "ˌəʊvəhˈed",
+   "cn": "n. 经常费用；头顶上方",
+   "ex": "Rising overhead forced the shop to raise prices.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "costs"
+   ]
+  },
+  {
+   "id": "read:republic",
+   "w": "republic",
+   "ipa": "rɪpˈʌblɪk",
+   "cn": "n. 共和国",
+   "ex": "The republic elects a president every five years.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:processor",
+   "w": "processor",
+   "ipa": "ˈprəʊsesə",
+   "cn": "n. 处理器",
+   "ex": "A faster processor cut the time for each calculation.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:goodness",
+   "w": "goodness",
+   "ipa": "ˈɡʊdnəs",
+   "cn": "n. 善良",
+   "ex": "Old stories praise goodness, duty, and care for others.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:comply",
+   "w": "comply",
+   "ipa": "kəmplˈaɪ",
+   "cn": "v. 遵守",
+   "ex": "Firms must comply with the new safety rules.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "obey",
+    "follow"
+   ]
+  },
+  {
+   "id": "read:audit",
+   "w": "audit",
+   "ipa": "ˈɔːdɪt",
+   "cn": "n. 审计",
+   "ex": "An independent audit found errors in the yearly accounts.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "review"
+   ]
+  },
+  {
+   "id": "read:slot",
+   "w": "slot",
+   "ipa": "ˈslɒt",
+   "cn": "n. 窄缝；时段",
+   "ex": "Each coin falls through a slot into a locked box.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "opening"
+   ]
+  },
+  {
+   "id": "read:drain",
+   "w": "drain",
+   "ipa": "ˈdreɪn",
+   "cn": "v. 排干；耗尽",
+   "ex": "Pumps drain water from the flooded field.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "empty"
+   ]
+  },
+  {
+   "id": "read:abdominal",
+   "w": "abdominal",
+   "ipa": "abdˈɒmɪnəl",
+   "cn": "adj. 腹部的",
+   "ex": "Severe abdominal pain can signal a digestive problem.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:tempt",
+   "w": "tempt",
+   "ipa": "ˈtempt",
+   "cn": "v. 诱惑",
+   "ex": "Low prices tempt buyers to purchase more than they need.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "attract"
+   ]
+  },
+  {
+   "id": "read:outlet",
+   "w": "outlet",
+   "ipa": "ˈaʊtlet",
+   "cn": "n. 出口；销路",
+   "ex": "The lake's only outlet is a narrow channel to the sea.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:precipitation",
+   "w": "precipitation",
+   "ipa": "prɪsˌɪpɪtˈeɪʃən",
+   "cn": "n. 降水；沉淀",
+   "ex": "Low precipitation left the reservoirs below their usual level.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "rainfall"
+   ]
+  },
+  {
+   "id": "read:invade",
+   "w": "invade",
+   "ipa": "ɪnvˈeɪd",
+   "cn": "v. 入侵",
+   "ex": "Weeds invade bare soil soon after a forest fire.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:interviewer",
+   "w": "interviewer",
+   "ipa": "ˈɪntəvjˌuːə",
+   "cn": "n. 面试官；采访者",
+   "ex": "The interviewer asked each candidate about past work.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:planner",
+   "w": "planner",
+   "ipa": "ˈplanə",
+   "cn": "n. 规划者",
+   "ex": "A city planner proposed more parks near the new homes.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:supposedly",
+   "w": "supposedly",
+   "ipa": "səpˈəʊzɪdli",
+   "cn": "adv. 据说",
+   "ex": "The bridge was supposedly safe, yet cracks appeared.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:gut",
+   "w": "gut",
+   "ipa": "ˈɡʌt",
+   "cn": "n. 肠道；直觉",
+   "ex": "Bacteria in the gut help digest tough plant fibres.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:swell",
+   "w": "swell",
+   "ipa": "ˈswel",
+   "cn": "v. 肿胀；上涨",
+   "ex": "The river began to swell after two days of rain.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "expand"
+   ]
+  },
+  {
+   "id": "read:emperor",
+   "w": "emperor",
+   "ipa": "ˈempərə",
+   "cn": "n. 皇帝",
+   "ex": "The emperor ordered a new road across the mountains.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:altitude",
+   "w": "altitude",
+   "ipa": "ˈaltɪtjˌuːd",
+   "cn": "n. 海拔",
+   "ex": "At high altitude each breath brings in less oxygen.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "height"
+   ]
+  },
+  {
+   "id": "read:gauge",
+   "w": "gauge",
+   "ipa": "ˈɡeɪdʒ",
+   "cn": "v. 估计；测量",
+   "ex": "Surveys help gauge support for the new railway.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "measure"
+   ]
+  },
+  {
+   "id": "read:transparency",
+   "w": "transparency",
+   "ipa": "transpˈarənsi",
+   "cn": "n. 透明；公开性",
+   "ex": "Public transparency shows how tax money is spent.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "openness"
+   ]
+  },
+  {
+   "id": "read:blank",
+   "w": "blank",
+   "ipa": "ˈblaŋk",
+   "cn": "adj. 空白的",
+   "ex": "Leave the last page blank for the examiner.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "empty"
+   ]
+  },
+  {
+   "id": "read:sensible",
+   "w": "sensible",
+   "ipa": "ˈsensɪbəl",
+   "cn": "adj. 明智的",
+   "ex": "It is sensible to carry water on a long walk.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "wise"
+   ]
+  },
+  {
+   "id": "read:weave",
+   "w": "weave",
+   "ipa": "ˈwiːv",
+   "cn": "v. 编织",
+   "ex": "Skilled workers weave wool into cloth on wooden looms.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:precipitate",
+   "w": "precipitate",
+   "ipa": "prɪsˈɪpɪtˌeɪt",
+   "cn": "v. 使沉淀；促成",
+   "ex": "Cooling can precipitate salt crystals in the solution.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:painful",
+   "w": "painful",
+   "ipa": "ˈpeɪnfəl",
+   "cn": "adj. 疼痛的；痛苦的",
+   "ex": "The treatment is painful but lasts only a few minutes.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:industrialisation",
+   "w": "industrialisation",
+   "ipa": "ɪndˌʌstrɪəlaɪzˈeɪʃən",
+   "cn": "n. 工业化",
+   "ex": "Rapid industrialisation drew villagers into the growing cities.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:minus",
+   "w": "minus",
+   "ipa": "ˈmaɪnəs",
+   "cn": "prep. 减去；负",
+   "ex": "The night temperature fell to minus eight degrees.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:conduction",
+   "w": "conduction",
+   "ipa": "kəndˈʌkʃən",
+   "cn": "n. 传导",
+   "ex": "Heat conduction through the metal rod was rapid.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:audio",
+   "w": "audio",
+   "ipa": "ˈɔːdɪˌəʊ",
+   "cn": "n. 音频",
+   "ex": "The audio was unclear, so the lecture was recorded again.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "sound"
+   ]
+  },
+  {
+   "id": "read:subtract",
+   "w": "subtract",
+   "ipa": "sʌbtrˈakt",
+   "cn": "v. 减去",
+   "ex": "You subtract material costs before calculating the profit.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "deduct"
+   ]
+  },
+  {
+   "id": "read:facet",
+   "w": "facet",
+   "ipa": "ˈfasɪt",
+   "cn": "n. 方面",
+   "ex": "Every facet of the problem needs careful thought.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "aspect"
+   ]
+  },
+  {
+   "id": "read:incumbent",
+   "w": "incumbent",
+   "ipa": "ɪŋkˈʌmbənt",
+   "cn": "n. 现任者",
+   "ex": "The incumbent won the election by a narrow margin.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:chunk",
+   "w": "chunk",
+   "ipa": "ˈtʃʌŋk",
+   "cn": "n. 大块",
+   "ex": "A chunk of ice broke away from the glacier.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "piece"
+   ]
+  },
+  {
+   "id": "read:credibility",
+   "w": "credibility",
+   "ipa": "ˌkredɪbˈɪlɪti",
+   "cn": "n. 可信度",
+   "ex": "Repeated errors hurt the credibility of the report.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:aluminium",
+   "w": "aluminium",
+   "ipa": "ˌaljʊmˈɪniəm",
+   "cn": "n. 铝",
+   "ex": "Light aluminium is widely used in aircraft bodies.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:gram",
+   "w": "gram",
+   "ipa": "ˈɡram",
+   "cn": "n. 克",
+   "ex": "Add one gram of salt to the warm water.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:liable",
+   "w": "liable",
+   "ipa": "ˈlaɪəbəl",
+   "cn": "adj. 容易发生的；负有责任的",
+   "ex": "Old pipes are liable to crack during a hard frost.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "likely"
+   ]
+  },
+  {
+   "id": "read:marble",
+   "w": "marble",
+   "ipa": "ˈmɑːbəl",
+   "cn": "n. 大理石；弹珠",
+   "ex": "The hall floor is polished marble from a local quarry.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:technically",
+   "w": "technically",
+   "ipa": "ˈteknɪkli",
+   "cn": "adv. 技术上；严格说来",
+   "ex": "The device technically meets the rule but fails in use.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:fringe",
+   "w": "fringe",
+   "ipa": "ˈfrɪndʒ",
+   "cn": "n. 边缘；刘海",
+   "ex": "Farms on the fringe of the city are disappearing.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "edge"
+   ]
+  },
+  {
+   "id": "read:messenger",
+   "w": "messenger",
+   "ipa": "ˈmesɪndʒə",
+   "cn": "n. 信使",
+   "ex": "A messenger carried the letter over the mountains.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "courier"
+   ]
+  },
+  {
+   "id": "read:biologist",
+   "w": "biologist",
+   "ipa": "baɪˈɒlədʒˌɪst",
+   "cn": "n. 生物学家",
+   "ex": "A biologist counted birds nesting along the marsh.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:connotation",
+   "w": "connotation",
+   "ipa": "kɒnətˈeɪʃən",
+   "cn": "n. 隐含意义",
+   "ex": "The word carries a negative connotation in political debate.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:delta",
+   "w": "delta",
+   "ipa": "ˈdeltə",
+   "cn": "n. 三角洲；变化量",
+   "ex": "The river delta supports farms, fish, and wildlife.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:tremendous",
+   "w": "tremendous",
+   "ipa": "trəmˈendəs",
+   "cn": "adj. 巨大的",
+   "ex": "The dam holds a tremendous volume of water.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "huge"
+   ]
+  },
+  {
+   "id": "read:flesh",
+   "w": "flesh",
+   "ipa": "ˈfleʃ",
+   "cn": "n. 肉；果肉",
+   "ex": "The flesh of the fruit is sweet and pale yellow.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:ghost",
+   "w": "ghost",
+   "ipa": "ˈɡəʊst",
+   "cn": "n. 鬼魂",
+   "ex": "Stories tell of a ghost in the ruined abbey.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "spirit"
+   ]
+  },
+  {
+   "id": "read:marrow",
+   "w": "marrow",
+   "ipa": "ˈmarəʊ",
+   "cn": "n. 骨髓；西葫芦",
+   "ex": "Bone marrow produces the cells that carry oxygen.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:surgeon",
+   "w": "surgeon",
+   "ipa": "ˈsɜːdʒən",
+   "cn": "n. 外科医生",
+   "ex": "The surgeon repaired a damaged valve during the operation.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:instinct",
+   "w": "instinct",
+   "ipa": "ˈɪnstɪŋkt",
+   "cn": "n. 本能；直觉",
+   "ex": "Birds follow instinct when they leave before winter.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:industrialise",
+   "w": "industrialise",
+   "ipa": "ɪndˈʌstrɪəlˌaɪz",
+   "cn": "v. 使工业化",
+   "ex": "Leaders hoped to industrialise the rural north quickly.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:stripe",
+   "w": "stripe",
+   "ipa": "ˈstraɪp",
+   "cn": "n. 条纹",
+   "ex": "Each stripe on the shell marks a year of growth.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "band"
+   ]
+  },
+  {
+   "id": "read:junior",
+   "w": "junior",
+   "ipa": "ˈdʒuːnjə",
+   "cn": "adj. 初级的；年少的",
+   "ex": "New junior staff report problems to a senior colleague.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:solvent",
+   "w": "solvent",
+   "ipa": "ˈsɒlvənt",
+   "cn": "n. 溶剂",
+   "ex": "Use a solvent to remove grease from the metal.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:kilometre",
+   "w": "kilometre",
+   "ipa": "ˈkɪləmˌiːtə",
+   "cn": "n. 千米；公里",
+   "ex": "The village lies one kilometre from the station.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:slab",
+   "w": "slab",
+   "ipa": "ˈslab",
+   "cn": "n. 厚板",
+   "ex": "A stone slab covered the entrance to the tomb.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:hedge",
+   "w": "hedge",
+   "ipa": "ˈhedʒ",
+   "cn": "n. 树篱；防范",
+   "ex": "A tall hedge shelters the garden from the sea wind.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:spray",
+   "w": "spray",
+   "ipa": "ˈspreɪ",
+   "cn": "v. 喷洒",
+   "ex": "Farmers spray crops to limit damage from insects.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:plug",
+   "w": "plug",
+   "ipa": "ˈplʌɡ",
+   "cn": "n. 插头；塞子",
+   "ex": "The plug must fit the socket before the lamp works.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:naked",
+   "w": "naked",
+   "ipa": "ˈneɪkɪd",
+   "cn": "adj. 裸露的",
+   "ex": "The rules ban naked flames near the fuel store.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "bare"
+   ]
+  },
+  {
+   "id": "read:indifference",
+   "w": "indifference",
+   "ipa": "ɪndˈɪfrəns",
+   "cn": "n. 冷漠",
+   "ex": "Public indifference slowed reform more than expected.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:erase",
+   "w": "erase",
+   "ipa": "ɪrˈeɪz",
+   "cn": "v. 擦除",
+   "ex": "Digital tools can erase an image without a trace.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "delete",
+    "remove"
+   ]
+  },
+  {
+   "id": "read:powder",
+   "w": "powder",
+   "ipa": "ˈpaʊdə",
+   "cn": "n. 粉末",
+   "ex": "Mix the powder with water before you take it.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:clip",
+   "w": "clip",
+   "ipa": "ˈklɪp",
+   "cn": "n. 夹子；片段",
+   "ex": "A metal clip held the notes together on the desk.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:portrayal",
+   "w": "portrayal",
+   "ipa": "pɔːtrˈeɪəl",
+   "cn": "n. 刻画；描写",
+   "ex": "The portrayal of city life in the novel feels honest.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "depiction"
+   ]
+  },
+  {
+   "id": "read:statistics",
+   "w": "statistics",
+   "ipa": "stətˈɪstɪks",
+   "cn": "n. 统计数据；统计学",
+   "ex": "Official statistics show a steady fall in child deaths.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "figures"
+   ]
+  },
+  {
+   "id": "read:thumb",
+   "w": "thumb",
+   "ipa": "ˈθʌm",
+   "cn": "n. 拇指",
+   "ex": "Press your thumb on the cut until the bleeding slows.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:uplift",
+   "w": "uplift",
+   "ipa": "ʌplˈɪft",
+   "cn": "n. 抬升；提升",
+   "ex": "Coastal uplift left old beaches high above the sea.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "rise"
+   ]
+  },
+  {
+   "id": "read:flip",
+   "w": "flip",
+   "ipa": "ˈflɪp",
+   "cn": "v. 翻转",
+   "ex": "Please flip the card to read the answer underneath.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "turn"
+   ]
+  },
+  {
+   "id": "read:parcel",
+   "w": "parcel",
+   "ipa": "ˈpɑːsəl",
+   "cn": "n. 包裹；地块",
+   "ex": "The parcel arrived damaged after the long journey.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "package"
+   ]
+  },
+  {
+   "id": "read:skip",
+   "w": "skip",
+   "ipa": "ˈskɪp",
+   "cn": "v. 跳过",
+   "ex": "Do not skip the questions on the first page.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "omit"
+   ]
+  },
+  {
+   "id": "read:sword",
+   "w": "sword",
+   "ipa": "ˈsɔːd",
+   "cn": "n. 剑",
+   "ex": "The sword was buried beside the warrior.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:photographic",
+   "w": "photographic",
+   "ipa": "ˌfəʊtəɡrˈafɪk",
+   "cn": "adj. 摄影的",
+   "ex": "Clear photographic evidence supported the accident report.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:auction",
+   "w": "auction",
+   "ipa": "ˈɔːkʃən",
+   "cn": "n. 拍卖",
+   "ex": "The painting sold at auction for a record sum.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:barrel",
+   "w": "barrel",
+   "ipa": "ˈbarəl",
+   "cn": "n. 桶；枪管",
+   "ex": "A wooden barrel held drinking water for the crew.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:nicely",
+   "w": "nicely",
+   "ipa": "ˈnaɪsli",
+   "cn": "adv. 很好地",
+   "ex": "The pieces fit nicely into the space under the stairs.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "well"
+   ]
+  },
+  {
+   "id": "read:lump",
+   "w": "lump",
+   "ipa": "ˈlʌmp",
+   "cn": "n. 块；肿块",
+   "ex": "A lump of coal still burned at the back of the stove.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "chunk"
+   ]
+  },
+  {
+   "id": "read:quiz",
+   "w": "quiz",
+   "ipa": "ˈkwɪz",
+   "cn": "n. 小测验",
+   "ex": "The weekly quiz checks whether students remember key terms.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "test"
+   ]
+  },
+  {
+   "id": "read:watershed",
+   "w": "watershed",
+   "ipa": "ˈwɔːtəʃˌed",
+   "cn": "n. 分水岭；转折点",
+   "ex": "This ridge is a watershed between two river systems.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:litre",
+   "w": "litre",
+   "ipa": "ˈliːtə",
+   "cn": "n. 升",
+   "ex": "Each bottle holds one litre of clean drinking water.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:oxidise",
+   "w": "oxidise",
+   "ipa": "ˈɒksɪdˌaɪz",
+   "cn": "v. 氧化",
+   "ex": "Wet iron will oxidise if it stays in damp air.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:noisy",
+   "w": "noisy",
+   "ipa": "ˈnɔɪzi",
+   "cn": "adj. 吵闹的",
+   "ex": "The noisy street made the interview hard to record.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "loud"
+   ]
+  },
+  {
+   "id": "read:phenomenal",
+   "w": "phenomenal",
+   "ipa": "fɪnˈɒmɪnəl",
+   "cn": "adj. 惊人的；非凡的",
+   "ex": "The city saw phenomenal growth over the last decade.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "extraordinary"
+   ]
+  },
+  {
+   "id": "read:bizarre",
+   "w": "bizarre",
+   "ipa": "bɪzˈɑː",
+   "cn": "adj. 古怪的",
+   "ex": "The test produced a bizarre result that nobody expected.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "strange"
+   ]
+  },
+  {
+   "id": "read:socialise",
+   "w": "socialise",
+   "ipa": "ˈsəʊʃəlˌaɪz",
+   "cn": "v. 社交",
+   "ex": "Children socialise more easily in small play groups.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:novice",
+   "w": "novice",
+   "ipa": "ˈnɒvɪs",
+   "cn": "n. 新手",
+   "ex": "A novice can learn the basic steps in one afternoon.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "beginner"
+   ]
+  },
+  {
+   "id": "read:enormously",
+   "w": "enormously",
+   "ipa": "ɪnˈɔːməsli",
+   "cn": "adv. 极大地",
+   "ex": "Demand for housing has grown enormously in ten years.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "hugely"
+   ]
+  },
+  {
+   "id": "read:clever",
+   "w": "clever",
+   "ipa": "ˈklevə",
+   "cn": "adj. 聪明的；巧妙的",
+   "ex": "It was a clever design that used very little fuel.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "bright"
+   ]
+  },
+  {
+   "id": "read:sometime",
+   "w": "sometime",
+   "ipa": "ˈsʌmtaɪm",
+   "cn": "adv. 某个时候",
+   "ex": "The museum will close sometime next year for repairs.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:bucket",
+   "w": "bucket",
+   "ipa": "ˈbʌkɪt",
+   "cn": "n. 桶",
+   "ex": "Fill a bucket with seawater and count the tiny animals.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "pail"
+   ]
+  },
+  {
+   "id": "read:swap",
+   "w": "swap",
+   "ipa": "ˈswɒp",
+   "cn": "v. 交换",
+   "ex": "Students swap essays and comment on the arguments.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "exchange"
+   ]
+  },
+  {
+   "id": "read:aeroplane",
+   "w": "aeroplane",
+   "ipa": "ˈeərəplˌeɪn",
+   "cn": "n. 飞机",
+   "ex": "The aeroplane landed safely in a strong crosswind.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "plane"
+   ]
+  },
+  {
+   "id": "read:deflection",
+   "w": "deflection",
+   "ipa": "dɪflˈekʃən",
+   "cn": "n. 偏转",
+   "ex": "A slight deflection of the needle showed a weaker current.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:deceive",
+   "w": "deceive",
+   "ipa": "dɪsˈiːv",
+   "cn": "v. 欺骗",
+   "ex": "False claims can deceive buyers about product quality.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "mislead"
+   ]
+  },
+  {
+   "id": "read:neat",
+   "w": "neat",
+   "ipa": "ˈniːt",
+   "cn": "adj. 整洁的；简洁的",
+   "ex": "Keep your notes neat so others can follow them.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "tidy"
+   ]
+  },
+  {
+   "id": "read:lever",
+   "w": "lever",
+   "ipa": "ˈliːvə",
+   "cn": "n. 杠杆",
+   "ex": "A long lever lets one person lift a heavy stone.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:underneath",
+   "w": "underneath",
+   "ipa": "ˌʌndənˈiːθ",
+   "cn": "prep. 在…下面",
+   "ex": "Pipes run underneath the street into each building.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "under",
+    "below"
+   ]
+  },
+  {
+   "id": "read:reactor",
+   "w": "reactor",
+   "ipa": "rɪˈaktə",
+   "cn": "n. 反应堆；反应器",
+   "ex": "The reactor shut down after a fault in cooling.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:cheat",
+   "w": "cheat",
+   "ipa": "ˈtʃiːt",
+   "cn": "v. 作弊；欺骗",
+   "ex": "Students who cheat in exams may lose the qualification.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:missile",
+   "w": "missile",
+   "ipa": "ˈmɪsaɪl",
+   "cn": "n. 导弹",
+   "ex": "The missile struck a warehouse near the city edge.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:rub",
+   "w": "rub",
+   "ipa": "ˈrʌb",
+   "cn": "v. 摩擦；揉",
+   "ex": "Please rub the surface until the old paint lifts off.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:radar",
+   "w": "radar",
+   "ipa": "ˈreɪdɑː",
+   "cn": "n. 雷达",
+   "ex": "Ship radar can detect vessels hidden by thick fog.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:scripture",
+   "w": "scripture",
+   "ipa": "ˈskrɪptʃə",
+   "cn": "n. 经文",
+   "ex": "Short readings from scripture opened the public ceremony.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:whoever",
+   "w": "whoever",
+   "ipa": "huːˈevə",
+   "cn": "pron. 无论谁",
+   "ex": "Please tell whoever finds the file to report it.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:whichever",
+   "w": "whichever",
+   "ipa": "wɪtʃˈevə",
+   "cn": "det. 无论哪个",
+   "ex": "Take whichever route is safest in bad weather.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:bullet",
+   "w": "bullet",
+   "ipa": "ˈbʊlɪt",
+   "cn": "n. 子弹；项目符号",
+   "ex": "A bullet was lodged in the wall beside the window.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:punch",
+   "w": "punch",
+   "ipa": "ˈpʌntʃ",
+   "cn": "n. 一拳；打孔",
+   "ex": "One punch left a clear mark on the wooden door.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "blow"
+   ]
+  },
+  {
+   "id": "read:artwork",
+   "w": "artwork",
+   "ipa": "ˈɑːtwɜːk",
+   "cn": "n. 艺术品；图画",
+   "ex": "The artwork on the cover shows a harbour at dusk.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:pardon",
+   "w": "pardon",
+   "ipa": "ˈpɑːdən",
+   "cn": "v. 赦免；原谅",
+   "ex": "The judge may pardon a prisoner who shows remorse.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "forgive"
+   ]
+  },
+  {
+   "id": "read:millimetre",
+   "w": "millimetre",
+   "ipa": "ˈmɪlɪmˌiːtə",
+   "cn": "n. 毫米",
+   "ex": "The crack is less than one millimetre wide.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:incredible",
+   "w": "incredible",
+   "ipa": "ɪŋkrˈedɪbəl",
+   "cn": "adj. 难以置信的；极好的",
+   "ex": "The team made an incredible recovery after the loss.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "unbelievable"
+   ]
+  },
+  {
+   "id": "read:halfway",
+   "w": "halfway",
+   "ipa": "ˈhɑːfweɪ",
+   "cn": "adv. 中途；到一半",
+   "ex": "We stopped halfway up the hill because of thick cloud.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:bang",
+   "w": "bang",
+   "ipa": "ˈbaŋ",
+   "cn": "n. 巨响",
+   "ex": "A loud bang woke the camp just before dawn.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:slash",
+   "w": "slash",
+   "ipa": "ˈslaʃ",
+   "cn": "v. 大幅削减；砍",
+   "ex": "The council may slash arts funding next year.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "cut"
+   ]
+  },
+  {
+   "id": "read:ridiculous",
+   "w": "ridiculous",
+   "ipa": "rɪdˈɪkjʊləs",
+   "cn": "adj. 荒谬的",
+   "ex": "It seems ridiculous to ignore the engineers' warning.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "absurd"
+   ]
+  },
+  {
+   "id": "read:volition",
+   "w": "volition",
+   "ipa": "vəlˈɪʃən",
+   "cn": "n. 意志；自愿",
+   "ex": "She resigned of her own volition after the inquiry.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "will"
+   ]
+  },
+  {
+   "id": "read:tricky",
+   "w": "tricky",
+   "ipa": "ˈtrɪki",
+   "cn": "adj. 棘手的",
+   "ex": "This tricky sum needs several careful checks.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "difficult"
+   ]
+  },
+  {
+   "id": "read:shuttle",
+   "w": "shuttle",
+   "ipa": "ˈʃʌtəl",
+   "cn": "n. 班车；航天飞机",
+   "ex": "A shuttle runs between the campus and the station.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:athletic",
+   "w": "athletic",
+   "ipa": "aθlˈetɪk",
+   "cn": "adj. 运动的；健壮的",
+   "ex": "Her athletic training began with running and swimming.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:chess",
+   "w": "chess",
+   "ipa": "ˈtʃes",
+   "cn": "n. 国际象棋",
+   "ex": "Playing chess helps people plan several moves ahead.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:terribly",
+   "w": "terribly",
+   "ipa": "ˈterɪbli",
+   "cn": "adv. 非常；严重地",
+   "ex": "The road was terribly damaged after the winter floods.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "very",
+    "badly"
+   ]
+  },
+  {
+   "id": "read:scroll",
+   "w": "scroll",
+   "ipa": "ˈskrəʊl",
+   "cn": "n. 卷轴",
+   "ex": "The old scroll lists taxes paid to the temple.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:connector",
+   "w": "connector",
+   "ipa": "kənˈektə",
+   "cn": "n. 连接件",
+   "ex": "A loose connector made the lights fail during testing.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:nasty",
+   "w": "nasty",
+   "ipa": "ˈnasti",
+   "cn": "adj. 恶劣的；讨厌的",
+   "ex": "A nasty storm kept ships in the harbour for days.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "unpleasant"
+   ]
+  },
+  {
+   "id": "read:incredibly",
+   "w": "incredibly",
+   "ipa": "ɪŋkrˈedɪbli",
+   "cn": "adv. 极其",
+   "ex": "The desert can be incredibly cold after sunset.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "extremely"
+   ]
+  },
+  {
+   "id": "read:entrant",
+   "w": "entrant",
+   "ipa": "ˈentrənt",
+   "cn": "n. 参赛者；新进入者",
+   "ex": "Each entrant must send a form before the deadline.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:hawk",
+   "w": "hawk",
+   "ipa": "ˈhɔːk",
+   "cn": "n. 鹰",
+   "ex": "A hawk circled above the field, watching for movement.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:handout",
+   "w": "handout",
+   "ipa": "ˈhandaʊt",
+   "cn": "n. 讲义；救济品",
+   "ex": "The lecturer shared a handout before the morning class.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:rack",
+   "w": "rack",
+   "ipa": "ˈrak",
+   "cn": "n. 架子",
+   "ex": "Hang wet coats on the rack beside the door.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:applause",
+   "w": "applause",
+   "ipa": "əplˈɔːz",
+   "cn": "n. 掌声",
+   "ex": "Loud applause followed the last speech of the evening.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "clapping"
+   ]
+  },
+  {
+   "id": "read:demonstrator",
+   "w": "demonstrator",
+   "ipa": "ˈdemənstrˌeɪtə",
+   "cn": "n. 示威者；演示者",
+   "ex": "A demonstrator held a sign outside the ministry.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:calculator",
+   "w": "calculator",
+   "ipa": "ˈkalkjʊlˌeɪtə",
+   "cn": "n. 计算器",
+   "ex": "She checked the sum again on a small calculator.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:mall",
+   "w": "mall",
+   "ipa": "ˈmal",
+   "cn": "n. 购物中心",
+   "ex": "The new mall has shops, cafes, and a clinic.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:sneeze",
+   "w": "sneeze",
+   "ipa": "ˈsniːz",
+   "cn": "v. 打喷嚏",
+   "ex": "People sneeze more often when pollen levels rise.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:sniff",
+   "w": "sniff",
+   "ipa": "ˈsnɪf",
+   "cn": "v. 嗅；抽鼻子",
+   "ex": "Dogs sniff the ground to follow a faint scent.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": [
+    "smell"
+   ]
+  },
+  {
+   "id": "read:stadium",
+   "w": "stadium",
+   "ipa": "ˈsteɪdiəm",
+   "cn": "n. 体育场",
+   "ex": "The new stadium holds fifty thousand spectators.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  },
+  {
+   "id": "read:descendant",
+   "w": "descendant",
+   "ipa": "dɪsˈendənt",
+   "cn": "n. 后代；子孙",
+   "ex": "She is a descendant of a family from the island.",
+   "g": "r:3",
+   "use": "receptive",
+   "syns": []
+  }
+ ]
+}

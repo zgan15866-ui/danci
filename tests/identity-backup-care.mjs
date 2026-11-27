@@ -123,14 +123,14 @@ function prog(page) {
 }
 
 const html = await (await fetch(BASE + "/index.html")).text();
-check(html.includes('var APPV="danci-v24"') && html.includes('var SYNC_APPV = "v24"'), "page is app v24");
+check(html.includes('var APPV="danci-v25"') && html.includes('var SYNC_APPV = "v25"'), "page is app v25");
 check(html.includes('var KEY = "danci.v1"'), "learning key unchanged");
 check(html.includes('src="voice/mespeak.js"') && html.includes('rawdata:"array"') && html.includes("createBufferSource"), "demo audio is local eSpeak played through Web Audio");
 check(html.includes("pitch:68") && html.includes("wordgap:2") && html.includes("amplitude:90"), "demo uses a higher pitch, a short word gap, and slightly lower amplitude");
 check(!html.includes("SpeechSynthesisUtterance") && !html.includes("speechSynthesis.speak"), "demo path does not call system TTS");
 check(!/responsivevoice|translate\.google|dictionaryapi|speech\.googleapis|unrealspeech|elevenlabs/i.test(html), "page has no online TTS service");
 const sw = await (await fetch(BASE + "/sw.js")).text();
-check(sw.includes('const CACHE = "danci-v24"') && sw.includes("./voice/mespeak.js"), "service worker cache is danci-v24 and includes the voice engine");
+check(sw.includes('const CACHE = "danci-v25"') && sw.includes("./voice/mespeak.js") && sw.includes("./packs/listen.json") && sw.includes("./packs/read.json") && sw.includes("./packs/core.json"), "service worker cache is danci-v25 and includes the voice engine and the new packs");
 const voiceJs = await (await fetch(BASE + "/voice/mespeak.js")).text();
 check(voiceJs.includes("en/en-rp") && voiceJs.includes("en/en-us") && voiceJs.length > 1000000, "bundled engine contains British and American voices");
 
@@ -444,7 +444,7 @@ async function backupText(over, sync) {
     extra: JSON.parse(localStorage.getItem("danci.v1")).prog.b0.extra
   }));
   check(ui.home && ui.title === "发现新版本" && ui.btn === "立即更新" && ui.bar, "opening an old version shows the home update card");
-  check(ui.appv === "danci-v24" && ui.extra === "keep", "version key advances without touching study data");
+  check(ui.appv === "danci-v25" && ui.extra === "keep", "version key advances without touching study data");
   await shot(page, "home_update_prompt.png");
   await page.click("#updLater");
   const hidden = await page.evaluate(() => document.getElementById("updHome").hidden && !document.getElementById("updBar").classList.contains("on"));
@@ -458,7 +458,7 @@ async function backupText(over, sync) {
   await close(page);
 }
 {
-  const page = await openPage({ storage: [["danci.v1", JSON.stringify(db({ name: "小红" }))], ["danci.appv", "danci-v24"]] });
+  const page = await openPage({ storage: [["danci.v1", JSON.stringify(db({ name: "小红" }))], ["danci.appv", "danci-v25"]] });
   const hidden = await page.evaluate(() => document.getElementById("updHome").hidden);
   check(hidden, "current version does not show the update card");
   await close(page);
@@ -667,7 +667,7 @@ async function backupText(over, sync) {
       "jh:and": { n: 1, iv: 1, ef: 2.5, due: 2, lap: 0, first: 1, last: 1, extra: "keep" }
     }
   }));
-  const page = await openPage({ storage: [["danci.v1", raw], ["danci.appv", "danci-v24"]] });
+  const page = await openPage({ storage: [["danci.v1", raw], ["danci.appv", "danci-v25"]] });
   await page.waitForFunction(() => document.getElementById("dueN").textContent !== "0", { timeout: 8000 });
   const tune = await page.evaluate(() => {
     function f0(bytes) {
@@ -910,7 +910,7 @@ async function backupText(over, sync) {
     storage: [["danci.v1", JSON.stringify(db({
       name: "小红",
       prog: { "jh:i": { n: 1, iv: 1, ef: 2.5, due: 1, lap: 0, first: 1, last: 1, extra: "keep" } }
-    }))], ["danci.appv", "danci-v24"]]
+    }))], ["danci.appv", "danci-v25"]]
   });
   await page.evaluate(() => {
     window.__audioStarts = [];
@@ -960,7 +960,7 @@ async function backupText(over, sync) {
       name: "小红",
       custom: [{ id: "c1", w: "flibbertigibbet", cn: "自造词", ex: "A flibbertigibbet sat on the bench.", g: "我的生词" }],
       prog: { c1: { n: 2, iv: 3, ef: 2.5, due: 1, lap: 0, first: 1, last: 1, extra: "keep" } }
-    }))], ["danci.appv", "danci-v24"]]
+    }))], ["danci.appv", "danci-v25"]]
   });
   await page.evaluate(() => {
     window.__audioStarts = [];
@@ -1000,7 +1000,7 @@ async function backupText(over, sync) {
       name: "小红",
       custom: [{ id: "c1", w: "押金", cn: "没有英文", g: "我的生词" }],
       prog: { c1: { n: 2, iv: 3, ef: 2.5, due: 1, lap: 0, first: 1, last: 1, extra: "keep" } }
-    }))], ["danci.appv", "danci-v24"]]
+    }))], ["danci.appv", "danci-v25"]]
   });
   await page.evaluate(() => {
     window.__audioStarts = [];
@@ -1037,7 +1037,7 @@ function dueProg(n) {
 }
 {
   const page = await openPage({
-    storage: [["danci.v1", JSON.stringify(db({ name: "小红", prog: dueProg(40), set: { cap: 50, batch: 10, track: "exam", accent: "en-GB", rate: 0.9, auto: false, goal: 7000, weekGoal: 70 } }))], ["danci.appv", "danci-v24"]]
+    storage: [["danci.v1", JSON.stringify(db({ name: "小红", prog: dueProg(40), set: { cap: 50, batch: 10, track: "exam", accent: "en-GB", rate: 0.9, auto: false, goal: 7000, weekGoal: 70 } }))], ["danci.appv", "danci-v25"]]
   });
   await page.setViewport({ width: 375, height: 812, deviceScaleFactor: 2 });
   await page.waitForFunction(() => /复习\s+25/.test(document.getElementById("battleSub").textContent), { timeout: 20000 });
@@ -1057,19 +1057,19 @@ function dueProg(n) {
 }
 {
   const low = await openPage({
-    storage: [["danci.v1", JSON.stringify(db({ name: "小红", prog: dueProg(40), set: { cap: 20, batch: 10, track: "exam", accent: "en-GB", rate: 0.9, auto: false, goal: 7000, weekGoal: 70 } }))], ["danci.appv", "danci-v24"]]
+    storage: [["danci.v1", JSON.stringify(db({ name: "小红", prog: dueProg(40), set: { cap: 20, batch: 10, track: "exam", accent: "en-GB", rate: 0.9, auto: false, goal: 7000, weekGoal: 70 } }))], ["danci.appv", "danci-v25"]]
   });
   await low.waitForFunction(() => /复习\s+20/.test(document.getElementById("battleSub").textContent), { timeout: 20000 });
   check((await low.$eval("#battleSub", (el) => el.textContent)).includes("复习 20"), "a lower cap of 20 is kept");
   await close(low);
   const beg = await openPage({
-    storage: [["danci.v1", JSON.stringify(db({ name: "小红", prog: dueProg(40), set: { cap: 100, batch: 10, track: "beginner", accent: "en-GB", rate: 0.9, auto: false, goal: 7000, weekGoal: 70 } }))], ["danci.appv", "danci-v24"]]
+    storage: [["danci.v1", JSON.stringify(db({ name: "小红", prog: dueProg(40), set: { cap: 100, batch: 10, track: "beginner", accent: "en-GB", rate: 0.9, auto: false, goal: 7000, weekGoal: 70 } }))], ["danci.appv", "danci-v25"]]
   });
   await beg.waitForFunction(() => /复习\s+15/.test(document.getElementById("battleSub").textContent), { timeout: 20000 });
   check((await beg.$eval("#battleSub", (el) => el.textContent)).includes("复习 15"), "beginner round is 15 even with a high cap");
   await close(beg);
   const fresh = await openPage({
-    storage: [["danci.v1", JSON.stringify(db({ name: "小红", prog: {}, set: { cap: 9999, batch: 10, track: "exam", accent: "en-GB", rate: 0.9, auto: false, goal: 7000, weekGoal: 70 } }))], ["danci.appv", "danci-v24"]]
+    storage: [["danci.v1", JSON.stringify(db({ name: "小红", prog: {}, set: { cap: 9999, batch: 10, track: "exam", accent: "en-GB", rate: 0.9, auto: false, goal: 7000, weekGoal: 70 } }))], ["danci.appv", "danci-v25"]]
   });
   await fresh.waitForFunction(() => /新词\s+5/.test(document.getElementById("battleSub").textContent), { timeout: 20000 });
   check((await fresh.$eval("#battleSub", (el) => el.textContent)).includes("新词 5"), "with no reviews, exam adds 5 new words");
@@ -1084,7 +1084,7 @@ function dueProg(n) {
         b1: { n: 2, iv: 1, ef: 2.5, due: 1, lap: 0, first: 1, last: 1, extra: "keep" }
       },
       set: { cap: 50, batch: 10, track: "exam", accent: "en-GB", rate: 0.9, auto: false, goal: 7000, weekGoal: 70 }
-    }))], ["danci.appv", "danci-v24"]]
+    }))], ["danci.appv", "danci-v25"]]
   });
   await page.setViewport({ width: 375, height: 812, deviceScaleFactor: 2 });
   await page.waitForFunction(() => document.getElementById("dueN").textContent !== "0", { timeout: 20000 });
@@ -1143,7 +1143,7 @@ function dueProg(n) {
       name: "小红",
       prog: { b326: { n: 1, iv: 1, ef: 2.5, due: 1, lap: 0, first: 1, last: 1, extra: "keep" } },
       set: { cap: 50, batch: 10, track: "exam", accent: "en-GB", rate: 0.9, auto: false, goal: 7000, weekGoal: 70 }
-    }))], ["danci.appv", "danci-v24"]]
+    }))], ["danci.appv", "danci-v25"]]
   });
   await page.waitForFunction(() => document.getElementById("dueN").textContent !== "0", { timeout: 20000 });
   await page.evaluate(() => document.getElementById("goReview").click());
@@ -1179,7 +1179,7 @@ function dueProg(n) {
       name: "小红",
       custom: [{ id: "c1", w: "deposit", cn: "押金", g: "我的生词" }],
       set: { cap: 50, batch: 10, track: "exam", accent: "en-GB", rate: 0.9, auto: false, goal: 7000, weekGoal: 70, pr: "m:我的生词" }
-    }))], ["danci.appv", "danci-v24"]]
+    }))], ["danci.appv", "danci-v25"]]
   });
   await page.waitForFunction(() => document.getElementById("goSpell"), { timeout: 20000 });
   await page.evaluate(() => { document.getElementById("moreBox").open = true; });
@@ -1197,6 +1197,97 @@ function dueProg(n) {
   const after = await page.evaluate(() => JSON.parse(localStorage.getItem("danci.v1")).prog.c1);
   check(mid.sw === 1 && after.sw === 1 && after.due === mid.due && after.n === mid.n, "dictation-style spelling redo does not record the miss twice: " + JSON.stringify({ mid, after, again: again.slice(0, 40) }));
   check(page.__hits.length === 0, "round changes send nothing: " + page.__hits.join(","));
+  await close(page);
+}
+
+// 词库扩充：数量、备考能学到新包、入门不自动进入、旧进度还在、音标例句和缓存。
+{
+  const learned = () => ({ n: 2, iv: 30, ef: 2.5, due: 999999, lap: 0, sw: 0, first: 1, last: 1 });
+  const [core, awl, junior] = await Promise.all(["core", "awl", "junior"].map(async (name) => {
+    const r = await fetch(BASE + "/packs/" + name + ".json");
+    if (!r.ok) throw new Error(name);
+    return r.json();
+  }));
+  const learnedProg = {};
+  for (let i = 0; i < 416; i++) learnedProg["b" + i] = learned();
+  learnedProg.b0.extra = "keep";
+  core.words.forEach((w) => { learnedProg[w.id] = learned(); });
+  awl.words.forEach((w) => { learnedProg[w.id] = learned(); });
+  (junior.order || []).forEach((id) => { learnedProg[id] = learned(); });
+  learnedProg.b0.extra = "keep";
+  const page = await openPage({
+    storage: [["danci.v1", JSON.stringify(db({
+      name: "小红",
+      prog: learnedProg,
+      set: { track: "exam", cap: 50, batch: 10, accent: "en-GB", rate: 0.9, auto: false, goal: 7000, weekGoal: 70 }
+    }))], ["danci.appv", "danci-v25"]]
+  });
+  await page.waitForFunction(() => (document.getElementById("vocabText") || {}).textContent && document.getElementById("vocabText").textContent.includes("词库现有 5512"), { timeout: 20000 });
+  const vocab = await page.$eval("#vocabText", (el) => el.textContent);
+  check(vocab.includes("词库现有 5512"), "exam home shows the expanded bank: " + vocab);
+  await page.click("#battleBtn");
+  await page.waitForSelector("#study.on .word");
+  const front = await page.evaluate(() => ({
+    word: document.querySelector("#sBody .word").textContent,
+    ipa: (document.querySelector("#sBody .iph") || {}).textContent || ""
+  }));
+  check(front.word === "case" && front.ipa.includes("ˈkeɪs"), "exam battle reaches the new listening pack: " + JSON.stringify(front));
+  await page.click("#reveal");
+  await page.waitForFunction(() => document.getElementById("sBody").innerText.includes("In this case"));
+  const back = await page.$eval("#sBody", (el) => el.innerText);
+  check(back.includes("情况") && back.includes("In this case"), "exam card shows the gloss and example: " + back.slice(0, 180));
+  await page.click("#sQuit");
+  await page.waitForFunction(() => !document.getElementById("study").classList.contains("on"));
+  let saved = await prog(page);
+  check(saved.extra === "keep" && saved.keep === "yes-do-not-wipe" && saved.custom === "c1" && saved.name === "小红", "opening a new-pack card does not wipe old progress");
+  await page.click('#tabs button[data-v="set"]');
+  await page.waitForSelector("#setTrack button[data-v='beginner']");
+  await page.click("#setTrack button[data-v='beginner']");
+  await page.click('#tabs button[data-v="home"]');
+  await page.waitForFunction(() => document.getElementById("battleT").textContent === "入门");
+  saved = await prog(page);
+  check(saved.extra === "keep" && saved.name === "小红", "switching to beginner keeps the old record");
+  const beg = await page.evaluate(() => ({
+    t: document.getElementById("battleT").textContent,
+    sub: document.getElementById("battleSub").textContent,
+    disabled: document.getElementById("battleBtn").disabled,
+    opt: document.getElementById("newSrc").selectedOptions[0].textContent
+  }));
+  check(beg.t === "入门" && beg.disabled && beg.sub.includes("词库都学完了"), "beginner does not continue into listen/read packs: " + beg.sub);
+  check(beg.opt.includes("入门→话题核心") && !beg.opt.includes("高频"), "beginner sequence label stays off the new packs: " + beg.opt);
+  await page.click('#tabs button[data-v="lib"]');
+  await page.waitForFunction(() => document.getElementById("tierSub").textContent.includes("入门档不会自动进入"));
+  await page.evaluate(() => {
+    const el = document.querySelector('#tierGroups [data-g="l:1"]');
+    if (!el) throw new Error("missing listen group");
+    el.click();
+  });
+  await page.waitForSelector("#libWords:not([hidden]) .it[data-w='listen:case']");
+  await page.click('.it[data-w="listen:case"]');
+  await page.waitForSelector("#sheet.on .ipa");
+  const sheet = await page.$eval("#sheetIn", (el) => el.innerText);
+  check(sheet.includes("case") && sheet.includes("/ˈkeɪs/") && sheet.includes("In this case") && sheet.includes("情况"), "library card shows IPA, gloss and example: " + sheet.slice(0, 160));
+  await page.evaluate(() => document.getElementById("sheet").click());
+  saved = await prog(page);
+  check(saved.extra === "keep", "browsing the new pack does not clear progress");
+  await close(page);
+}
+{
+  const page = await openPage({
+    storage: [["danci.v1", JSON.stringify(db({
+      name: "小红",
+      prog: { b0: { n: 3, iv: 4, ef: 2.5, due: 999999, lap: 0, sw: 0, first: 1, last: 1, extra: "keep" } },
+      set: { track: "exam", cap: 50, batch: 10, accent: "en-GB", rate: 0.9, auto: false, goal: 7000, weekGoal: 70 }
+    }))], ["danci.appv", "danci-v25"]]
+  });
+  await page.waitForFunction(() => document.getElementById("vocabText").textContent.includes("词库现有 5512"));
+  await page.click("#battleBtn");
+  await page.waitForSelector("#study.on .word");
+  const word = await page.$eval("#sBody .word", (el) => el.textContent);
+  check(word === "pollution", "exam still teaches the next old word before the new packs: " + word);
+  await page.click("#sQuit");
+  const saved = await prog(page);
+  check(saved.extra === "keep" && saved.custom === "c1", "an ordinary exam round leaves the saved progress alone");
   await close(page);
 }
 

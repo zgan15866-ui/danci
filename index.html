@@ -321,7 +321,7 @@
       </div>
       <div class="card">
         <h2>分级词库</h2>
-        <p class="sub" id="tierSub">话题核心词按话题扩充；学术词 AWL 是学术文章里最常见的 570 个词族，分 10 级。</p>
+        <p class="sub" id="tierSub">话题核心词按话题扩充；学术词 AWL 分 10 级。备考还可学听力阅读高频和学术阅读补缺；入门档不会自动进入这两组。</p>
         <div id="tierGroups"></div>
       </div>
       <div class="card">
@@ -539,8 +539,8 @@
     <div class="card">
       <h2>📚 分级词库、会用的词、同义替换</h2>
       <ul>
-        <li><b>学习程度</b>：在「设置」里选「备考」或「入门」。默认是备考，给准备雅思的人用。入门档从最常用生活词开始，学完再进入话题核心词，不进入 AWL。切换档位不会清掉进度。</li>
-        <li><b>词库有三层</b>：入门词（最常用生活词）→ 内置话题词（原来的 416 个）和 <b>话题核心词</b> → <b>学术词 AWL</b>（学术文章最常见的 570 个词族，分 10 级）。备考档「开打」按话题核心再到 AWL；入门档先走入门词。</li>
+        <li><b>学习程度</b>：在「设置」里选「备考」或「入门」。默认是备考，给准备雅思的人用。入门档从最常用生活词开始，学完再进入话题核心词，不自动进入 AWL，也不进入听力阅读高频和学术阅读补缺。切换档位不会清掉进度。</li>
+        <li><b>词库分层</b>：入门词（最常用生活词）→ 内置话题词（原来的 416 个）和 <b>话题核心词</b> → <b>学术词 AWL</b>（学术文章最常见的 570 个词族，分 10 级）→ <b>听力阅读高频</b>和<b>考试场景用语</b> → <b>学术阅读补缺</b>。备考档「开打」按这个顺序往后学；入门档只自动走到话题核心词。</li>
         <li><b>✍️ 会用</b>：带这个标记的词，写作和口语要会拼、会用，学完建议去「看中文拼写」「听音写词」练一练；没有标记的词，阅读和听力认识就够。</li>
         <li><b>同义替换</b>：很多词下面有常见的替换说法，雅思阅读、听力常考“同义替换”，写作里也能避免重复。</li>
         <li><b>词汇量进度</b>：首页会显示已学词数和离目标还差多少。目标在「设置」里改（默认 7000）。这里只统计在本应用里学过的词，标为「太简单」的词不计入。</li>
@@ -555,6 +555,8 @@
       <ul>
         <li><b>Academic Word List（学术词表）</b>：Averil Coxhead, 2000, <i>A New Academic Word List</i>, TESOL Quarterly 34(2)。本应用使用其 570 个词族的首词（词表由 Victoria University of Wellington 公开发布），AWL 的分级沿用原表。</li>
         <li><b>入门词</b>：选词参考 New Dolch List 1.1（Browne &amp; Culligan）和 New General Service List 1.2（Browne, Culligan &amp; Phillips），二者均为 <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>。本应用只使用其词目和频率排序（数字、星期、月份来自 NGSL 补充表），英式拼写为自行调整，释义和例句为自编。</li>
+        <li><b>听力阅读高频、考试场景用语</b>：词目来自 New General Service List 1.2（Browne, Culligan &amp; Phillips）和 TOEIC Service List 1.2（Browne &amp; Culligan），均为 <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>。只使用词目和频率排序，不使用原表的英文释义。已经在本应用里的词不再重复加入。英式拼写按原表给出的英式形式或常规英式写法调整。释义、例句和同义替换为自编。</li>
+        <li><b>学术阅读补缺</b>：词目来自 New Academic Word List 1.2（Browne, Culligan &amp; Phillips），<a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>。只使用词目。实验室术语、语言学符号和过窄的数学行话没有整表放入。释义和例句为自编。</li>
         <li><b>释义、例句、同义替换、话题分类</b>：全部为自编整理，没有抄录任何教材或商业词典，可能有疏漏，发现不准的词请在「设置」里提建议。</li>
         <li><b>音标</b>：由开源语音引擎 eSpeak NG 自动生成（英式），再做了格式整理，个别词可能与词典略有出入，请以词典和发音为准。</li>
         <li><b>听示范</b>：喇叭、例句、听写和「试听发音」用应用内置的 eSpeak 读出来（GPL，在手机里生成，不把单词发到网上）。设置里的英音是英式 RP，美音是美式，语速会一起变。自己加的英文也能读；词里没有英文字母或数字时，会提示没有示范音。点了没声音会提示，请同时看音量和侧边静音键。</li>
@@ -661,9 +663,9 @@ function persist(){
 load();
 
 // 所有词：内置 416 个 + 扩充词库（packs/*.json 静态文件）+ 自己加的
-// 内置词 ID 永远是 "b"+下标（b0–b415），不能插入、删除、重排；扩充词用稳定 ID（awl:xxx / core:xxx）。
+// 内置词 ID 永远是 "b"+下标（b0–b415），不能插入、删除、重排；扩充词用稳定 ID（awl:xxx / core:xxx / listen:xxx / read:xxx）。
 var TOPICS = BUILTIN.t;
-var WORDS = {}; var BUILT_IDS=[]; var CORE_IDS=[], AWL_PACK_IDS=[], AWL_BY={}; var JUNIOR_IDS=[], JUNIOR_NEW=0; var packState={loaded:false, failed:false};
+var WORDS = {}; var BUILT_IDS=[]; var CORE_IDS=[], AWL_PACK_IDS=[], AWL_BY={}; var JUNIOR_IDS=[], JUNIOR_NEW=0; var LISTEN_IDS=[], READ_IDS=[]; var packState={loaded:false, failed:false};
 BUILTIN.w.forEach(function(a,i){ var id="b"+i; WORDS[id]={id:id,w:a[0],ipa:a[1],cn:a[2],ex:a[3],g:"t"+a[4],use:(a[4]===11?"productive":"receptive"),syns:[]}; BUILT_IDS.push(id); });
 function rebuildCustom(){
   Object.keys(WORDS).forEach(function(k){ if(WORDS[k].custom) delete WORDS[k]; });
@@ -680,6 +682,8 @@ function addPack(p){
     var m=/^k:awl(\d+)$/.exec(x.g); if(m) w.awl=+m[1];
     WORDS[x.id]=w;
     if(p.pack==="core") CORE_IDS.push(x.id);
+    if(p.pack==="listen") LISTEN_IDS.push(x.id);
+    if(p.pack==="read") READ_IDS.push(x.id);
   });
   if(p.pack==="junior"){
     JUNIOR_IDS=(p.order||p.words.map(function(x){return x.id;})).filter(function(id){ return !!WORDS[id]; });
@@ -696,15 +700,15 @@ function indexAwl(){
 }
 function getJson(url){ return fetch(url).then(function(r){ if(!r.ok) throw new Error(url); return r.json(); }); }
 function loadPacks(){
-  return Promise.all([getJson("packs/meta.json"),getJson("packs/core.json"),getJson("packs/awl.json"),getJson("packs/junior.json")]).then(function(a){
-    applyMeta(a[0]); addPack(a[1]); addPack(a[2]); addPack(a[3]); indexAwl(); packState.loaded=true;
+  return Promise.all([getJson("packs/meta.json"),getJson("packs/core.json"),getJson("packs/awl.json"),getJson("packs/junior.json"),getJson("packs/listen.json"),getJson("packs/read.json")]).then(function(a){
+    applyMeta(a[0]); addPack(a[1]); addPack(a[2]); addPack(a[3]); addPack(a[4]); addPack(a[5]); indexAwl(); packState.loaded=true;
   });
 }
 function awlAll(){ var o=[]; for(var n=1;n<=10;n++) o=o.concat(AWL_BY[n]||[]); return o; }
 function isBeginner(){ return db.set.track==="beginner"; }
 function trackWeekGoal(){ return isBeginner() ? 40 : (db.set.weekGoal||70); }
 function trackGoal(){ return isBeginner() ? (db.set.goalBeginner||2000) : (db.set.goal||7000); }
-function libTotal(){ return BUILT_IDS.length+CORE_IDS.length+AWL_PACK_IDS.length+JUNIOR_NEW; }
+function libTotal(){ return BUILT_IDS.length+CORE_IDS.length+AWL_PACK_IDS.length+JUNIOR_NEW+LISTEN_IDS.length+READ_IDS.length; }
 var JTOPICS={basic:"基础用语",number:"数字",time:"时间",color:"颜色",family:"家庭",people:"人物",animal:"动物",food:"食物与饮料",body:"身体与健康",clothes:"服装",home:"家与生活",school:"学校",action:"常用动作",weather:"天气与自然",place:"地点",travel:"出行",shop:"购物与金钱",feel:"感受与性格",sport:"运动与爱好",job:"工作",adj:"常用形容",life:"日常用词"};
 function groupName(g){
   if(g[0]==="t") return TOPICS[+g.slice(1)];
@@ -712,6 +716,10 @@ function groupName(g){
   if(g==="k:junior") return "入门词";
   if(g==="k:awl") return "学术词 AWL（全部）";
   if(g.indexOf("k:awl")===0) return "AWL 第"+g.slice(5)+"级";
+  if(g==="k:listen") return "听力与阅读高频（全部）";
+  if(g==="k:read") return "学术阅读补缺（全部）";
+  if(g.indexOf("l:")===0) return ({"1":"听力阅读高频 · 上","2":"听力阅读高频 · 中","3":"听力阅读高频 · 下","s1":"考试场景用语 · 上","s2":"考试场景用语 · 中","s3":"考试场景用语 · 下"})[g.slice(2)]||"听力与阅读高频";
+  if(g.indexOf("r:")===0) return ({"1":"学术阅读补缺 · 上","2":"学术阅读补缺 · 中","3":"学术阅读补缺 · 下"})[g.slice(2)]||"学术阅读补缺";
   if(g.indexOf("j:")===0) return JTOPICS[g.slice(2)]||"入门词";
   return g.slice(2);
 }
@@ -722,12 +730,16 @@ function wordsIn(g){
       JUNIOR_IDS.concat(BUILT_IDS, CORE_IDS, db.custom.map(function(c){return c.id;})).forEach(function(id){ if(!seen[id] && WORDS[id]){ seen[id]=1; out.push(id); } });
       return out;
     }
-    return BUILT_IDS.concat(CORE_IDS, AWL_PACK_IDS, db.custom.map(function(c){return c.id;}));
+    return BUILT_IDS.concat(CORE_IDS, AWL_PACK_IDS, LISTEN_IDS, READ_IDS, db.custom.map(function(c){return c.id;}));
   }
   if(g==="k:junior") return JUNIOR_IDS;
   if(g==="k:core") return CORE_IDS;
   if(g==="k:awl") return awlAll();
   if(g.indexOf("k:awl")===0) return AWL_BY[+g.slice(5)]||[];
+  if(g==="k:listen") return LISTEN_IDS;
+  if(g==="k:read") return READ_IDS;
+  if(g.indexOf("l:")===0) return LISTEN_IDS.filter(function(id){ return WORDS[id] && WORDS[id].g===g; });
+  if(g.indexOf("r:")===0) return READ_IDS.filter(function(id){ return WORDS[id] && WORDS[id].g===g; });
   if(g[0]==="t") return BUILT_IDS.filter(function(id){ return WORDS[id].g===g; }).concat(CORE_IDS.filter(function(id){ return WORDS[id].g===g; }));
   return db.custom.filter(function(c){ return "m:"+c.g===g; }).map(function(c){return c.id;});
 }
@@ -951,9 +963,13 @@ function sourceOptions(sel, withPractice){
   function opt(g,label){ var ids=wordsIn(g); var left=ids.filter(function(id){return !db.prog[id];}).length;
     return '<option value="'+g+'">'+esc(label)+(withPractice?'（'+ids.length+'）':'（剩 '+left+'）')+'</option>'; }
   h+='<optgroup label="分级词库">';
-  if(!withPractice) h+='<option value="all">全部，按顺序（'+(isBeginner()?'入门→话题核心':'内置→话题核心→AWL')+'）</option>';
+  if(!withPractice) h+='<option value="all">全部，按顺序（'+(isBeginner()?'入门→话题核心':'内置→话题核心→AWL→高频与学术补缺')+'）</option>';
   h+=opt("k:junior","入门词")+opt("k:core","话题核心词")+opt("k:awl","学术词 AWL（全部）");
   for(var n=1;n<=10;n++) h+=opt("k:awl"+n,"AWL 第 "+n+" 级"+(n===1?"（最常见）":""));
+  h+=opt("k:listen","听力与阅读高频（全部）");
+  ["l:1","听力阅读高频 · 上","l:2","听力阅读高频 · 中","l:3","听力阅读高频 · 下","l:s1","考试场景用语 · 上","l:s2","考试场景用语 · 中","l:s3","考试场景用语 · 下"].forEach(function(x,i,a){ if(i%2===0) h+=opt(x,a[i+1]); });
+  h+=opt("k:read","学术阅读补缺（全部）");
+  ["r:1","学术阅读补缺 · 上","r:2","学术阅读补缺 · 中","r:3","学术阅读补缺 · 下"].forEach(function(x,i,a){ if(i%2===0) h+=opt(x,a[i+1]); });
   h+='</optgroup>';
   h+='<optgroup label="话题词（内置+核心）">';
   TOPICS.forEach(function(t,i){ h+=opt("t"+i,t); });
@@ -991,8 +1007,8 @@ function renderHome(){
 }
 function newOrder(){
   var seen={}, out=[], seq;
-  if(isBeginner()) seq=JUNIOR_IDS.concat(BUILT_IDS, CORE_IDS); // 入门词 → 话题核心，不进入 AWL
-  else seq=BUILT_IDS.concat(CORE_IDS, awlAll());
+  if(isBeginner()) seq=JUNIOR_IDS.concat(BUILT_IDS, CORE_IDS); // 入门词 → 话题核心，不进入 AWL 或听力/阅读补缺
+  else seq=BUILT_IDS.concat(CORE_IDS, awlAll(), LISTEN_IDS, READ_IDS);
   seq.forEach(function(id){ if(seen[id]||db.prog[id]||!WORDS[id]) return; seen[id]=1; out.push(id); });
   return out;
 }
@@ -1574,8 +1590,9 @@ function renderLib(){
   $("libGroups").hidden=false; $("libWords").hidden=true;
   $("myGroups").innerHTML = db.groups.map(function(g){ return grpRow("m:"+g); }).join("") || '<p class="sub">还没有分组。</p>';
   var tiers=["k:junior","k:core","k:awl"]; for(var n=1;n<=10;n++) tiers.push("k:awl"+n);
+  tiers.push("k:listen","l:1","l:2","l:3","l:s1","l:s2","l:s3","k:read","r:1","r:2","r:3");
   $("tierGroups").innerHTML = tiers.map(grpRow).join("");
-  $("tierSub").textContent = packState.failed ? "扩充词库没加载上，联网后重新打开 App。" : "入门词 "+JUNIOR_IDS.length+" 个（最常用生活词）；话题核心词 "+CORE_IDS.length+" 个；学术词 AWL 是学术文章最常见的 570 个词族，分 10 级。";
+  $("tierSub").textContent = packState.failed ? "扩充词库没加载上，联网后重新打开 App。" : "入门词 "+JUNIOR_IDS.length+" 个（最常用生活词）；话题核心词 "+CORE_IDS.length+" 个；学术词 AWL 分 10 级。备考还可学听力阅读高频 "+LISTEN_IDS.length+" 个、学术阅读补缺 "+READ_IDS.length+" 个。入门档不会自动进入后两组。";
   $("topicSub").textContent = "内置 "+BUILT_IDS.length+" 个 + 话题核心扩充 "+CORE_IDS.length+" 个，带音标、例句。";
   $("topicGroups").innerHTML = TOPICS.map(function(t,i){ return grpRow("t"+i); }).join("");
 }
@@ -2042,7 +2059,7 @@ function chipSet(el,opts,cur,cb){
 }
 function renderTrack(){
   var cur=isBeginner()?"beginner":"exam";
-  var opts=[["exam","备考（雅思）","为雅思考试准备：词库按话题核心再到学术词。一局最多复习 25 个。"],["beginner","入门（初中基础）","从最常用生活词开始，节奏更缓。一局最多复习 15 个。"]];
+  var opts=[["exam","备考（雅思）","为雅思考试准备：先话题核心和学术词，再学听力阅读高频和学术阅读补缺。一局最多复习 25 个。"],["beginner","入门（初中基础）","从最常用生活词开始，节奏更缓。一局最多复习 15 个。不自动进入学术词和听力阅读补缺。"]];
   $("setTrack").innerHTML=opts.map(function(o){ return '<button type="button" data-v="'+o[0]+'" class="'+(cur===o[0]?"on":"")+'"><b>'+o[1]+'</b><span>'+o[2]+'</span></button>'; }).join("");
 }
 if(!$("setTrack")._ok){ $("setTrack")._ok=1; $("setTrack").addEventListener("click",function(e){
@@ -2156,7 +2173,7 @@ $("bkLater").onclick=function(){ db.bkSnooze=Date.now()+3*DAY; persist(); checkB
 // 只上传：姓名、学习统计、近 35 天按天记录、最难的词。不上传：自建词、建议文字、备份文件。
 // 同步用独立的 localStorage 键 danci.sync，不碰 danci.v1。
 var SYNC_DEFAULT = {t:"w3f", k:"778b50de-d990-4df5-a20b-156e8a6fbfaf", f:"zganyasi"}; // Web3Forms 访问密钥是公开的（只能发信到赵干邮箱），不是机密
-var SYNC_APPV = "v24";
+var SYNC_APPV = "v25";
 var SYNC_KEY = "danci.sync";
 var syncSt = null, syncTimer = null, syncBusy = false;
 function syncLoad(){
@@ -2409,7 +2426,7 @@ loadPacks().then(function(){
 }).catch(function(){
   packState.failed=true; renderHome(); toast("扩充词库没加载上，联网后重新打开 App",3500);
 });
-var APPV="danci-v24", APPV_KEY="danci.appv";
+var APPV="danci-v25", APPV_KEY="danci.appv";
 var updWaiting=null, updClicked=false, updReloading=false, updJustUpdated=false, updSnooze=false;
 try{
   var _hadSw=!("serviceWorker" in navigator) ? false : !!navigator.serviceWorker.controller;
